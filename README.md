@@ -24,8 +24,6 @@ minutes and every one after loads instantly.
 /plugin install talk-to-anyone@talk-to-anyone
 ```
 
-(Private repo: your `gh auth login` / git credentials must have access.)
-
 **Requirement:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) for transcript pulling —
 `brew install yt-dlp` or `pip3 install --user yt-dlp`. Without it, personas still build
 from web research alone (weaker voice fidelity).
