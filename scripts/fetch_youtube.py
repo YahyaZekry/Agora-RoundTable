@@ -8,7 +8,11 @@ Given a channel URL/handle (or explicit video URLs), this script:
 
 Usage:
   python3 fetch_youtube.py --channel https://www.youtube.com/@AlexHormozi --max-videos 15 --out ./persona-workdir
+  python3 fetch_youtube.py --search "Warren Buffett interview" --max-videos 8 --out ./persona-workdir
   python3 fetch_youtube.py --videos URL1 URL2 ... --out ./persona-workdir
+
+--search finds long-form videos OF a person across all of YouTube (interviews,
+podcasts, keynotes) — for people who have no channel of their own.
 
 Requires: yt-dlp  (pip install yt-dlp   OR   brew install yt-dlp)
 Optional fallback: youtube-transcript-api (pip install youtube-transcript-api)
@@ -132,6 +136,41 @@ def list_popular_videos(yt_dlp: str, channel: str, max_videos: int) -> list[dict
     return []
 
 
+def search_videos(yt_dlp: str, query: str, max_videos: int) -> list[dict]:
+    """Return long-form videos matching a YouTube search (interviews, podcasts, talks)."""
+    print(f"Searching YouTube: {query}")
+    entries = run_json_lines(
+        [
+            yt_dlp,
+            "--flat-playlist",
+            "--dump-json",
+            f"ytsearch{max_videos * 3}:{query}",  # overshoot; shorts/short clips get filtered
+        ]
+    )
+    videos = []
+    for entry in entries:
+        video_id = entry.get("id")
+        if not video_id:
+            continue
+        duration = entry.get("duration") or 0
+        # Search mode wants substantial spoken content, not clips
+        if duration and duration < 480:
+            continue
+        videos.append(
+            {
+                "id": video_id,
+                "url": f"https://www.youtube.com/watch?v={video_id}",
+                "title": entry.get("title") or video_id,
+                "duration_seconds": duration,
+                "view_count": entry.get("view_count"),
+                "channel": entry.get("channel") or entry.get("uploader"),
+            }
+        )
+        if len(videos) >= max_videos:
+            break
+    return videos
+
+
 def slugify(text: str) -> str:
     slug = re.sub(r"[^a-zA-Z0-9]+", "-", text).strip("-").lower()
     return slug[:MAX_TITLE_SLUG_LENGTH] or "video"
@@ -216,12 +255,13 @@ def fetch_captions_via_transcript_api(video_id: str) -> str | None:
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--channel", help="Channel URL or @handle (e.g. https://www.youtube.com/@AlexHormozi)")
+    parser.add_argument("--search", help="YouTube search query for long-form videos OF the person (e.g. \"Warren Buffett interview\") — for people with no channel of their own")
     parser.add_argument("--videos", nargs="*", default=[], help="Explicit video URLs to fetch instead of / in addition to the channel's popular videos")
-    parser.add_argument("--max-videos", type=int, default=12, help="How many popular channel videos to pull (default 12)")
+    parser.add_argument("--max-videos", type=int, default=12, help="How many videos to pull per source (default 12)")
     parser.add_argument("--out", required=True, help="Output directory (transcripts/ and videos.json are written here)")
     args = parser.parse_args()
-    if not args.channel and not args.videos:
-        parser.error("provide --channel and/or --videos")
+    if not args.channel and not args.videos and not args.search:
+        parser.error("provide --channel, --search, and/or --videos")
     if args.max_videos < 1:
         parser.error("--max-videos must be >= 1")
     return args
@@ -242,6 +282,9 @@ def main() -> None:
         videos = list_popular_videos(yt_dlp, args.channel, args.max_videos)
         if not videos:
             print("WARNING: could not list channel videos (region block or layout change?)", file=sys.stderr)
+    if args.search:
+        seen_ids = {v["id"] for v in videos}
+        videos.extend(v for v in search_videos(yt_dlp, args.search, args.max_videos) if v["id"] not in seen_ids)
     for url in args.videos:
         video_id_match = re.search(r"(?:v=|youtu\.be/|/shorts/)([A-Za-z0-9_-]{11})", url)
         if not video_id_match:

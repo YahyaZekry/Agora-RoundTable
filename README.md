@@ -5,14 +5,18 @@ Turn any public figure into your personal coach, inside Claude Code.
 ```
 /coach alex hormozi     → business coaching from Alex Hormozi
 /coach andrew huberman  → health protocols from Andrew Huberman
-/coach anyone with a YouTube channel
+/coach warren buffett   → no YouTube channel needed — interviews + shareholder letters
+/coach marcus aurelius  → no video at all — built from his actual writings
 ```
 
-When you name a person, the plugin researches them on the web, finds their YouTube
-channel, pulls **real transcripts from their most popular videos** (no API keys), and
-distills a persona file: their voice, beliefs, named frameworks, signature phrases, and
-how they actually give advice. Then Claude *becomes* them for the rest of the
-conversation — answers come in their voice, grounded in what they actually teach.
+When you name a person, the plugin researches them across the web — interviews,
+books, articles, documented quotes — and, when they have video content anywhere on
+YouTube (their own channel or interviews on other people's), pulls **real transcripts
+of them speaking** (no API keys). Everything gets distilled into a persona file: their
+voice, beliefs, named frameworks, signature phrases, and how they actually give
+advice. Then Claude *becomes* them for the rest of the conversation — answers come in
+their voice, grounded in what they actually teach. Works for anyone with a public
+footprint, living or historical.
 
 Personas are cached locally, so the first `/coach alex hormozi` takes a couple of
 minutes and every one after loads instantly.
@@ -24,9 +28,10 @@ minutes and every one after loads instantly.
 /plugin install talk-to-anyone@talk-to-anyone
 ```
 
-**Requirement:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) for transcript pulling —
-`brew install yt-dlp` or `pip3 install --user yt-dlp`. Without it, personas still build
-from web research alone (weaker voice fidelity).
+**Optional (recommended):** [yt-dlp](https://github.com/yt-dlp/yt-dlp) for transcript
+pulling — `brew install yt-dlp` or `pip3 install --user yt-dlp`. Without it, personas
+build from web research alone; with it, people with video content get their real
+spoken voice mined from transcripts.
 
 ## Commands
 
@@ -44,15 +49,19 @@ If the short names collide with another plugin, use the namespaced form:
 ## How it works
 
 1. **Identify** — web-searches the name (handles misspellings: "alex formosi" →
-   Alex Hormozi) and finds their official YouTube channel.
-2. **Pull** — `scripts/fetch_youtube.py` lists the channel's most popular videos with
-   yt-dlp and downloads captions (manual subs preferred, auto-captions as fallback),
-   cleaned into plain-text transcripts.
-3. **Distill** — Claude reads the transcripts + light web research (books, frameworks,
-   bio) and fills out a structured persona file: identity, voice & delivery, core
-   beliefs (with verbatim quotes), named frameworks with their actual steps, coaching
-   style, signature quotes, and embodiment rules.
-4. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
+   Alex Hormozi) and maps their public footprint.
+2. **Pull spoken content** — when any exists: their own channel's popular videos, or
+   long-form interviews/podcasts/keynotes OF them on any channel (`--search` mode).
+   `scripts/fetch_youtube.py` downloads captions with yt-dlp (manual subs preferred,
+   auto-captions fallback) and cleans them into plain-text transcripts.
+3. **Deep web research** — every build: books and their core ideas, named frameworks,
+   print interviews and profiles, verified quotes, bio, common criticism. For people
+   with little or no video this is the primary source; for historical figures the
+   corpus is their own writings — letters, essays, speeches.
+4. **Distill** — Claude merges both streams into a structured persona file: identity,
+   voice & delivery, core beliefs (with verbatim quotes), named frameworks with their
+   actual steps, coaching style, signature quotes, and embodiment rules.
+5. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
    their real content; when it extrapolates beyond it, it says so in their voice.
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
@@ -70,8 +79,9 @@ persona built from 12 of his videos (~59,000 transcript words) by this exact pip
   if you ask. It won't invent personal facts or private opinions.
 - **Not professional advice.** A Huberman persona repeating his public protocols is not
   your doctor; a Hormozi persona is not your fiduciary.
-- Voice fidelity depends on caption availability. Channels with captions disabled fall
-  back to web research.
+- Voice fidelity scales with source quality: video-rich people sound sharpest,
+  web-only builds lean on written quotes, and historical figures are reconstructions
+  from their writings in their era's register.
 
 ## Troubleshooting
 
@@ -92,7 +102,7 @@ skills/
   coach/               # main skill + persona template
   coach-switch/  coach-end/  coach-list/  coach-refresh/
 scripts/
-  fetch_youtube.py     # channel → popular videos → clean transcripts
+  fetch_youtube.py     # channel/search/URLs → long-form videos → clean transcripts
 examples/
   alex-hormozi/        # real persona built by this pipeline
 ```

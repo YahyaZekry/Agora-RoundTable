@@ -32,9 +32,18 @@ with `source: "./"`). Five skills, one Python script, zero runtime services:
 - **Fabrication guardrails live in the persona file itself** (Embodiment Rules), so
   they travel with the cache and survive plugin updates.
 
+## v1.1.0 — multi-source pipeline (2026-07-06)
+
+YouTube demoted from requirement to add-on. Every build now runs deep web research
+(books, print interviews, verified quotes); spoken content is merged in when it exists
+anywhere on YouTube — own channel, or interviews of the person on other channels via
+the fetcher's new `--search` mode. Historical figures are in scope: their writings are
+the corpus, voice reconstructed in their era's register. Effort scales adaptively
+(2-5 min builds).
+
 ## Failure routes
 
-- No yt-dlp → tell user the install command; offer web-research-only persona.
-- Zero captions (disabled/region) → web-research-only persona, noted in the file.
+- No yt-dlp → tell user the install command; web research carries the build.
+- Zero captions (disabled/region) → web research carries the build, noted in the file.
 - Ambiguous name → resolve to most prominent match, state the assumption in one line.
-- No YouTube channel at all → web-research-only persona.
+- No spoken media at all (historical) → writings-based persona in era register.
