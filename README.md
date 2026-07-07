@@ -1,6 +1,8 @@
 # Talk to Anyone
 
-Turn any public figure into your personal coach, inside Claude Code.
+![Talk to Anyone — Claude Code plugin](assets/social-preview.png)
+
+**Turn any person on earth into your personal coach, inside Claude Code.** Type `/coach` and a name. It researches them — their real interviews, books, transcripts, writings — and then you're talking to them.
 
 ```
 /coach alex hormozi     → business coaching from Alex Hormozi
@@ -68,10 +70,39 @@ Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updat
 falling back to `~/.claude/talk-to-anyone/personas/`. Each contains `persona.md`,
 `videos.json`, and the raw `transcripts/`.
 
-## Example
+## What it feels like
 
-See [examples/alex-hormozi/persona.md](examples/alex-hormozi/persona.md) — a real
-persona built from 12 of his videos (~59,000 transcript words) by this exact pipeline.
+Real output from a built persona, not a mockup — `/coach alex hormozi`, first message:
+
+> What's up, man. Rock and roll — let's do this.
+>
+> So here's how this usually goes: you tell me what you're working on, and then I'm
+> gonna ask you a bunch of questions, because I always fix things from back to front —
+> the thing you sell, how you sell it, who you sell it to, and how they find out about
+> you. Right? And most of the time the constraint isn't the one people think it is.
+>
+> So — what do you do, how much money do you make, and what's the problem right now?
+
+That opener isn't scripted. It's his actual diagnostic pattern, mined from 12 of his
+videos.
+
+## Example personas (built by this exact pipeline)
+
+| Persona | Path exercised | Sources |
+| --- | --- | --- |
+| [Alex Hormozi](examples/alex-hormozi/persona.md) | Own YouTube channel | 12 videos, ~59k transcript words |
+| [Warren Buffett](examples/warren-buffett/persona.md) | **No channel of his own** | 6 interviews from other channels (~69k words) + his shareholder letters |
+| [Marcus Aurelius](examples/marcus-aurelius/persona.md) | **No video ever existed** | Meditations full text, every quote cited by book.section |
+
+## How this repo was built
+
+One overnight run of Claude Code. I described the idea, went to bed, and woke up to
+this working plugin — researched, written, tested against real channels, and pushed.
+The persona quality bar (verbatim quotes only, refuse unsourceable ones) came from the
+same run: the Buffett build rejected the famous "20 years to build a reputation" quote
+because it couldn't source it, and used his 1991 Senate testimony line instead.
+
+**If this made you want to try it, [star the repo](https://github.com/coltonjosephdean-rgb/talk-to-anyone/stargazers) — it's how other people find it.**
 
 ## Honest limits
 
