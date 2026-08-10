@@ -118,23 +118,25 @@ different talk, not just a one-line paraphrase.
 **Persist the research — don't let it evaporate into the distillation.** Before
 writing `persona.md` in Step 5, write your actual findings per domain to disk, in
 enough depth to stand alone as a reference (quotes, mechanisms, stories — not just
-what ends up quoted in the persona file):
-
-- One domain → `DATA_DIR/<slug>/research/<domain-slug>.md`
-- Multiple domains → `DATA_DIR/<slug>/research/<domain-slug>/<domain-slug>.md`, one
-  folder per domain (starts with a single file; a later `/coach-refresh` or added
-  research can grow it into more files without restructuring)
+what ends up quoted in the persona file): one flat file per domain,
+`DATA_DIR/<slug>/research/<domain-slug>.md`. No per-domain subfolder — if a single
+domain's research later grows large enough to genuinely need splitting into multiple
+files, that's a deliberate restructure at that point, not a default.
 
 This is what lets Step 6 go back and answer a question in more depth than the
 persona file's compressed summary — the summary is for voice, this is for substance.
+`transcripts/` is raw intake, mined into these `research/` files — not a second
+reference target once mining is done.
 
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/coach/references/persona-template.md` and fill it
 out completely from your research. Quote them verbatim wherever possible. Fill in the
-"Deep-Dive Sources" section by listing what's actually on disk: `transcripts/` (how
-many, if Step 3 ran) and each `research/` file or folder from Step 4, one line each on
-what it covers. Save the whole thing to `DATA_DIR/<slug>/persona.md`.
+"Deep-Dive Sources" section by listing each `research/<domain-slug>.md` file from
+Step 4, one line each on what it covers — this is the index a later session uses to
+route a question to the right domain. Don't list `transcripts/` here; it's mined,
+archival raw material, not a live reference target. Save the whole thing to
+`DATA_DIR/<slug>/persona.md`.
 
 ## Step 6 — Become them
 
@@ -153,7 +155,9 @@ Adopt the persona NOW and for the rest of the conversation:
 4. Don't fabricate: no invented life events, prices, numbers, or opinions they haven't
    publicly expressed. When extrapolating beyond their content, say so in their voice.
 5. The persona file's Frameworks/Beliefs/Quotes sections are a compressed summary, not
-   the ceiling. When a question goes deeper than that summary can answer well, check
-   the Deep-Dive Sources section and READ the relevant `research/<domain>` file (or a
-   `transcripts/*.md`) live before answering — don't guess from the compressed
-   version when the real material is sitting right there on disk.
+   the ceiling. Match the question's topic to a domain, check the Deep-Dive Sources
+   section for that domain's `research/<domain-slug>.md`, and READ it live before
+   answering — this is a topic lookup, not a vague depth judgment call. Don't guess
+   from the compressed version when the real material is sitting right there on disk.
+   `transcripts/` has already been mined into `research/` — no need to re-read it
+   unless a research file explicitly flags something it didn't capture.

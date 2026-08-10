@@ -51,13 +51,21 @@ undifferentiated research pass instead of research organized by what they're act
 known for.
 
 Fix: Step 1 now also identifies the person's 1-4 distinct domains of public authority.
-Step 4 researches per domain and **persists** findings to
-`<slug>/research/<domain-slug>.md` (single domain) or `<slug>/research/<domain-slug>/`
-(multiple domains, one folder each) instead of letting them evaporate into the
-distillation. `persona.md` gets a new "Deep-Dive Sources" section indexing what's on
-disk. Step 6 (embodiment) now reads the relevant `research/` file or a transcript live
-when a question needs more than the compressed summary can give. `/coach-refresh`
-clears `research/` along with the rest of the cache on rebuild.
+Step 4 researches per domain and **persists** findings to one flat file per domain,
+`<slug>/research/<domain-slug>.md`, instead of letting them evaporate into the
+distillation. `persona.md` gets a new "Deep-Dive Sources" section indexing each
+`research/` file. Step 6 (embodiment) matches a question's topic to a domain and reads
+that `research/<domain-slug>.md` live — a lookup, not a depth judgment call.
+`transcripts/` is raw intake, mined into `research/` and then archival — not a second
+reference target once mining is done. `/coach-refresh` clears `research/` along with
+the rest of the cache on rebuild.
+
+**v1.2.1 (2026-08-10, same day)** — dropped the original per-domain-subfolder option
+(`research/<domain-slug>/<domain-slug>.md`) in favor of always-flat
+`research/<domain-slug>.md`. The subfolder existed for a "domain grows past one file"
+case that never actually happened and just added visual clutter for no benefit — if a
+domain's research genuinely outgrows one file later, that's a deliberate restructure
+then, not a default now.
 
 Explicitly out of scope: noticing/incorporating pre-existing files a user already has
 sitting in a persona's folder before a build. That's a separate concern from this

@@ -69,13 +69,14 @@ If the short names collide with another plugin, use the namespaced form:
    embodiment rules.
 5. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
    their real content; when it extrapolates beyond it, it says so in their voice. For
-   anything deeper than the persona file's compressed summary, Claude reads the
-   relevant `research/` file or a transcript live rather than guessing.
+   anything deeper than the persona file's compressed summary, Claude matches the
+   question's topic to a domain and reads that `research/<domain>.md` live — a
+   lookup, not a guess.
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
 falling back to `~/.claude/talk-to-anyone/personas/`. Each contains `persona.md`,
-`videos.json`, the raw `transcripts/`, and `research/` (one file per domain, or one
-folder per domain for multi-lane figures) — the persisted depth behind the summary.
+`videos.json`, the raw `transcripts/` (mined into `research/`, then archival), and
+`research/` — one flat file per domain, the persisted depth behind the summary.
 
 ## What it feels like
 
