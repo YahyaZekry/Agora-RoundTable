@@ -81,11 +81,11 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/fetch_youtube.py" \
 (If `${CLAUDE_PLUGIN_ROOT}` didn't substitute, locate `scripts/fetch_youtube.py`
 relative to this skill file: `../../scripts/fetch_youtube.py`.)
 
-This writes `transcripts/*.txt` + `videos.json` into the persona directory. It takes a
+This writes `transcripts/*.md` + `videos.json` into the persona directory. It takes a
 minute or two — tell the user the build is running. Zero transcripts (captions
 disabled, region block)? Fine — continue to Step 4; the build does not fail.
 
-Then READ the transcripts. Read at least 5-6 substantially (plain text, title in the
+Then READ the transcripts. Read at least 5-6 substantially (Markdown with a frontmatter header, title in the
 header). Mine for: repeated beliefs, named frameworks, signature phrases, how they
 open/close advice, their tone and rhythm. For search-mode results, make sure the
 words you mine are the PERSON's, not the interviewer's.
@@ -155,5 +155,5 @@ Adopt the persona NOW and for the rest of the conversation:
 5. The persona file's Frameworks/Beliefs/Quotes sections are a compressed summary, not
    the ceiling. When a question goes deeper than that summary can answer well, check
    the Deep-Dive Sources section and READ the relevant `research/<domain>` file (or a
-   `transcripts/*.txt`) live before answering — don't guess from the compressed
+   `transcripts/*.md`) live before answering — don't guess from the compressed
    version when the real material is sitting right there on disk.

@@ -55,7 +55,7 @@ If the short names collide with another plugin, use the namespaced form:
 2. **Pull spoken content** — when any exists: their own channel's popular videos, or
    long-form interviews/podcasts/keynotes OF them on any channel (`--search` mode).
    `scripts/fetch_youtube.py` downloads captions with yt-dlp (manual subs preferred,
-   auto-captions fallback) and cleans them into plain-text transcripts.
+   auto-captions fallback) and cleans them into Markdown transcripts (with a frontmatter header).
 3. **Deep web research** — every build, run per domain the person's actually known
    for (a marketing guru who's also a content creator gets two research passes, not
    one blended sweep): books and their core ideas, named frameworks, print interviews

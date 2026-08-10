@@ -4,7 +4,7 @@
 Given a channel URL/handle (or explicit video URLs), this script:
   1. Lists the channel's most popular videos (yt-dlp, no API key needed)
   2. Downloads each video's captions (manual subs preferred, auto-captions as fallback)
-  3. Writes clean plain-text transcripts + a videos.json metadata index
+  3. Writes clean Markdown transcripts (frontmatter + text) + a videos.json metadata index
 
 Usage:
   python3 fetch_youtube.py --channel https://www.youtube.com/@AlexHormozi --max-videos 15 --out ./persona-workdir
@@ -307,11 +307,18 @@ def main() -> None:
         if not text:
             print("  no captions available, skipping", file=sys.stderr)
             continue
-        filename = f"{slugify(title)}-{video['id']}.txt"
+        word_count = len(text.split())
+        filename = f"{slugify(title)}-{video['id']}.md"
         transcript_path = transcripts_dir / filename
-        header = f"# {title}\n# {video['url']}\n\n"
+        frontmatter = ["---", f'title: "{title.replace(chr(34), chr(39))}"', f"url: {video['url']}", f"video_id: {video['id']}"]
+        if video.get("duration_seconds"):
+            frontmatter.append(f"duration_seconds: {video['duration_seconds']}")
+        if video.get("view_count"):
+            frontmatter.append(f"view_count: {video['view_count']}")
+        frontmatter += [f"caption_source: {source}", f"words: {word_count}", "---", "", f"# {title}", ""]
+        header = "\n".join(frontmatter) + "\n"
         transcript_path.write_text(header + text + "\n", encoding="utf-8")
-        fetched.append({**video, "title": title, "transcript_file": f"transcripts/{filename}", "caption_source": source, "words": len(text.split())})
+        fetched.append({**video, "title": title, "transcript_file": f"transcripts/{filename}", "caption_source": source, "words": word_count})
         print(f"  saved {transcript_path.name} ({len(text.split())} words via {source})")
         if index < len(videos):
             time.sleep(SLEEP_BETWEEN_VIDEOS_SECONDS)
