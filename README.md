@@ -144,3 +144,14 @@ scripts/
 examples/
   alex-hormozi/        # real persona built by this pipeline
 ```
+
+---
+
+<details>
+<summary>🧠 AI Context</summary>
+
+This project uses the [project-knowledge](https://github.com/YahyaZekry/claude-code-skills) skill to maintain a `.project-knowledge/` folder — a living, AI-readable map of the codebase. Every AI session loads only the files relevant to the current task instead of scanning from scratch.
+
+Built by [Yahya Zekry](https://github.com/YahyaZekry/claude-code-skills).
+
+</details>
