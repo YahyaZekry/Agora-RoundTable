@@ -67,7 +67,12 @@ If the short names collide with another plugin, use the namespaced form:
    voice & delivery, core beliefs (with verbatim quotes), named frameworks with their
    actual steps, coaching style, signature quotes, a Deep-Dive Sources index, and
    embodiment rules.
-5. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
+5. **Check `inbox/`** — every invocation, cache hit or not: anything you've dropped in
+   yourself (notes, a dossier, a PDF) gets extracted into the matching
+   `research/<domain>.md`, same as step 3's findings — a manifest
+   (`inbox/_sync-status.md`) tracks what's already been folded in so nothing gets
+   re-processed every time.
+6. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
    their real content; when it extrapolates beyond it, it says so in their voice. For
    anything deeper than the persona file's compressed summary, Claude matches the
    question's topic to a domain and reads that `research/<domain>.md` live — a
@@ -75,8 +80,9 @@ If the short names collide with another plugin, use the namespaced form:
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
 falling back to `~/.claude/talk-to-anyone/personas/`. Each contains `persona.md`,
-`videos.json`, the raw `transcripts/` (mined into `research/`, then archival), and
-`research/` — one flat file per domain, the persisted depth behind the summary.
+`videos.json`, the raw `transcripts/` (mined into `research/`, then archival),
+`research/` (one flat file per domain, the persisted depth behind the summary), and
+`inbox/` — drop your own files there any time; they'll be folded in next `/coach` call.
 
 ## What it feels like
 

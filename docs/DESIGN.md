@@ -67,6 +67,18 @@ case that never actually happened and just added visual clutter for no benefit �
 domain's research genuinely outgrows one file later, that's a deliberate restructure
 then, not a default now.
 
+**v1.2.2 (2026-08-10, same day)** — added `inbox/` and Step 5.5. A user dropping their
+own notes/dossier/PDF about a person for the AI to fold into that person's research
+isn't Obsidian-specific or specific to any particular setup — it's a generically
+useful capability, so it belongs in the plugin itself, not bolted on by
+external tooling. `DATA_DIR/<slug>/inbox/` is now standard folder shape, created on
+every build; Step 5.5 checks it on *every* `/coach` invocation, cache hit or not, and
+extracts anything new straight into `research/<domain>.md` — same mechanism Step 4
+already uses. Tracked via `inbox/_sync-status.md` (a manifest, not frontmatter — PDFs
+can't hold YAML frontmatter, so this needed to be uniform across file types anyway).
+`/coach-refresh` clears the manifest (not the dropped files) so a refresh re-extracts
+everything current in `inbox/`.
+
 Explicitly out of scope: noticing/incorporating pre-existing files a user already has
 sitting in a persona's folder before a build. That's a separate concern from this
 plugin's own research pipeline — left to whatever's managing that folder externally

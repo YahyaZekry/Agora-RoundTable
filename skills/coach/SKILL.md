@@ -41,7 +41,7 @@ thing (Alex Hormozi: business offers/pricing, lead generation, content creation 
 a split that isn't there. This list drives how Step 4's research gets organized on disk.
 
 Check the cache: if `DATA_DIR/<slug>/persona.md` exists, read it and **skip straight to
-Step 5**. Mention it loaded from cache in one line.
+Step 5.5**. Mention it loaded from cache in one line.
 
 The persona is built from TWO source streams, always both: their spoken content
 (Steps 2-3, when any exists) and deep web research (Step 4, every build). YouTube is
@@ -138,6 +138,41 @@ route a question to the right domain. Don't list `transcripts/` here; it's mined
 archival raw material, not a live reference target. Save the whole thing to
 `DATA_DIR/<slug>/persona.md`.
 
+## Step 5.5 — Check `inbox/` for user-dropped material (every invocation, cache hit or not)
+
+`DATA_DIR/<slug>/inbox/` is a standing part of the folder shape, not something bolted
+on later — ensure it exists (create it, empty, if missing). It's where the user can
+drop their own files (notes, a dossier, a PDF) for you to fold into this persona's
+research, independent of anything you fetched yourself.
+
+Read `inbox/_sync-status.md` if it exists — a manifest table: file, last-synced date,
+which `research/<domain-slug>.md` it was extracted into (PDFs can't hold YAML
+frontmatter, so this manifest is the tracking mechanism for everything in `inbox/`,
+not per-file frontmatter). Treat any file with no entry, or modified after its logged
+date, as needing extraction. No manifest yet and no files in `inbox/`? Nothing to do —
+move on silently.
+
+For each file needing extraction:
+- Check `persona.md`'s Deep-Dive Sources for which domains already exist.
+- **Text files:** read in full. Extract real content — mechanisms, named frameworks,
+  verbatim quotes, stories — and merge it into the matching `research/<domain>.md`,
+  genuinely integrated into its existing structure, not pasted as a raw dump. If
+  nothing existing fits, create `research/<new-domain-slug>.md` and add it to
+  `persona.md`'s Deep-Dive Sources, same as Step 4 would.
+- **PDFs:** read only the first 1-3 pages (a `pages` range — never the whole file).
+  Extract what those pages show into the matching `research/<domain>.md`, labeled
+  with the source and how many pages remain unread, so a later pass can go further
+  with a `pages` range if a question needs it.
+- **Light touch only on `persona.md` itself:** pull at most a couple of the most
+  distinctive new elements (a quote, a genuinely new framework name) into its
+  compressed sections. The real depth belongs in `research/`, not duplicated into
+  the summary.
+- Update `inbox/_sync-status.md`: filename, today's date, which `research/` file(s)
+  it went into. Create the manifest if this is its first entry.
+
+Mention in one line if anything was newly synced ("also pulled in 2 new notes from
+inbox/"). Nothing to sync → say nothing, don't narrate a no-op.
+
 ## Step 6 — Become them
 
 Adopt the persona NOW and for the rest of the conversation:
@@ -159,5 +194,6 @@ Adopt the persona NOW and for the rest of the conversation:
    section for that domain's `research/<domain-slug>.md`, and READ it live before
    answering — this is a topic lookup, not a vague depth judgment call. Don't guess
    from the compressed version when the real material is sitting right there on disk.
-   `transcripts/` has already been mined into `research/` — no need to re-read it
-   unless a research file explicitly flags something it didn't capture.
+   `transcripts/` and `inbox/` have already been mined into `research/` (Step 4 and
+   Step 5.5) — no need to re-read either unless a research file explicitly flags
+   something it didn't capture.
