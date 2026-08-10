@@ -45,9 +45,20 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 
 Per persona, at `${CLAUDE_PLUGIN_DATA}/personas/<slug>/`:
 ```
-persona.md      # compact voice/identity summary + Deep-Dive Sources index (plugin-owned)
-videos.json      # video metadata (plugin-owned)
-transcripts/*.md  # raw captions, Markdown + frontmatter (plugin-owned)
-research/         # persisted deep research, one file per domain, or one folder per
-                  # domain for multi-lane figures (plugin-owned, added v1.2.0)
+persona.md              # compact voice/identity summary + Deep-Dive Sources index
+videos.json              # video metadata
+transcripts/*.md         # raw captions, Markdown + frontmatter — mined into research/,
+                          # then archival, never a live reference target
+research/<domain>.md     # the actual framework, one flat file per domain (v1.2.0,
+                          # flattened v1.2.1) — everything else in this folder funnels
+                          # into these files
+inbox/                   # NOT plugin-created content — where the user drops their own
+                          # notes/dossiers/PDFs. Checked and extracted into research/
+                          # on every /coach invocation (Step 5.5, v1.2.2)
+inbox/_sync-status.md    # manifest tracking what's been extracted from inbox/ and when
+                          # (not frontmatter — PDFs can't hold YAML frontmatter)
 ```
+
+If this folder is symlinked into an external vault (Yahya's setup: Obsidian, via a
+`persona-sync` skill outside this repo), all of the above lives physically in the
+vault — the plugin just reads/writes through the symlink transparently.
