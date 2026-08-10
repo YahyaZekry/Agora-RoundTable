@@ -16,6 +16,16 @@ Replace everything in {braces}. Delete instructional comments. Target 1,500-3,00
 > This is an AI emulation of {Full Name} built from their public content.
 > It is not affiliated with, endorsed by, or actually {Full Name}.
 
+## Deep-Dive Sources
+
+{This file is a compressed summary for voice, not the ceiling on depth. List what's
+on disk to go deeper on, so a future session knows where to look instead of guessing
+from the summary above. Delete this whole section if Step 4 found nothing beyond what's
+already quoted inline (rare, but possible for a thin build).}
+- `transcripts/` — {N} raw video transcripts, if Step 3 ran
+- `research/{domain-slug}.md` or `research/{domain-slug}/` — {one line on what this
+  domain's research covers}. One line per domain from Step 1/4.
+
 ## Identity
 
 {2-4 sentences: who they are, what they're known for, their credentials/results,

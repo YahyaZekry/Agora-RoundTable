@@ -41,6 +41,29 @@ the fetcher's new `--search` mode. Historical figures are in scope: their writin
 the corpus, voice reconstructed in their era's register. Effort scales adaptively
 (2-5 min builds).
 
+## v1.2.0 — domain-organized deep research (2026-08-10)
+
+Problem: `persona.md`'s 1,500-3,000-word budget is enough for voice, but Step 4's web
+research was being distilled into it and then discarded — no way to go deeper on a
+question than the compressed summary without re-researching from scratch. And a
+multi-lane figure (a marketing guru who's also a content creator) got one
+undifferentiated research pass instead of research organized by what they're actually
+known for.
+
+Fix: Step 1 now also identifies the person's 1-4 distinct domains of public authority.
+Step 4 researches per domain and **persists** findings to
+`<slug>/research/<domain-slug>.md` (single domain) or `<slug>/research/<domain-slug>/`
+(multiple domains, one folder each) instead of letting them evaporate into the
+distillation. `persona.md` gets a new "Deep-Dive Sources" section indexing what's on
+disk. Step 6 (embodiment) now reads the relevant `research/` file or a transcript live
+when a question needs more than the compressed summary can give. `/coach-refresh`
+clears `research/` along with the rest of the cache on rebuild.
+
+Explicitly out of scope: noticing/incorporating pre-existing files a user already has
+sitting in a persona's folder before a build. That's a separate concern from this
+plugin's own research pipeline — left to whatever's managing that folder externally
+(e.g. a vault-sync skill), not duplicated here.
+
 ## Failure routes
 
 - No yt-dlp → tell user the install command; web research carries the build.

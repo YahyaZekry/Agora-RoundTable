@@ -56,19 +56,26 @@ If the short names collide with another plugin, use the namespaced form:
    long-form interviews/podcasts/keynotes OF them on any channel (`--search` mode).
    `scripts/fetch_youtube.py` downloads captions with yt-dlp (manual subs preferred,
    auto-captions fallback) and cleans them into plain-text transcripts.
-3. **Deep web research** — every build: books and their core ideas, named frameworks,
-   print interviews and profiles, verified quotes, bio, common criticism. For people
-   with little or no video this is the primary source; for historical figures the
-   corpus is their own writings — letters, essays, speeches.
+3. **Deep web research** — every build, run per domain the person's actually known
+   for (a marketing guru who's also a content creator gets two research passes, not
+   one blended sweep): books and their core ideas, named frameworks, print interviews
+   and profiles, verified quotes, bio, common criticism. For people with little or no
+   video this is the primary source; for historical figures the corpus is their own
+   writings — letters, essays, speeches. Findings are **persisted to disk** per domain,
+   not just distilled and discarded.
 4. **Distill** — Claude merges both streams into a structured persona file: identity,
    voice & delivery, core beliefs (with verbatim quotes), named frameworks with their
-   actual steps, coaching style, signature quotes, and embodiment rules.
+   actual steps, coaching style, signature quotes, a Deep-Dive Sources index, and
+   embodiment rules.
 5. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
-   their real content; when it extrapolates beyond it, it says so in their voice.
+   their real content; when it extrapolates beyond it, it says so in their voice. For
+   anything deeper than the persona file's compressed summary, Claude reads the
+   relevant `research/` file or a transcript live rather than guessing.
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
 falling back to `~/.claude/talk-to-anyone/personas/`. Each contains `persona.md`,
-`videos.json`, and the raw `transcripts/`.
+`videos.json`, the raw `transcripts/`, and `research/` (one file per domain, or one
+folder per domain for multi-lane figures) — the persisted depth behind the summary.
 
 ## What it feels like
 

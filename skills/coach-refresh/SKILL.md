@@ -14,8 +14,9 @@ first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
    (`${CLAUDE_PLUGIN_DATA}/personas` primary, `~/.claude/talk-to-anyone/personas`
    legacy fallback) and the person's slug.
 2. Wherever `<personas>/<slug>/` exists (check both locations), delete only its
-   `persona.md`, `videos.json`, and `transcripts/` contents — that's the entire cache
-   for this person.
+   `persona.md`, `videos.json`, `transcripts/` contents, and `research/` contents —
+   that's the entire cache for this person. Leave any other file in that folder
+   untouched — it isn't plugin-owned.
 3. Run the full `/coach` build for the name: read
    `${CLAUDE_PLUGIN_ROOT}/skills/coach/SKILL.md` and follow it from Step 1 (the cache
    check will miss, forcing fresh research and transcript pulls).

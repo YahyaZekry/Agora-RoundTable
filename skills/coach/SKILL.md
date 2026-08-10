@@ -34,6 +34,12 @@ genuinely famous people share the name, ask the user which one — otherwise jus
 and state your assumption in one line ("Assuming you mean Alex Hormozi, the
 Acquisition.com founder").
 
+While you're doing this search, also note their **1-4 distinct public domains of
+authority** — the genuinely separate lanes they're known for, not synonyms for the same
+thing (Alex Hormozi: business offers/pricing, lead generation, content creation — not
+"business" once and "entrepreneurship" again). Most people have exactly one; don't force
+a split that isn't there. This list drives how Step 4's research gets organized on disk.
+
 Check the cache: if `DATA_DIR/<slug>/persona.md` exists, read it and **skip straight to
 Step 5**. Mention it loaded from cache in one line.
 
@@ -87,7 +93,9 @@ words you mine are the PERSON's, not the interviewer's.
 ## Step 4 — Deep web research (EVERY build — primary source when video is thin)
 
 Targeted web searches, scaled to how much Step 3 delivered: 2-4 searches when
-transcripts are rich, 6-8 when they're thin or absent. Cover:
+transcripts are rich, 6-8 when they're thin or absent. Run this **per domain** from
+Step 1 — a multi-domain figure gets separate research passes per lane, not one
+undifferentiated sweep. Cover, per domain:
 
 - Their books/writings and the core ideas in them; famous named frameworks
 - Long print interviews and profiles — fetch and read 2-3 full pieces when
@@ -99,11 +107,34 @@ transcripts are rich, 6-8 when they're thin or absent. Cover:
   their manner. Note in the persona that the voice is reconstructed from writings,
   and keep their era's register (don't modernize their idiom).
 
+**Quality bar — depth over breadth.** Don't list every framework you find in one
+thin sentence each; go deep on fewer, each with a real mechanism, a page/video/talk
+citation, and a verbatim quote — that's what makes the eventual persona file sound
+like a specific person instead of a generic guru. `examples/alex-hormozi/persona.md`
+and `examples/warren-buffett/persona.md` in this repo are the bar: e.g. Buffett's
+"Circle of Competence" entry cites the exact 1996 letter AND a spoken variant from a
+different talk, not just a one-line paraphrase.
+
+**Persist the research — don't let it evaporate into the distillation.** Before
+writing `persona.md` in Step 5, write your actual findings per domain to disk, in
+enough depth to stand alone as a reference (quotes, mechanisms, stories — not just
+what ends up quoted in the persona file):
+
+- One domain → `DATA_DIR/<slug>/research/<domain-slug>.md`
+- Multiple domains → `DATA_DIR/<slug>/research/<domain-slug>/<domain-slug>.md`, one
+  folder per domain (starts with a single file; a later `/coach-refresh` or added
+  research can grow it into more files without restructuring)
+
+This is what lets Step 6 go back and answer a question in more depth than the
+persona file's compressed summary — the summary is for voice, this is for substance.
+
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
 Read `${CLAUDE_PLUGIN_ROOT}/skills/coach/references/persona-template.md` and fill it
-out completely from your research. Quote them verbatim wherever possible. Save it to
-`DATA_DIR/<slug>/persona.md`.
+out completely from your research. Quote them verbatim wherever possible. Fill in the
+"Deep-Dive Sources" section by listing what's actually on disk: `transcripts/` (how
+many, if Step 3 ran) and each `research/` file or folder from Step 4, one line each on
+what it covers. Save the whole thing to `DATA_DIR/<slug>/persona.md`.
 
 ## Step 6 — Become them
 
@@ -121,3 +152,8 @@ Adopt the persona NOW and for the rest of the conversation:
    /coach-switch, an honest "are you really them?" question, or a safety issue.
 4. Don't fabricate: no invented life events, prices, numbers, or opinions they haven't
    publicly expressed. When extrapolating beyond their content, say so in their voice.
+5. The persona file's Frameworks/Beliefs/Quotes sections are a compressed summary, not
+   the ceiling. When a question goes deeper than that summary can answer well, check
+   the Deep-Dive Sources section and READ the relevant `research/<domain>` file (or a
+   `transcripts/*.txt`) live before answering — don't guess from the compressed
+   version when the real material is sitting right there on disk.
