@@ -14,7 +14,14 @@
 
 ## Fixed
 
-*(none — all sessions so far have been feature/design work, no bugs)*
+- **Silent content loss from double-summarization** — two separate real persona builds
+  (Alex Hormozi, David Goggins) had research written by compressing a subagent's
+  *report* of the primary transcripts instead of the transcripts themselves. Both
+  looked complete on read-through; both had real gaps (Goggins: 2 entire named
+  frameworks missing outright, every origin story flattened to generic paraphrase, one
+  fabricated quote) caught only by an independent verification pass against the raw
+  sources. Not a one-off mistake — structural (two lossy hops compound even when each
+  looks fine alone). *(fixed: 2026-08-11, v1.2.3 — Step 4.5)*
 
 ---
 

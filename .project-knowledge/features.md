@@ -18,10 +18,11 @@
 1. Identify the real person + their 1-4 distinct domains of public authority — Step 1 *(domain identification added v1.2.0)*
 2. Find their spoken content, if any (own channel, or interviews of them elsewhere) — Step 2
 3. Pull real transcripts via `scripts/fetch_youtube.py`, write `transcripts/*.md` — Step 3
-4. Deep web research, run per domain, persisted flat to `research/<domain-slug>.md` — Step 4 *(persistence v1.2.0, flattened v1.2.1)*
-5. Distill everything into `persona.md`, including a Deep-Dive Sources index listing each `research/` file — Step 5
-6. **Check `inbox/`** — every invocation, cache hit or fresh build alike: extract anything Yahya dropped in (notes, a dossier, a PDF) into the matching `research/<domain>.md`, tracked via `inbox/_sync-status.md` — Step 5.5 *(added v1.2.2)*
-7. Embody: one-time handoff line, then speak in character; for anything deeper than the compressed summary, match the question's topic to a domain and read that `research/<domain>.md` live — a lookup, not a guess — Step 6 *(live-read v1.2.0, made topic-matched + transcripts/inbox excluded v1.2.1/v1.2.2)*
+4. Deep web research, run per domain, persisted flat to `research/<domain-slug>.md` — Step 4 *(persistence v1.2.0, flattened v1.2.1)*. Written directly by whoever read the primary source — never a compressed report handed to someone else to write from (that lossy hop is what Step 4.5 exists to catch when it slips through anyway).
+5. **Verify `research/<domain-slug>.md` against the actual sources, independently, before proceeding** — mandatory, not skippable — Step 4.5 *(added v1.2.3, after real content loss found on two separate builds)*
+6. Distill everything into `persona.md`, including a Deep-Dive Sources index listing each `research/` file — Step 5
+7. **Check `inbox/`** — every invocation, cache hit or fresh build alike: extract anything Yahya dropped in (notes, a dossier, a PDF) into the matching `research/<domain>.md`, tracked via `inbox/_sync-status.md` — Step 5.5 *(added v1.2.2)*. Read in full by whoever's doing the extraction directly — same no-delegated-summary rule as Step 4.
+8. Embody: one-time handoff line, then speak in character; for anything deeper than the compressed summary, match the question's topic to a domain and read that `research/<domain>.md` live — a lookup, not a guess — Step 6 *(live-read v1.2.0, made topic-matched + transcripts/inbox excluded v1.2.1/v1.2.2)*
 
 **Cache-hit path (`/coach <name>` again)**
 Skips straight to Step 5.5 — so even an already-built persona picks up anything newly
