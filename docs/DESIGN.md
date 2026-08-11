@@ -79,6 +79,21 @@ can't hold YAML frontmatter, so this needed to be uniform across file types anyw
 `/coach-refresh` clears the manifest (not the dropped files) so a refresh re-extracts
 everything current in `inbox/`.
 
+**v1.2.3 (2026-08-11)** — added Step 4.5, a mandatory verification pass. Problem
+found in practice, twice, on two different persona builds: research written by
+compressing a subagent's *report* of the transcripts (rather than the transcripts
+themselves) silently dropped named frameworks, origin stories, and specific numbers —
+and once fabricated a quote that doesn't appear anywhere in the source. The failure
+mode is structural, not a one-off: two summarization hops (source → report,
+report → research file) compound losses even when each hop looks reasonable alone.
+Fix: (1) Step 4 and Step 5.5 now say explicitly not to summarize a summary — whoever
+reads the primary source writes `research/<domain>.md` directly; (2) Step 4.5 is a
+separate, mandatory, independent check of `research/<domain>.md` against the actual
+sources, every build, before `persona.md` gets written from it. Both times this was
+run retroactively as a one-off "let's double check" pass, it found real gaps in
+minutes — the fix is making that pass unskippable, not relying on someone getting
+suspicious enough to ask for it.
+
 Explicitly out of scope: noticing/incorporating pre-existing files a user already has
 sitting in a persona's folder before a build. That's a separate concern from this
 plugin's own research pipeline — left to whatever's managing that folder externally

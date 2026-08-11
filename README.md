@@ -63,16 +63,21 @@ If the short names collide with another plugin, use the namespaced form:
    video this is the primary source; for historical figures the corpus is their own
    writings — letters, essays, speeches. Findings are **persisted to disk** per domain,
    not just distilled and discarded.
-4. **Distill** — Claude merges both streams into a structured persona file: identity,
+4. **Verify** — every build, mandatory: checks the just-written research against the
+   actual transcripts and sources fresh, not against its own summary. Catches named
+   frameworks dropped entirely, origin stories flattened to generic paraphrase, and
+   quotes that don't actually appear verbatim where credited — real failure modes,
+   caught in practice, not hypothetical.
+5. **Distill** — Claude merges both streams into a structured persona file: identity,
    voice & delivery, core beliefs (with verbatim quotes), named frameworks with their
    actual steps, coaching style, signature quotes, a Deep-Dive Sources index, and
    embodiment rules.
-5. **Check `inbox/`** — every invocation, cache hit or not: anything you've dropped in
+6. **Check `inbox/`** — every invocation, cache hit or not: anything you've dropped in
    yourself (notes, a dossier, a PDF) gets extracted into the matching
    `research/<domain>.md`, same as step 3's findings — a manifest
    (`inbox/_sync-status.md`) tracks what's already been folded in so nothing gets
    re-processed every time.
-6. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
+7. **Embody** — Claude speaks as them until you end or switch. Advice is grounded in
    their real content; when it extrapolates beyond it, it says so in their voice. For
    anything deeper than the persona file's compressed summary, Claude matches the
    question's topic to a domain and reads that `research/<domain>.md` live — a

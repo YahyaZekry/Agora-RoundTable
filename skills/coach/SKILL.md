@@ -123,10 +123,39 @@ what ends up quoted in the persona file): one flat file per domain,
 domain's research later grows large enough to genuinely need splitting into multiple
 files, that's a deliberate restructure at that point, not a default.
 
+**Don't summarize a summary.** If you delegate reading the transcripts or a batch of
+web sources to a subagent, that subagent should write `research/<domain-slug>.md`
+directly — not hand back a prose report for you to compress a second time. Two
+summarization hops (source → report, report → research file) reliably drops named
+frameworks, origin stories, and specific numbers, even when each hop looks reasonable
+in isolation. This has caused real content loss in practice — not a hypothetical risk.
+
 This is what lets Step 6 go back and answer a question in more depth than the
 persona file's compressed summary — the summary is for voice, this is for substance.
 `transcripts/` is raw intake, mined into these `research/` files — not a second
 reference target once mining is done.
+
+## Step 4.5 — Verify research against primary sources (every build, mandatory)
+
+Before writing `persona.md`, independently check what Step 4 actually produced. This
+is not optional and not skippable because the research "looks complete" — a build
+that reads as thorough can still have silently dropped real content, and the only way
+to catch that is checking against the primary sources fresh, not re-reading your own
+summary and nodding along.
+
+For each `research/<domain-slug>.md` file: go back to the actual sources it's built
+from (`transcripts/*.md`, and re-verify specific web claims) and check for:
+- A named framework or concept the person teaches that's present in a source but
+  missing from `research/` entirely — not paraphrased differently, genuinely absent.
+- An origin story or specific number (a date, a dollar figure, a rep count) that's in
+  the source but got flattened into a generic paraphrase in `research/`.
+- A quote attributed as verbatim that doesn't actually appear in that form in the
+  source it's credited to — check wording precisely, don't assume a close paraphrase
+  is the real quote.
+
+If you find gaps, fix `research/<domain-slug>.md` before moving on — don't note the
+gap and proceed anyway. Only once this check is clean does Step 5 read as trustworthy
+input rather than a first draft.
 
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
@@ -154,11 +183,14 @@ move on silently.
 
 For each file needing extraction:
 - Check `persona.md`'s Deep-Dive Sources for which domains already exist.
-- **Text files:** read in full. Extract real content — mechanisms, named frameworks,
-  verbatim quotes, stories — and merge it into the matching `research/<domain>.md`,
-  genuinely integrated into its existing structure, not pasted as a raw dump. If
-  nothing existing fits, create `research/<new-domain-slug>.md` and add it to
-  `persona.md`'s Deep-Dive Sources, same as Step 4 would.
+- **Text files:** read in full YOURSELF — don't delegate this to a subagent and merge
+  in its report; that's the same summary-of-a-summary loss Step 4.5 exists to catch,
+  and this step doesn't get a separate verification pass. Extract real content —
+  mechanisms, named frameworks, verbatim quotes, stories — and merge it into the
+  matching `research/<domain>.md`, genuinely integrated into its existing structure,
+  not pasted as a raw dump. If nothing existing fits, create
+  `research/<new-domain-slug>.md` and add it to `persona.md`'s Deep-Dive Sources, same
+  as Step 4 would.
 - **PDFs:** read only the first 1-3 pages (a `pages` range — never the whole file).
   Extract what those pages show into the matching `research/<domain>.md`, labeled
   with the source and how many pages remain unread, so a later pass can go further
