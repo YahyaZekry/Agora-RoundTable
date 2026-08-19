@@ -58,3 +58,23 @@
   vault-side tooling since the plugin has no concept of "vault" and shouldn't gain one.
   *(2026-08-10, v1.2.2, supersedes the "explicitly out of scope" decision from earlier
   the same day)*
+- **Verification has to cover sourcing and coverage, not just accuracy.** Step 4.5
+  (v1.2.3) was built to catch content loss and fabricated quotes, and it does. Running
+  it retroactively against the Hormozi persona — built before it existed — found
+  neither: every verbatim traced word-for-word. It found two things Step 4.5 was blind
+  to instead. (1) `inbox/_sync-status.md` recorded *whether* a file was synced but not
+  *how much* of it was extracted, so a 13-concept dossier logged as done after 5
+  permanently stopped later passes from looking — Step 5.5, Step 4.5 and
+  `/coach-refresh` all trust that manifest, so a false "complete" is terminal, worse
+  than no entry. Coverage is now a required column, defensible by walking the source's
+  structure; partial is the default for anything sampled and is itself a re-extraction
+  trigger. (2) Step 4.5 compared `research/` against its sources but never asked which
+  claims had *no* source in the folder — book frameworks recalled from training rather
+  than read from anything present. That's the hardest class to catch precisely because
+  the claims are usually true; the defect is presenting them as sourced. They're now
+  relocated to a labeled section rather than deleted, so Step 6 hedges instead of
+  quoting. *(2026-08-19, v1.2.4)*
+- **A retroactive verification pass is worth running on every persona built before
+  v1.2.3, not just ones that feel thin.** Hormozi felt fine and read fine — the gaps
+  were 8 unmined concepts and 5 unsourced frameworks, invisible from the output side.
+  *(2026-08-19)*

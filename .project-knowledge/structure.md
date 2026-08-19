@@ -55,7 +55,7 @@ research/<domain>.md     # the actual framework, one flat file per domain (v1.2.
 inbox/                   # NOT plugin-created content — where the user drops their own
                           # notes/dossiers/PDFs. Checked and extracted into research/
                           # on every /coach invocation (Step 5.5, v1.2.2)
-inbox/_sync-status.md    # manifest tracking what's been extracted from inbox/ and when
+inbox/_sync-status.md    # manifest: file, date, coverage (complete/partial), target research/ file
                           # (not frontmatter — PDFs can't hold YAML frontmatter)
 ```
 

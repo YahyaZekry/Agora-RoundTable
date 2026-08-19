@@ -1,9 +1,9 @@
 # talk-to-anyone — Knowledge Index
 
-> Last updated: 2026-08-10
+> Last updated: 2026-08-19
 > Status: Active
 > Stack: Claude Code plugin (5 Markdown skills + 1 Python script), zero runtime services
-> Current goal: push v1.2.0 (domain-organized research persistence) to `origin` and repoint the installed plugin from upstream to this fork so it's actually live
+> Current goal: none active — v1.2.4 is live on `origin/main` and proposed upstream in PR #1
 
 ## What This Project Does
 
