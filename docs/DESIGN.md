@@ -94,6 +94,22 @@ run retroactively as a one-off "let's double check" pass, it found real gaps in
 minutes — the fix is making that pass unskippable, not relying on someone getting
 suspicious enough to ask for it.
 
+**v1.2.4 (2026-08-19)** — closed two holes Step 4.5 didn't cover, both found by
+running the v1.2.3 verification pass retroactively against a persona built before it
+existed. (1) The manifest could lie: `_sync-status.md` recorded a file as synced with
+no notion of *how much* of it was extracted, and a dossier with 13 concepts had been
+logged as done after 5 — which then stopped every later pass from looking, since Step
+5.5, Step 4.5 and `/coach-refresh` all trust the manifest. Fix: coverage is now a
+required manifest column, defensible by walking the source's actual structure, with
+partial the default for anything sampled (every PDF). (2) Step 4.5 checked what
+`research/` said against its sources but never checked for claims with *no* source in
+the folder — frameworks recalled from the person's books rather than read from
+anything present. Those are the hardest class to spot, because they're usually true;
+the defect is presenting them as sourced. Fix: a fourth check that relocates them to a
+labeled section instead of deleting them, so embodiment hedges rather than quotes.
+Step 4.5 also now names `inbox/` as a source to verify against, not just
+`transcripts/` and web claims.
+
 Explicitly out of scope: noticing/incorporating pre-existing files a user already has
 sitting in a persona's folder before a build. That's a separate concern from this
 plugin's own research pipeline — left to whatever's managing that folder externally

@@ -144,7 +144,8 @@ to catch that is checking against the primary sources fresh, not re-reading your
 summary and nodding along.
 
 For each `research/<domain-slug>.md` file: go back to the actual sources it's built
-from (`transcripts/*.md`, and re-verify specific web claims) and check for:
+from (`transcripts/*.md`, anything in `inbox/`, and re-verify specific web claims) and
+check for:
 - A named framework or concept the person teaches that's present in a source but
   missing from `research/` entirely — not paraphrased differently, genuinely absent.
 - An origin story or specific number (a date, a dollar figure, a rep count) that's in
@@ -152,6 +153,12 @@ from (`transcripts/*.md`, and re-verify specific web claims) and check for:
 - A quote attributed as verbatim that doesn't actually appear in that form in the
   source it's credited to — check wording precisely, don't assume a close paraphrase
   is the real quote.
+- A claim with **no source in this folder at all** — a framework you know from the
+  person's books or general reputation rather than from anything you actually read.
+  These are the easiest to miss because they're usually correct-sounding and often
+  true; the problem is that `research/` presents them as sourced. Don't delete them —
+  move them to a clearly labeled "no primary source in this folder" section at the
+  end of the file, so Step 6 knows to hedge instead of quoting.
 
 If you find gaps, fix `research/<domain-slug>.md` before moving on — don't note the
 gap and proceed anyway. Only once this check is clean does Step 5 read as trustworthy
@@ -175,11 +182,11 @@ drop their own files (notes, a dossier, a PDF) for you to fold into this persona
 research, independent of anything you fetched yourself.
 
 Read `inbox/_sync-status.md` if it exists — a manifest table: file, last-synced date,
-which `research/<domain-slug>.md` it was extracted into (PDFs can't hold YAML
-frontmatter, so this manifest is the tracking mechanism for everything in `inbox/`,
-not per-file frontmatter). Treat any file with no entry, or modified after its logged
-date, as needing extraction. No manifest yet and no files in `inbox/`? Nothing to do —
-move on silently.
+**coverage**, which `research/<domain-slug>.md` it was extracted into (PDFs can't hold
+YAML frontmatter, so this manifest is the tracking mechanism for everything in
+`inbox/`, not per-file frontmatter). Treat any file with no entry, modified after its
+logged date, **or logged as partial**, as needing extraction. No manifest yet and no
+files in `inbox/`? Nothing to do — move on silently.
 
 For each file needing extraction:
 - Check `persona.md`'s Deep-Dive Sources for which domains already exist.
@@ -199,8 +206,17 @@ For each file needing extraction:
   distinctive new elements (a quote, a genuinely new framework name) into its
   compressed sections. The real depth belongs in `research/`, not duplicated into
   the summary.
-- Update `inbox/_sync-status.md`: filename, today's date, which `research/` file(s)
-  it went into. Create the manifest if this is its first entry.
+- Update `inbox/_sync-status.md`: filename, today's date, coverage, which `research/`
+  file(s) it went into. Create the manifest if this is its first entry.
+
+**Coverage is a claim you have to be able to defend.** Before logging a file as
+complete, walk its actual structure — its headings, sections, chapters — and confirm
+each one has a counterpart in `research/`. Anything you skipped, sampled, or read only
+part of (every PDF, by definition) is logged as **partial**, naming what's left: "pages
+1-3 of ~10 read," "concepts I, III-VI extracted; II and VII-XIII not yet." A partial
+extraction logged as complete is worse than no entry at all — it's the one thing that
+stops a later pass from ever looking again, and neither Step 4.5 nor a `/coach-refresh`
+will catch it, because both trust this manifest.
 
 Mention in one line if anything was newly synced ("also pulled in 2 new notes from
 inbox/"). Nothing to sync → say nothing, don't narrate a no-op.
