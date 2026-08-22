@@ -7,15 +7,17 @@ one-on-one — or open a roundtable and have multiple minds respond to you simul
 debate each other, and synthesize their expertise around your question.
 
 ```
-/coach thomas harris         → talk to the author of Red Dragon one-on-one
-/roundtable thomas harris, gillian flynn, dennis lehane
-                             → open a roundtable of three minds at once
-/discuss whose POV for the opening scene?
+/coach alex hormozi          → business coaching from Alex Hormozi
+/coach marcus aurelius       → no video — built from his actual writings
+/roundtable elon musk, steve jobs, warren buffett
+                             → three minds, one conversation
+/discuss what's the biggest mistake founders make?
                              → they debate it; Claude synthesizes
 ```
 
 Build a persona once from their real interviews, books, transcripts, and writings.
-Then summon them any time — solo or together.
+Then summon them any time — solo or together. Works for anyone with a public
+footprint, living or historical.
 
 ## Install
 
@@ -45,6 +47,31 @@ spoken voice mined from transcripts.
 
 If the short names collide with another plugin, use the namespaced form:
 `/agora-roundtable:coach <name>`.
+
+## Architecture
+
+```mermaid
+flowchart TD
+    A(["/coach &lt;name&gt;"]) --> B{Persona cached?}
+    B -- Yes --> C[Check inbox/\nfor new files]
+    B -- No --> D[Identify person\n+ map domains]
+    D --> E[Fetch YouTube\ntranscripts]
+    E --> F[Deep web research\nper domain]
+    F --> G[Verify research\nvs. sources]
+    G --> H[Distill into\npersona.md]
+    H --> C
+    C --> I([Embody — speak as them])
+
+    J(["/roundtable &lt;name1&gt;, &lt;name2&gt;, ..."]) --> K{All personas built?}
+    K -- No --> L([Tell user to /coach\nmissing names first])
+    K -- Yes --> M[Write\nroundtable-session.json]
+    M --> N([Facilitation mode])
+
+    N --> O{Message type?}
+    O -- "@name ..." --> P[One coach responds]
+    O -- "/discuss topic" --> Q[Each coach reacts\nto each other →\nFacilitator synthesizes]
+    O -- General --> R[All coaches respond\nin sequence]
+```
 
 ## How it works
 
