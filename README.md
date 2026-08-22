@@ -26,7 +26,7 @@ minutes and every one after loads instantly.
 ## Install
 
 ```
-/plugin marketplace add YahyaZekry/agora-roundtable
+/plugin marketplace add YahyaZekry/Agora-RoundTable
 /plugin install agora-roundtable@agora-roundtable
 ```
 
@@ -167,7 +167,7 @@ original work. The roundtable feature and ongoing development are by
 | `yt-dlp is not installed` | `brew install yt-dlp` (or `pip3 install --user yt-dlp`), then `/coach-refresh <name>` |
 | Zero transcripts fetched | Channel may have captions disabled or region-blocked; persona builds from web research instead |
 | Wrong person picked | `/coach-refresh` with a more specific name ("the podcaster", "the founder of X") |
-| Commands not showing | `/plugin` → verify talk-to-anyone is installed + enabled, then restart Claude Code |
+| Commands not showing | `/plugin` → verify agora-roundtable is installed + enabled, then restart Claude Code |
 
 ## Repo layout
 
