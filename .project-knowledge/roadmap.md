@@ -4,10 +4,10 @@
 
 ## Current Goal
 
-None active — v1.2.4 is live on `origin/main` (`f378d98`) and the installed plugin
-already points at this fork. The plugin is self-sufficient end to end: build, deep
-research, inbox extraction, verification, embodiment. First upstream PR is open:
-coltonjosephdean-rgb/talk-to-anyone#1.
+v2.0.0 built, not yet pushed. Roundtable feature complete. Repo detached from fork
+(now `YahyaZekry/talk-to-anyone`, independent, MIT attributed). Blocked on name
+decision — Yahya is choosing between keeping `talk-to-anyone` or renaming to something
+like `summon` or `council`. Name decision gates the push.
 
 ---
 
@@ -19,10 +19,18 @@ coltonjosephdean-rgb/talk-to-anyone#1.
 
 ## Active TODOs
 
-- [ ] Reinstall the plugin from the fork to pick up v1.2.4 — `/plugin install` alone
-      doesn't pull new commits; needs a full marketplace remove+re-add, which wipes the
-      plugin data dir and breaks persona symlinks (run `persona-sync` after)
-      *(added: 2026-08-19)*
+- [ ] **Decide the plugin name** — options on the table: `summon`, `council`, keep
+      `talk-to-anyone`. Name change requires updating: both JSON manifests, fallback
+      DATA_DIR path in all skill files, command namespace prefix, GitHub repo rename,
+      README install command. *(added: 2026-08-22)*
+- [ ] **Push v2.0.0 to `origin/main`** — after name decision *(added: 2026-08-22)*
+- [ ] **Reinstall the plugin** — after push: full marketplace remove+re-add (not just
+      `/plugin install`), then `persona-sync` to recreate the symlinks the reinstall
+      wipes *(added: 2026-08-22)*
+- [ ] **Build the novel coaching personas** — Thomas Harris, Gillian Flynn, Dennis
+      Lehane, Joe Navarro. These are the first real roundtable use case. Build with
+      `/coach`, run `persona-sync`, then test `/roundtable thomas harris, gillian flynn`
+      *(added: 2026-08-22)*
 - [ ] Run the Step 4.5 pass against the Goggins persona's `inbox/` and coverage the
       same way Hormozi was checked — v1.2.3 fixed its `research/` for accuracy, but
       that was before coverage and unsourced-claim checks existed *(added: 2026-08-19)*

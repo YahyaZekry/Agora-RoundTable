@@ -17,10 +17,10 @@ If `$ARGUMENTS` is empty, ask who they want to talk to, then continue.
 Personas are cached so a person only has to be built once. Resolve `DATA_DIR` in this order:
 
 1. `${CLAUDE_PLUGIN_DATA}` — if that substituted to a real absolute path, use `<that path>/personas`
-2. Otherwise fall back to `~/.claude/talk-to-anyone/personas`
+2. Otherwise fall back to `~/.claude/agora-roundtable/personas`
 
 When READING (cache checks, loading a persona), check the primary location first and
-then `~/.claude/talk-to-anyone/personas` as a legacy fallback — personas built before
+then `~/.claude/agora-roundtable/personas` as a legacy fallback — personas built before
 the plugin was installed live there. When WRITING, always use the primary location.
 Create the directory if it doesn't exist. Slugify the person's name (lowercase,
 hyphens: "Alex Hormozi" → `alex-hormozi`) — but FIRST correct the spelling in Step 1;

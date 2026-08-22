@@ -1,17 +1,17 @@
 {
-  "name": "talk-to-anyone",
+  "name": "agora-roundtable",
   "owner": {
-    "name": "Colton Dean"
+    "name": "Yahya Zekry"
   },
   "description": "Marketplace for the Talk to Anyone coach plugin",
   "plugins": [
     {
-      "name": "talk-to-anyone",
+      "name": "agora-roundtable",
       "source": "./",
-      "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person across the web, pulls real transcripts when they have video anywhere on YouTube, builds a persona, and talks to you as them until you switch or end.",
-      "version": "1.1.0",
+      "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable runs multiple coaches simultaneously.",
+      "version": "2.0.0",
       "author": {
-        "name": "Colton Dean"
+        "name": "Yahya Zekry"
       }
     }
   ]

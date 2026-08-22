@@ -1,14 +1,21 @@
 # Features & Workflows
 
-> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-10
+> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-22
 
 ## Features
 
+**Single-coach commands:**
 - **`/coach <name>`** — build (first time) or load (cached) a persona and start talking to them in character. *(v1.0.0)*
 - **`/coach-switch <name>`** — close out the current coach, start/load a different one, no need for `/coach-end` first. *(v1.0.0)*
 - **`/coach-end`** — drop character, back to normal Claude, cache untouched. *(v1.0.0)*
 - **`/coach-list`** — show every persona already built on this machine (name, build date, source-video count). *(v1.0.0)*
 - **`/coach-refresh <name>`** — wipe a persona's plugin-owned cache (`persona.md`, `videos.json`, `transcripts/`, `research/`, and the `inbox/_sync-status.md` manifest) and rebuild from fresh research + re-extract everything currently in `inbox/`, leaving the dropped files themselves untouched. *(v1.0.0, extended v1.2.0, v1.2.2)*
+
+**Roundtable commands (v2.0.0):**
+- **`/roundtable <name1>, <name2>, ...`** — start a multi-coach session with two or more already-built personas. Coaches must exist in cache; if any are missing, the skill tells the user to build them first with `/coach`. Writes `DATA_DIR/roundtable-session.json` to persist the active roster. *(v2.0.0)*
+- **`/roundtable-add <name>`** — add a coach to an active roundtable mid-conversation. Updates the session JSON. *(v2.0.0)*
+- **`/roundtable-remove <name>`** — remove a coach from the active roundtable. If one coach remains, asks the user whether to continue or switch to `/coach`. *(v2.0.0)*
+- **`/roundtable-end`** — delete `roundtable-session.json`, drop all personas, back to normal Claude. Cache untouched. *(v2.0.0)*
 
 ---
 
@@ -33,10 +40,23 @@ A person known for genuinely separate things (e.g. marketing AND wealth philosop
 gets one flat `research/<domain-slug>.md` per domain. A single-domain figure gets just
 one file. No subfolder nesting regardless of domain count (v1.2.1).
 
+**Roundtable session state**
+
+The active roster is persisted in `DATA_DIR/roundtable-session.json`:
+```json
+{ "coaches": [{ "slug": "thomas-harris", "name": "Thomas Harris" }, ...] }
+```
+`/roundtable-add` and `/roundtable-remove` update this file mid-conversation. The
+facilitator reads it at the start of each message to know who's in the room.
+
+**Three message modes inside a roundtable:**
+1. **General** (default) — all active coaches respond in sequence, each from their domain angle, labeled `**[Name]:**`
+2. **Direct** (`@name ...`) — only the named coach responds
+3. **Facilitated discussion** (`/discuss <topic>`) — Claude routes the topic through each coach letting them react to each other, then synthesizes agreements and tensions
+
 **What's still explicitly out of scope for this repo**
-Only one thing now: moving a built persona OUT of the plugin's own data dir and INTO
-an external vault/notes system, and deciding where it belongs there. That's
-inherently specific to whatever vault-management setup the user has (a `persona-sync`
-skill, in Yahya's case) — the plugin has no concept of "vault" and shouldn't gain one,
-or it stops being portable to anyone else who installs it. *(scope re-confirmed v1.2.2,
-after inbox/extraction itself was pulled back IN — see history.md)*
+Moving a built persona OUT of the plugin's own data dir and INTO an external vault/notes
+system. That's inherently specific to whatever vault-management setup the user has (a
+`persona-sync` skill, in Yahya's case) — the plugin has no concept of "vault" and
+shouldn't gain one, or it stops being portable to anyone else who installs it.
+*(scope re-confirmed v1.2.2, v2.0.0)*

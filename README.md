@@ -26,8 +26,8 @@ minutes and every one after loads instantly.
 ## Install
 
 ```
-/plugin marketplace add coltonjosephdean-rgb/talk-to-anyone
-/plugin install talk-to-anyone@talk-to-anyone
+/plugin marketplace add YahyaZekry/agora-roundtable
+/plugin install agora-roundtable@agora-roundtable
 ```
 
 **Optional (recommended):** [yt-dlp](https://github.com/yt-dlp/yt-dlp) for transcript
@@ -44,9 +44,13 @@ spoken voice mined from transcripts.
 | `/coach-end` | Back to normal Claude |
 | `/coach-list` | Show every coach saved on this machine |
 | `/coach-refresh <name>` | Rebuild a persona from fresh research |
+| `/roundtable <name1>, <name2>, ...` | Start a session with multiple coaches simultaneously |
+| `/roundtable-add <name>` | Add a coach to an active roundtable |
+| `/roundtable-remove <name>` | Remove a coach from an active roundtable |
+| `/roundtable-end` | End the roundtable, back to normal Claude |
 
 If the short names collide with another plugin, use the namespaced form:
-`/talk-to-anyone:coach <name>`.
+`/agora-roundtable:coach <name>`.
 
 ## How it works
 
@@ -84,7 +88,7 @@ If the short names collide with another plugin, use the namespaced form:
    lookup, not a guess.
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
-falling back to `~/.claude/talk-to-anyone/personas/`. Each contains `persona.md`,
+falling back to `~/.claude/agora-roundtable/personas/`. Each contains `persona.md`,
 `videos.json`, the raw `transcripts/` (mined into `research/`, then archival),
 `research/` (one flat file per domain, the persisted depth behind the summary), and
 `inbox/` — drop your own files there any time; they'll be folded in next `/coach` call.
@@ -113,15 +117,38 @@ videos.
 | [Warren Buffett](examples/warren-buffett/persona.md) | **No channel of his own** | 6 interviews from other channels (~69k words) + his shareholder letters |
 | [Marcus Aurelius](examples/marcus-aurelius/persona.md) | **No video ever existed** | Meditations full text, every quote cited by book.section |
 
-## How this repo was built
+## Roundtable mode
 
-One overnight run of Claude Code. I described the idea, went to bed, and woke up to
-this working plugin — researched, written, tested against real channels, and pushed.
-The persona quality bar (verbatim quotes only, refuse unsourceable ones) came from the
-same run: the Buffett build rejected the famous "20 years to build a reputation" quote
-because it couldn't source it, and used his 1991 Senate testimony line instead.
+Run multiple coaches simultaneously and have them respond to your questions in their
+own voice — or use `/discuss <topic>` to have them talk *to each other*, facilitated
+by Claude.
 
-**If this made you want to try it, [star the repo](https://github.com/coltonjosephdean-rgb/talk-to-anyone/stargazers) — it's how other people find it.**
+```
+/roundtable thomas harris, gillian flynn, dennis lehane
+```
+
+Three modes inside a roundtable session:
+
+- **Ask everyone** — type normally; all coaches respond in sequence, each from their
+  domain expertise. Harris on character psychology, Flynn on what's hidden, Lehane on
+  structure.
+- **Direct to one** — `@harris what do you think about Y's opening scene?` — only
+  that coach responds.
+- **Facilitated discussion** — `/discuss whose POV should the first scene use?` —
+  Claude routes the question through each coach, lets them react to each other, then
+  synthesizes where they agreed and where they diverged.
+
+Coaches must be built first with `/coach <name>`. The roundtable session persists the
+active roster in `DATA_DIR/roundtable-session.json` so `/roundtable-add` and
+`/roundtable-remove` can modify it mid-conversation.
+
+## Attribution
+
+Based on [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
+[Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT. The core
+persona-building pipeline (Steps 1–6, the verification pass, inbox extraction) is his
+original work. The roundtable feature and ongoing development are by
+[Yahya Zekry](https://github.com/YahyaZekry).
 
 ## Honest limits
 
@@ -151,6 +178,8 @@ because it couldn't source it, and used his 1991 Senate testimony line instead.
 skills/
   coach/               # main skill + persona template
   coach-switch/  coach-end/  coach-list/  coach-refresh/
+  roundtable/          # multi-coach session
+  roundtable-add/  roundtable-remove/  roundtable-end/
 scripts/
   fetch_youtube.py     # channel/search/URLs → long-form videos → clean transcripts
 examples/

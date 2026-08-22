@@ -1,6 +1,6 @@
 # History
 
-> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-10
+> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-22
 > Past-only. Append-only — never delete entries.
 
 ## Removed
@@ -78,3 +78,23 @@
   v1.2.3, not just ones that feel thin.** Hormozi felt fine and read fine — the gaps
   were 8 unmined concepts and 5 unsourced frameworks, invisible from the output side.
   *(2026-08-19)*
+- **Detached fork, made the repo fully independent.** `YahyaZekry/talk-to-anyone` was a
+  fork of `coltonjosephdean-rgb/talk-to-anyone`. User detached it on GitHub (Settings →
+  Detach fork). `plugin.json` and `marketplace.json` updated to credit Yahya Zekry as
+  author, with a `based_on` field pointing to the original. `LICENSE` kept untouched
+  (MIT requires preserving the original copyright notice). README updated: install
+  command now points to `YahyaZekry/talk-to-anyone`, Colton's personal narrative removed,
+  attribution section added. *(2026-08-22, v2.0.0)*
+- **Added roundtable feature** — four new skills: `roundtable`, `roundtable-add`,
+  `roundtable-remove`, `roundtable-end`. Roundtable runs multiple already-built personas
+  simultaneously. The facilitator (Claude, out of character) handles three message types:
+  general (all coaches respond in sequence), direct (@name routes to one), and
+  /discuss (structured facilitated exchange where coaches react to each other, followed
+  by a synthesis). Session state persisted in `DATA_DIR/roundtable-session.json` so
+  add/remove can modify the roster mid-conversation. Coaches must be pre-built — the
+  skill does not auto-build, it tells the user to run `/coach <name>` first. Bumped to
+  v2.0.0. *(2026-08-22)*
+- **Plugin name still undecided.** Candidates: keep `talk-to-anyone`, rename to
+  `summon` (evocative — you summon any mind across time), or `council` (emphasizes the
+  roundtable/advisory-board dimension). Name gates the push — everything else is ready.
+  *(2026-08-22)*

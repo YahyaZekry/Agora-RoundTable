@@ -1,17 +1,22 @@
-# talk-to-anyone — Knowledge Index
+# Agora RoundTable — Knowledge Index
 
-> Last updated: 2026-08-19
+> Last updated: 2026-08-22
 > Status: Active
-> Stack: Claude Code plugin (5 Markdown skills + 1 Python script), zero runtime services
-> Current goal: none active — v1.2.4 is live on `origin/main` and proposed upstream in PR #1
+> Stack: Claude Code plugin (9 Markdown skills + 1 Python script), zero runtime services
+> Current goal: decide plugin name, then push v2.0.0 and reinstall
 
 ## What This Project Does
 
-A fork of `coltonjosephdean-rgb/talk-to-anyone`, a Claude Code plugin that turns any
-public figure into an AI coach persona. `/coach <name>` researches them across the web
-and YouTube, builds a persona file grounded in their real content, and Claude speaks as
-them for the rest of the conversation. This fork (`YahyaZekry/talk-to-anyone`) adds
-domain-organized deep-research persistence on top of the original v1.1.0 pipeline.
+An independent Claude Code plugin (based on `coltonjosephdean-rgb/talk-to-anyone`, MIT
+attributed) that turns any public figure into an AI coach persona. Two modes:
+
+- **Single coach** — `/coach <name>` researches them across the web and YouTube, builds
+  a persona file grounded in their real content, and Claude speaks as them for the rest
+  of the conversation.
+- **Roundtable** — `/roundtable <name1>, <name2>, ...` runs multiple built personas
+  simultaneously. All coaches respond to each message in their own voice. Direct a
+  question to one with `@name`, or use `/discuss <topic>` to have the coaches dialogue
+  with each other, facilitated by Claude.
 
 ---
 
@@ -22,9 +27,9 @@ domain-organized deep-research persistence on top of the original v1.1.0 pipelin
 | `stack.md` | Tech (Python + Markdown, no DB/build step), dev commands, the two `CLAUDE_PLUGIN_*` env vars | Touching `fetch_youtube.py`, adding a skill, checking how plugin paths resolve |
 | `structure.md` | File tree, key files, the runtime (gitignored) per-persona output shape | Navigating the repo, understanding what a build actually produces on disk |
 | `systems.md` | Persona cache, YouTube fetching, web research, AI embodiment — the actual cross-cutting concerns (no auth/DB/payments here) | Touching the research pipeline or the cache layout |
-| `features.md` | The 5 slash commands + the build/embodiment workflow, step by step | Understanding or changing how a persona gets built |
-| `roadmap.md` | Current goal (push + repoint), active TODOs | Starting any task — know what's still pending |
-| `history.md` | Architectural decisions from this session (why `research/` exists, why transcripts are `.md`) | Debugging or reconsidering a design choice |
+| `features.md` | All 9 slash commands + the build/embodiment/roundtable workflows, step by step | Understanding or changing how a persona gets built, or how roundtable works |
+| `roadmap.md` | Current goal, active TODOs | Starting any task — know what's still pending |
+| `history.md` | Architectural decisions (why `research/` exists, why transcripts are `.md`, why roundtable was added) | Debugging or reconsidering a design choice |
 | `sessions.md` | Session-by-session log | Reviewing what's been done |
 
 > `schema.md`, `routes.md`, `hooks.md`, `components.md`, `integrations.md` don't exist
@@ -38,6 +43,7 @@ domain-organized deep-research persistence on top of the original v1.1.0 pipelin
 | Task | Load these files |
 |------|-----------------|
 | Changing `skills/coach/SKILL.md` or the research pipeline | `features.md` + `history.md` |
+| Changing `skills/roundtable/SKILL.md` or roundtable behavior | `features.md` + `structure.md` |
 | Changing `scripts/fetch_youtube.py` | `stack.md` + `structure.md` |
 | Understanding the runtime persona-folder shape | `structure.md` |
 | Picking up pending work | `roadmap.md` |

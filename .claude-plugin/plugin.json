@@ -1,17 +1,24 @@
 {
-  "name": "talk-to-anyone",
-  "displayName": "Talk to Anyone",
-  "version": "1.2.4",
-  "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person across the web, pulls real transcripts when they have video anywhere on YouTube, builds a persona, and talks to you as them until you switch or end.",
+  "name": "agora-roundtable",
+  "displayName": "Agora RoundTable",
+  "version": "2.0.0",
+  "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable <name1>, <name2>, ... runs multiple coaches simultaneously with a facilitated discussion mode.",
   "author": {
-    "name": "Colton Dean"
+    "name": "Yahya Zekry"
   },
-  "repository": "https://github.com/coltonjosephdean-rgb/talk-to-anyone",
+  "based_on": {
+    "name": "talk-to-anyone",
+    "author": "Colton Dean",
+    "repository": "https://github.com/coltonjosephdean-rgb/talk-to-anyone"
+  },
+  "repository": "https://github.com/YahyaZekry/agora",
   "license": "MIT",
   "keywords": [
     "coach",
     "persona",
     "mentor",
+    "roundtable",
+    "multi-coach",
     "youtube",
     "transcripts"
   ]

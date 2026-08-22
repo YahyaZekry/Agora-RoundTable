@@ -11,7 +11,7 @@ The user wants **$ARGUMENTS** rebuilt from scratch (their content has moved on, 
 first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
 
 1. Resolve the personas directories the same way as /coach Step 0
-   (`${CLAUDE_PLUGIN_DATA}/personas` primary, `~/.claude/talk-to-anyone/personas`
+   (`${CLAUDE_PLUGIN_DATA}/personas` primary, `~/.claude/agora-roundtable/personas`
    legacy fallback) and the person's slug.
 2. Wherever `<personas>/<slug>/` exists (check both locations), delete only its
    `persona.md`, `videos.json`, `transcripts/` contents, `research/` contents, and
