@@ -115,6 +115,51 @@ sitting in a persona's folder before a build. That's a separate concern from thi
 plugin's own research pipeline — left to whatever's managing that folder externally
 (e.g. a vault-sync skill), not duplicated here.
 
+## v2.4.0 — agent-based roundtable (2026-08-23)
+
+The roundtable was rewritten from "Claude switching voices in one context" to real
+independent subagents. Each coach now runs as a dedicated Agent with its own context
+window, reads only its own persona.md and research/ files, and has no visibility into
+what other coaches are about to say.
+
+Message type C (general): all coach agents spawn in parallel — independent, uncontaminated.
+Message type B (/discuss): agents run sequentially — each receives the prior agents'
+actual responses as context before generating their own. Real reaction, not scripted exchange.
+Message type A (@name): one dedicated agent for that coach.
+
+The facilitator (Claude in the main session) spawns the agents, collects responses,
+and synthesizes. It never writes a coach response itself.
+
+This same pattern was applied to the /novel skill's Step 5: Simon routes and synthesizes,
+but never simulates a coach voice inline.
+
+## v2.3.0 — bulk operations: /coach-update-all and /coach-refresh-all (2026-08-23)
+
+Both commands accept an optional preset name (`/coach-update-all y-table`) to scope
+the operation to one named table rather than every built coach. Without an argument
+they scan DATA_DIR for every slug with a persona.md and operate on all of them.
+
+`/coach-refresh-all` is deliberately slow and warns upfront — each coach is a full
+rebuild (transcripts + research + verify + persona.md + inbox sync). `inbox/` files
+are never deleted.
+
+## v2.2.0 — explicit inbox sync with /coach-update (2026-08-23)
+
+Problem: `/coach` processed `inbox/` on every load, including cache hits where the user
+just wanted to resume a conversation. This was implicit, always-on behavior that also
+meant `/roundtable` (which loads from cache and skips the build pipeline entirely) never
+processed inboxes at all — inconsistency the user had to know about.
+
+Fix: inbox processing removed from `/coach` Step 5.5 entirely. New `/coach-update`
+skill owns it exclusively. Call `/coach-update <name>` whenever you've dropped
+something into a coach's `inbox/` and want it folded into their research. `/coach-refresh`
+now explicitly calls `/coach-update` logic as its final step after rebuilding, so a full
+rebuild still picks up inbox material. `/roundtable` behavior is unchanged — if you want
+inbox synced before a roundtable, run `/coach-update <name>` for each coach first.
+
+Design constraint honored: inbox processing is now opt-in, explicit, and consistent
+across both single-coach and roundtable workflows.
+
 ## v2.1.0 — named roundtable presets (2026-08-22)
 
 Problem: a roundtable with a fixed team (e.g. "Y's table": Harris, Navarro, Sherlock,

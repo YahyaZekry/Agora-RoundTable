@@ -38,9 +38,17 @@ spoken voice mined from transcripts.
 | `/coach <name>` | Build (or load) a persona and talk to them one-on-one |
 | `/coach-switch <name>` | Swap coaches mid-conversation |
 | `/coach-end` | Back to normal Claude |
-| `/coach-list` | Show every persona saved on this machine |
+| `/coach-list` | Show every persona saved on this machine + saved presets |
 | `/coach-refresh <name>` | Rebuild a persona from fresh research |
+| `/coach-refresh-all` | Rebuild every built coach (slow — several minutes per coach) |
+| `/coach-refresh-all <preset>` | Rebuild all coaches in a named preset |
+| `/coach-update <name>` | Sync new files from a coach's `inbox/` into their research |
+| `/coach-update-all` | Sync inbox for every built coach |
+| `/coach-update-all <preset>` | Sync inbox for all coaches in a named preset |
 | `/roundtable <name1>, <name2>, ...` | Open a roundtable with multiple coaches |
+| `/roundtable <preset-name>` | Load a named preset (e.g. `/roundtable y-table`) |
+| `/roundtable-save <preset-name>` | Save the active session as a named preset |
+| `/roundtable-save <preset-name> name1, name2` | Define a new preset from scratch |
 | `/roundtable-add <name>` | Add a coach to an active roundtable |
 | `/roundtable-remove <name>` | Remove a coach from the roundtable |
 | `/roundtable-end` | Close the roundtable, back to normal Claude |
@@ -53,24 +61,30 @@ If the short names collide with another plugin, use the namespaced form:
 ```mermaid
 flowchart TD
     A(["/coach &lt;name&gt;"]) --> B{Persona cached?}
-    B -- Yes --> C[Check inbox/\nfor new files]
+    B -- Yes --> I
     B -- No --> D[Identify person\n+ map domains]
     D --> E[Fetch YouTube\ntranscripts]
     E --> F[Deep web research\nper domain]
     F --> G[Verify research\nvs. sources]
     G --> H[Distill into\npersona.md]
-    H --> C
-    C --> I([Embody — speak as them])
+    H --> I([Embody — speak as them])
 
-    J(["/roundtable &lt;name1&gt;, &lt;name2&gt;, ..."]) --> K{All personas built?}
+    U(["/coach-update &lt;name&gt;"]) --> V[Process inbox/\nmerge into research/]
+
+    J(["/roundtable &lt;preset or names&gt;"]) --> K{All personas built?}
     K -- No --> L([Tell user to /coach\nmissing names first])
     K -- Yes --> M[Write\nroundtable-session.json]
     M --> N([Facilitation mode])
 
     N --> O{Message type?}
-    O -- "@name ..." --> P[One coach responds]
-    O -- "/discuss topic" --> Q[Each coach reacts\nto each other →\nFacilitator synthesizes]
-    O -- General --> R[All coaches respond\nin sequence]
+    O -- "@name ..." --> P1[Spawn 1 Agent\nreads persona + research]
+    P1 --> P2([Coach responds\nin own context])
+    O -- "/discuss topic" --> Q1[Spawn agents\nsequentially]
+    Q1 --> Q2[Each agent gets\nprior responses\nas context]
+    Q2 --> Q3([Real reaction\nnot scripted])
+    O -- General --> R1[Spawn all agents\nin parallel]
+    R1 --> R2[Each reads own\npersona + research\nindependently]
+    R2 --> R3([Facilitator\nsynthesizes])
 ```
 
 ## How it works
@@ -93,40 +107,36 @@ flowchart TD
 5. **Distill** — merges everything into a structured persona file: identity, voice,
    core beliefs (with verbatim quotes), named frameworks, coaching style, signature
    quotes, and a Deep-Dive Sources index.
-6. **Check `inbox/`** — every invocation, cache hit or not: anything you've dropped in
-   yourself (notes, a dossier, a PDF) gets extracted into the matching
-   `research/<domain>.md` and tracked in `inbox/_sync-status.md`.
-7. **Embody** — Claude speaks as them until you end or switch. For anything deeper than
+6. **Embody** — Claude speaks as them until you end or switch. For anything deeper than
    the persona summary, it reads the matching `research/<domain>.md` live before
    answering — a lookup, not a guess.
+
+**To add your own material** (notes, a dossier, a PDF): drop it into
+`DATA_DIR/<slug>/inbox/` and run `/coach-update <name>`. It merges the content into the
+matching `research/<domain>.md` and tracks what was extracted in `inbox/_sync-status.md`.
+Run this before a roundtable if inbox material needs to be live for that session.
 
 Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/` (survives plugin updates),
 falling back to `~/.claude/agora-roundtable/personas/`.
 
 ### Roundtable mode
 
-Run multiple already-built personas simultaneously. Three message modes:
+Each coach runs as a **dedicated subagent** with its own independent context — not Claude switching voices in the same window. Each agent reads only its own `persona.md` and `research/` files and has no access to what the others are about to say.
 
-- **Ask everyone** — type normally; all coaches respond in sequence, each from their
-  domain expertise.
-- **Direct to one** — `@harris what do you think about the opening scene?` — only
-  that coach responds.
-- **Facilitated discussion** — `/discuss <topic>` — Claude routes the topic through
-  each coach, lets them react to each other, then synthesizes agreements and tensions.
+Three message modes:
+
+- **Ask everyone** — all coach agents spawn in parallel. Each responds independently from their own context. Results displayed in sequence, facilitator notes key tensions.
+- **Direct to one** — `@harris your question here` — one dedicated agent for that coach only.
+- **Facilitated discussion** — `/discuss <topic>` — agents run sequentially: coach 2 receives coach 1's actual response as context before responding, coach 3 gets both, and so on. Real reaction, not a scripted exchange.
 
 ```
 /roundtable thomas harris, gillian flynn, dennis lehane
 
 You: /discuss whose POV should the first scene use?
 
-Thomas Harris:
-[his take — the profiler's entry point]
-
-Gillian Flynn:
-[her response — may push back on Harris]
-
-Dennis Lehane:
-[synthesis or a third angle]
+→ Harris agent spawns, reads persona + research, responds
+→ Flynn agent spawns, reads persona + research, receives Harris's response, reacts
+→ Lehane agent spawns, reads persona + research, receives both, responds
 
 [Facilitator: where they agreed, where they diverged, what it means for your decision]
 ```
@@ -163,8 +173,8 @@ videos.
 
 Based on [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
 [Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT. The core
-persona-building pipeline (Steps 1–6, the verification pass, inbox extraction) is his
-original work. The roundtable feature and ongoing development are by
+persona-building pipeline (Steps 1–6, the verification pass, inbox system) is his
+original work. The roundtable feature, named presets, and `/coach-update` are by
 [Yahya Zekry](https://github.com/YahyaZekry).
 
 ## Honest limits
@@ -195,7 +205,11 @@ original work. The roundtable feature and ongoing development are by
 skills/
   coach/               # main skill + persona template
   coach-switch/  coach-end/  coach-list/  coach-refresh/
-  roundtable/          # multi-coach session
+  coach-update/        # explicit inbox sync (new in v2.2.0)
+  coach-update-all/    # inbox sync for all coaches or a preset (new in v2.3.0)
+  coach-refresh-all/   # full rebuild for all coaches or a preset (new in v2.3.0)
+  roundtable/          # multi-coach session (named presets: v2.1.0)
+  roundtable-save/     # save/define named presets (new in v2.1.0)
   roundtable-add/  roundtable-remove/  roundtable-end/
 scripts/
   fetch_youtube.py     # channel/search/URLs → long-form videos → clean transcripts

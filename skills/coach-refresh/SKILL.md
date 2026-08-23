@@ -21,7 +21,9 @@ first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
    person. Leave every other file untouched — it isn't plugin-owned.
 3. Run the full `/coach` build for the name: read
    `${CLAUDE_PLUGIN_ROOT}/skills/coach/SKILL.md` and follow it from Step 1 (the cache
-   check will miss, forcing fresh research and transcript pulls, and Step 5.5 will
-   re-extract everything currently in `inbox/`).
-4. Finish by adopting the rebuilt persona per /coach Step 6, and note in the handoff
+   check will miss, forcing fresh research and transcript pulls).
+4. After the build completes, run `/coach-update` for this coach: read
+   `${CLAUDE_PLUGIN_ROOT}/skills/coach-update/SKILL.md` and follow its Step 2 to
+   re-extract everything currently in `inbox/` into the freshly rebuilt `research/`.
+5. Finish by adopting the rebuilt persona per /coach Step 6, and note in the handoff
    line that it was rebuilt fresh.

@@ -94,7 +94,32 @@
   add/remove can modify the roster mid-conversation. Coaches must be pre-built — the
   skill does not auto-build, it tells the user to run `/coach <name>` first. Bumped to
   v2.0.0. *(2026-08-22)*
-- **Plugin name still undecided.** Candidates: keep `talk-to-anyone`, rename to
-  `summon` (evocative — you summon any mind across time), or `council` (emphasizes the
-  roundtable/advisory-board dimension). Name gates the push — everything else is ready.
-  *(2026-08-22)*
+- ~~**Plugin name still undecided.**~~ Decided: renamed to `agora-roundtable`. Updated
+  both JSON manifests, all skill fallback DATA_DIR paths (`~/.claude/agora-roundtable/personas`),
+  display name in README install command. GitHub repo renamed accordingly. *(2026-08-22/23, v2.0.0→)*
+- **Named roundtable presets** — `/roundtable <preset>` now checks `DATA_DIR/roundtable-presets.json`
+  before parsing as comma-separated names. `/roundtable-save` writes/updates presets. `/coach-list`
+  also shows saved presets. Preset file is plain JSON, human-editable. Preset exists as an opt-in
+  layer — if the file doesn't exist, `/roundtable` behavior is unchanged. *(2026-08-23, v2.1.0)*
+- **Inbox processing moved out of `/coach` into explicit `/coach-update`** — Step 5.5 (auto-process
+  `inbox/` on every `/coach` invocation, cache hit or not) was removed. Problem: implicit, always-on
+  behavior where `/roundtable` (which skips the build pipeline entirely and loads from cache) never
+  processed inboxes at all — silent inconsistency the user had to know about. New `/coach-update`
+  skill owns inbox processing exclusively. `/coach-refresh` now explicitly calls `/coach-update`
+  logic as its final step so a full rebuild still picks up inbox material. *(2026-08-23, v2.2.0)*
+- **Bulk inbox and refresh commands** — `/coach-update-all [preset]` and `/coach-refresh-all [preset]`
+  added. Both accept an optional preset name to scope the operation; without an argument they operate
+  on all slugs in DATA_DIR with a `persona.md`. `/coach-refresh-all` warns upfront: slow (minutes per
+  coach). `inbox/` files are never deleted by any command. *(2026-08-23, v2.3.0)*
+- **Roundtable rewritten to use real Agent subagents** — the original roundtable had Claude switch
+  voices inline in the same context, which is fabrication, not embodiment. Rewritten: each coach
+  gets a dedicated Agent with its own independent context window. Each agent reads only its own
+  `persona.md` and the relevant `research/<domain>.md` — no visibility into what others say (for
+  general questions) or explicit context of prior responses (for `/discuss`). The facilitator spawns
+  agents, collects responses, and synthesizes; it never writes a coach response itself. Three message
+  modes: general (all agents in parallel), @direct (one agent), /discuss (sequential — each agent
+  gets prior agents' actual responses as context). *(2026-08-23, v2.4.0)*
+- **`inbox/` folder creation made explicit in `/coach`** — v1.2.2 said "created on every build" but
+  the skill never had an explicit mkdir step; the implicit creation came from Step 5.5 (which was then
+  removed in v2.2.0). Added an explicit `mkdir -p DATA_DIR/<slug>/inbox` to Step 1, runs on cache hit
+  and fresh build alike. *(2026-08-23, v2.4.0 fix)*

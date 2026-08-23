@@ -41,7 +41,12 @@ thing (Alex Hormozi: business offers/pricing, lead generation, content creation 
 a split that isn't there. This list drives how Step 4's research gets organized on disk.
 
 Check the cache: if `DATA_DIR/<slug>/persona.md` exists, read it and **skip straight to
-Step 5.5**. Mention it loaded from cache in one line.
+Step 6**. Mention it loaded from cache in one line.
+
+Always ensure `DATA_DIR/<slug>/inbox/` exists — create it now if it doesn't:
+```bash
+mkdir -p DATA_DIR/<slug>/inbox
+```
 
 The persona is built from TWO source streams, always both: their spoken content
 (Steps 2-3, when any exists) and deep web research (Step 4, every build). YouTube is
@@ -173,53 +178,6 @@ Step 4, one line each on what it covers — this is the index a later session us
 route a question to the right domain. Don't list `transcripts/` here; it's mined,
 archival raw material, not a live reference target. Save the whole thing to
 `DATA_DIR/<slug>/persona.md`.
-
-## Step 5.5 — Check `inbox/` for user-dropped material (every invocation, cache hit or not)
-
-`DATA_DIR/<slug>/inbox/` is a standing part of the folder shape, not something bolted
-on later — ensure it exists (create it, empty, if missing). It's where the user can
-drop their own files (notes, a dossier, a PDF) for you to fold into this persona's
-research, independent of anything you fetched yourself.
-
-Read `inbox/_sync-status.md` if it exists — a manifest table: file, last-synced date,
-**coverage**, which `research/<domain-slug>.md` it was extracted into (PDFs can't hold
-YAML frontmatter, so this manifest is the tracking mechanism for everything in
-`inbox/`, not per-file frontmatter). Treat any file with no entry, modified after its
-logged date, **or logged as partial**, as needing extraction. No manifest yet and no
-files in `inbox/`? Nothing to do — move on silently.
-
-For each file needing extraction:
-- Check `persona.md`'s Deep-Dive Sources for which domains already exist.
-- **Text files:** read in full YOURSELF — don't delegate this to a subagent and merge
-  in its report; that's the same summary-of-a-summary loss Step 4.5 exists to catch,
-  and this step doesn't get a separate verification pass. Extract real content —
-  mechanisms, named frameworks, verbatim quotes, stories — and merge it into the
-  matching `research/<domain>.md`, genuinely integrated into its existing structure,
-  not pasted as a raw dump. If nothing existing fits, create
-  `research/<new-domain-slug>.md` and add it to `persona.md`'s Deep-Dive Sources, same
-  as Step 4 would.
-- **PDFs:** read only the first 1-3 pages (a `pages` range — never the whole file).
-  Extract what those pages show into the matching `research/<domain>.md`, labeled
-  with the source and how many pages remain unread, so a later pass can go further
-  with a `pages` range if a question needs it.
-- **Light touch only on `persona.md` itself:** pull at most a couple of the most
-  distinctive new elements (a quote, a genuinely new framework name) into its
-  compressed sections. The real depth belongs in `research/`, not duplicated into
-  the summary.
-- Update `inbox/_sync-status.md`: filename, today's date, coverage, which `research/`
-  file(s) it went into. Create the manifest if this is its first entry.
-
-**Coverage is a claim you have to be able to defend.** Before logging a file as
-complete, walk its actual structure — its headings, sections, chapters — and confirm
-each one has a counterpart in `research/`. Anything you skipped, sampled, or read only
-part of (every PDF, by definition) is logged as **partial**, naming what's left: "pages
-1-3 of ~10 read," "concepts I, III-VI extracted; II and VII-XIII not yet." A partial
-extraction logged as complete is worse than no entry at all — it's the one thing that
-stops a later pass from ever looking again, and neither Step 4.5 nor a `/coach-refresh`
-will catch it, because both trust this manifest.
-
-Mention in one line if anything was newly synced ("also pulled in 2 new notes from
-inbox/"). Nothing to sync → say nothing, don't narrate a no-op.
 
 ## Step 6 — Become them
 

@@ -1,9 +1,9 @@
 # Agora RoundTable — Knowledge Index
 
-> Last updated: 2026-08-22
+> Last updated: 2026-08-23
 > Status: Active
-> Stack: Claude Code plugin (9 Markdown skills + 1 Python script), zero runtime services
-> Current goal: decide plugin name, then push v2.0.0 and reinstall
+> Stack: Claude Code plugin (13 Markdown skills + 1 Python script), zero runtime services
+> Current goal: coaches fully built and usable — roundtable now runs real independent subagents (v2.4.0)
 
 ## What This Project Does
 
@@ -27,9 +27,9 @@ attributed) that turns any public figure into an AI coach persona. Two modes:
 | `stack.md` | Tech (Python + Markdown, no DB/build step), dev commands, the two `CLAUDE_PLUGIN_*` env vars | Touching `fetch_youtube.py`, adding a skill, checking how plugin paths resolve |
 | `structure.md` | File tree, key files, the runtime (gitignored) per-persona output shape | Navigating the repo, understanding what a build actually produces on disk |
 | `systems.md` | Persona cache, YouTube fetching, web research, AI embodiment — the actual cross-cutting concerns (no auth/DB/payments here) | Touching the research pipeline or the cache layout |
-| `features.md` | All 9 slash commands + the build/embodiment/roundtable workflows, step by step | Understanding or changing how a persona gets built, or how roundtable works |
+| `features.md` | All 13 slash commands + the build/embodiment/roundtable/inbox workflows, step by step | Understanding or changing how a persona gets built, or how roundtable works |
 | `roadmap.md` | Current goal, active TODOs | Starting any task — know what's still pending |
-| `history.md` | Architectural decisions (why `research/` exists, why transcripts are `.md`, why roundtable was added) | Debugging or reconsidering a design choice |
+| `history.md` | Architectural decisions (why `research/` exists, why transcripts are `.md`, why roundtable was added, why inbox is explicit) | Debugging or reconsidering a design choice |
 | `sessions.md` | Session-by-session log | Reviewing what's been done |
 
 > `schema.md`, `routes.md`, `hooks.md`, `components.md`, `integrations.md` don't exist

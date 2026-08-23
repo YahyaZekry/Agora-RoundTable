@@ -3,13 +3,13 @@
   "owner": {
     "name": "Yahya Zekry"
   },
-  "description": "Marketplace for the Talk to Anyone coach plugin",
+  "description": "Marketplace for the Agora RoundTable plugin",
   "plugins": [
     {
       "name": "agora-roundtable",
       "source": "./",
       "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable runs multiple coaches simultaneously.",
-      "version": "2.0.0",
+      "version": "2.4.0",
       "author": {
         "name": "Yahya Zekry"
       }

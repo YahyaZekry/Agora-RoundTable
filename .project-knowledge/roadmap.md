@@ -1,13 +1,12 @@
 # Roadmap
 
-> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-19
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-23
 
 ## Current Goal
 
-v2.0.0 built, not yet pushed. Roundtable feature complete. Repo detached from fork
-(now `YahyaZekry/talk-to-anyone`, independent, MIT attributed). Blocked on name
-decision — Yahya is choosing between keeping `talk-to-anyone` or renaming to something
-like `summon` or `council`. Name decision gates the push.
+v2.4.0 complete. Plugin renamed `agora-roundtable`, installed and working. Roundtable
+now runs real independent subagents. Novel coaching personas (Harris, Navarro, Flynn,
+Lehane) built as stubs but need `/coach-refresh` — only David Simon is fully built.
 
 ---
 
@@ -19,18 +18,9 @@ like `summon` or `council`. Name decision gates the push.
 
 ## Active TODOs
 
-- [ ] **Decide the plugin name** — options on the table: `summon`, `council`, keep
-      `talk-to-anyone`. Name change requires updating: both JSON manifests, fallback
-      DATA_DIR path in all skill files, command namespace prefix, GitHub repo rename,
-      README install command. *(added: 2026-08-22)*
-- [ ] **Push v2.0.0 to `origin/main`** — after name decision *(added: 2026-08-22)*
-- [ ] **Reinstall the plugin** — after push: full marketplace remove+re-add (not just
-      `/plugin install`), then `persona-sync` to recreate the symlinks the reinstall
-      wipes *(added: 2026-08-22)*
-- [ ] **Build the novel coaching personas** — Thomas Harris, Gillian Flynn, Dennis
-      Lehane, Joe Navarro. These are the first real roundtable use case. Build with
-      `/coach`, run `persona-sync`, then test `/roundtable thomas harris, gillian flynn`
-      *(added: 2026-08-22)*
+- [ ] **Rebuild novel coaching personas with full pipeline** — Thomas Harris, Joe Navarro,
+      Gillian Flynn, Dennis Lehane all only have `persona.md` stubs (no `research/`,
+      most have no `transcripts/`). Run `/coach-refresh` for each. *(added: 2026-08-23)*
 - [ ] Run the Step 4.5 pass against the Goggins persona's `inbox/` and coverage the
       same way Hormozi was checked — v1.2.3 fixed its `research/` for accuracy, but
       that was before coverage and unsourced-claim checks existed *(added: 2026-08-19)*
