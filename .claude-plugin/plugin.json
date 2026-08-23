@@ -1,8 +1,8 @@
 {
   "name": "agora-roundtable",
   "displayName": "Agora RoundTable",
-  "version": "2.0.0",
-  "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable <name1>, <name2>, ... runs multiple coaches simultaneously with a facilitated discussion mode.",
+  "version": "2.1.0",
+  "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable <name1>, <name2>, ... runs multiple coaches simultaneously with a facilitated discussion mode. /roundtable <preset-name> loads a saved preset. /roundtable-save <name> saves the active session as a named preset.",
   "author": {
     "name": "Yahya Zekry"
   },

@@ -15,7 +15,22 @@ Same as /coach Step 0:
 1. `${CLAUDE_PLUGIN_DATA}/personas` if that substituted to a real absolute path
 2. Otherwise fall back to `~/.claude/agora-roundtable/personas`
 
-## Step 1 — Parse coaches
+## Step 1 — Check for named preset
+
+Before parsing names, check if $ARGUMENTS is a single token (no comma). If so, slugify
+it and look for that key in `DATA_DIR/roundtable-presets.json`. If the file exists and
+the key is found, load the coaches list from the preset:
+
+```json
+{ "y-table": { "display": "Y's Table", "coaches": ["thomas-harris", "joe-navarro"] } }
+```
+
+Say one line: **"Loading preset 'Y's Table': Thomas Harris, Joe Navarro."**
+Then skip directly to Step 2 with those slugs.
+
+If the argument is not a preset (no match, or contains a comma), continue below.
+
+## Step 1.5 — Parse coaches
 
 Split $ARGUMENTS by comma. Trim whitespace around each name. If empty, ask the user
 which coaches to include. If only one name is given, suggest `/coach <name>` instead —

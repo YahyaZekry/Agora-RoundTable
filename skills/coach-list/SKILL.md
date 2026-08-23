@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # /coach-list — saved coaches
 
-Show the user every persona already built on this machine.
+Show the user every persona already built on this machine, plus any saved roundtable presets.
 
 1. Resolve the personas directories the same way as /coach Step 0:
    `${CLAUDE_PLUGIN_DATA}/personas` if that substituted to a real path, AND the legacy
@@ -18,3 +18,14 @@ Show the user every persona already built on this machine.
    `/coach <name>` loads instantly · `/coach-refresh <name>` rebuilds from fresh research.
 4. If the directory is empty or missing, say no coaches are saved yet and that
    `/coach <name>` builds the first one.
+5. After the coaches table, check for `DATA_DIR/roundtable-presets.json`. If it exists
+   and has entries, print a second section:
+
+   **Saved roundtable presets:**
+   | Preset | Coaches |
+   |--------|---------|
+   | y-table | Thomas Harris, Joe Navarro |
+
+   End with: `/roundtable <preset-name>` loads the preset · `/roundtable-save <name>` saves a new one.
+
+6. If no presets file exists, skip the presets section entirely.

@@ -115,6 +115,22 @@ sitting in a persona's folder before a build. That's a separate concern from thi
 plugin's own research pipeline — left to whatever's managing that folder externally
 (e.g. a vault-sync skill), not duplicated here.
 
+## v2.1.0 — named roundtable presets (2026-08-22)
+
+Problem: a roundtable with a fixed team (e.g. "Y's table": Harris, Navarro, Sherlock,
+Patrick Jane) required typing out all the names every time. For project-specific setups
+with named tables, this was friction.
+
+Fix: `DATA_DIR/roundtable-presets.json` stores named presets. `/roundtable <name>` now
+checks for a preset match before parsing as comma-separated names. `/roundtable-save`
+saves the current session or a specified list as a named preset. `/coach-list` now also
+shows saved presets. The preset file is a plain JSON object, human-readable and
+editable directly.
+
+Design constraint honored: presets are stored in DATA_DIR (survives plugin updates),
+not hardcoded anywhere in the plugin itself. The preset file is optional — if it doesn't
+exist, `/roundtable` behavior is unchanged.
+
 ## Failure routes
 
 - No yt-dlp → tell user the install command; web research carries the build.
