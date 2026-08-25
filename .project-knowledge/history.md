@@ -123,3 +123,35 @@
   the skill never had an explicit mkdir step; the implicit creation came from Step 5.5 (which was then
   removed in v2.2.0). Added an explicit `mkdir -p DATA_DIR/<slug>/inbox` to Step 1, runs on cache hit
   and fresh build alike. *(2026-08-23, v2.4.0 fix)*
+- **Warm agents beat cold agents for debate, and are cheaper.** v2.4.0's `/discuss` spawned a fresh
+  agent per coach per turn with prior responses pasted into the prompt. That agent has no prior
+  position of its own — it can only agree or disagree with text on a page. Switched to spawning each
+  coach once and resuming with `SendMessage`. Proven on a two-coach test before building: Harris
+  opened round 2 with "you've moved me, and I want to be exact about where, because it isn't where you
+  think"; Navarro quoted and retracted its own round-1 claim ("I said 'never bridge the two' and that
+  was too clean") and produced a distinction neither had before. Cost went DOWN, not up — 0 tool calls
+  on round 2 vs 5-6 on round 1, since persona/research were already in context. *(2026-08-24, v2.5.0)*
+- **Debate rounds are dynamic, and "crystallized" is a success state.** An early draft specified 3
+  rounds while also claiming to "stop when nobody moves" — a contradiction the user caught. Rounds now
+  return a META block (`movedBy`, `newArgument`, `wantsToPress`) and stop when a full round produces
+  neither movement nor a new argument, capped at 5 with an explicit notice. Critically, the loop does
+  NOT push for agreement: three terminal states (converged / crystallized / capped), and crystallized
+  — positions fully developed but still opposed — is reported as a success. Stopping only on consensus
+  would manufacture agreement between specialists, which is exactly the failure the independent-
+  subagent architecture exists to prevent. `wantsToPress` lets the table narrow to a 1v1 when the
+  agents identify where the tension is, instead of hardcoding which round is the duel.
+  *(2026-08-24, v2.5.0)*
+- **Gap detection by use, not by audit.** Step 4.5 (v1.2.3/v1.2.4) checks `research/` against its
+  sources — it structurally cannot check `research/` against questions nobody has asked yet. A coach
+  that just spent four rounds defending a position knows where it was reaching, because it felt the
+  thin spot under pressure. After synthesis each agent is asked where it was thin; gaps are classified
+  by who can close them (unmined → already in `transcripts/`, free to fix, never sent to the web;
+  unresearched → targeted pass; user-only → drop it in `inbox/`) and persisted to `research/_gaps.md`.
+  That file closes the loop: `/coach-refresh` reads it and targets known thin spots instead of doing a
+  generic rebuild, `/coach-update` closes entries when inbox material fills one. Entries are marked
+  `closed`, never deleted. New `/coach-gaps <name>` exposes the same audit standalone. This is the
+  user's idea, and it's a better mechanism than the audit it complements. *(2026-08-24, v2.5.0)*
+- **Agents should be told whether `research/` exists.** Found in the v2.5.0 proof run: the Navarro
+  agent hunted for a `research/` folder that doesn't exist, hit `Exit code 2`, and fell back to a
+  filesystem-wide `find`. Round-1 prompts now state whether the folder exists rather than making the
+  agent discover it — and tell the agent to flag thin sourcing when it doesn't. *(2026-08-24, v2.5.0)*

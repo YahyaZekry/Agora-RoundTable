@@ -115,6 +115,66 @@ sitting in a persona's folder before a build. That's a separate concern from thi
 plugin's own research pipeline — left to whatever's managing that folder externally
 (e.g. a vault-sync skill), not duplicated here.
 
+## v2.5.0 — warm-agent debate + use-driven gap detection (2026-08-24)
+
+Two changes, one enabling the other.
+
+**Warm agents.** v2.4.0's `/discuss` spawned a *fresh* agent per coach per turn and
+pasted the prior responses into its prompt. That agent is reading a transcript of a
+conversation it wasn't in — it can agree or disagree with text on a page, but it has no
+prior position of its own to defend or revise. Fixed by spawning each coach ONCE and
+resuming it with `SendMessage`, which preserves the agent's context across rounds.
+
+Verified before building, on a two-coach test (Harris + Navarro, on whether a
+character's perceptiveness should be shown mechanically). Round two produced things a
+cold agent structurally cannot say: Harris opened *"you've moved me, and I want to be
+exact about where, because it isn't where you think"*; Navarro quoted and walked back
+its own round-one claim — *"I said 'never bridge the two' and that was too clean."*
+Navarro also turned Harris's strongest example against him and produced a distinction
+(concealed *evidence* vs. unstated *inference*) that neither had in round one. That
+distinction only exists because they pressed each other.
+
+Warm rounds are also **cheaper**: both agents used 0 tool calls on round two versus 5–6
+on round one, because persona and research were already in context. Re-spawning pays
+the file-reading cost every single turn.
+
+**Rounds are dynamic, not fixed.** An early draft specified three rounds, which
+contradicted its own "stop when nobody moves" rule. Each round now returns a META block
+(`movedBy`, `newArgument`, `wantsToPress`) and the loop stops on a round where nobody
+moved and nobody raised anything new, capped at 5 with an explicit notice — a capped
+debate is never reported as a finished one. `wantsToPress` lets the table narrow to a
+focused 1v1 when the agents themselves identify where the tension is, rather than
+hardcoding which round is the duel.
+
+Three terminal states, and **crystallized is a success**: positions fully developed,
+still opposed, nothing moving. Stopping only on agreement would push specialists into
+manufactured consensus — exactly the failure the independent-subagent architecture
+exists to prevent.
+
+**Use-driven gap detection.** After synthesis, each agent is asked one last question:
+where were you thin? A coach that just spent four rounds defending a position knows
+where it was reaching — it felt the thin spot under pressure. Step 4.5's audit can
+never produce this, because an audit checks `research/` against its *sources*; it
+cannot check `research/` against questions nobody has asked yet. This is verification
+by use rather than by inspection, and it catches a different class of defect.
+
+Gaps are classified by who can close them — **unmined** (already in `transcripts/`,
+free to fix, never send it to the web), **unresearched** (needs a targeted pass), and
+**user-only** (a specific book or paywalled piece; the user drops it in `inbox/`) — and
+persisted to `research/_gaps.md`. That file closes the loop: `/coach-refresh` reads it
+and targets those areas instead of doing a generic rebuild, and `/coach-update` closes
+entries when inbox material fills one. Entries are marked `closed`, never deleted, so a
+later session can see the gap was real and was addressed.
+
+New `/coach-gaps <name>` exposes the same audit standalone, without needing a debate to
+trigger it. It reads every `research/` file and reports what's missing against the
+person's well-known material. With no argument it surveys every built coach.
+
+Side finding from the test: the Navarro agent burned tool calls hunting for a
+`research/` folder that doesn't exist, hit `Exit code 2`, and fell back to a filesystem
+`find`. Round-one prompts now state whether `research/` exists rather than making the
+agent discover it.
+
 ## v2.4.0 — agent-based roundtable (2026-08-23)
 
 The roundtable was rewritten from "Claude switching voices in one context" to real

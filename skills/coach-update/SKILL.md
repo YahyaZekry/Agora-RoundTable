@@ -64,11 +64,26 @@ of (every PDF, by definition) is logged as **partial**, naming what's left: "pag
 of ~10 read," "concepts I, III-VI extracted; II and VII-XIII not yet." A partial
 extraction logged as complete is worse than no entry at all.
 
+## Step 2.5 — Close any gaps this material fills
+
+If `DATA_DIR/<slug>/research/_gaps.md` exists, read its open entries. These are thin
+spots found during actual use — by `/discuss` or `/coach-gaps` — and a `user-only` gap
+is closed precisely by the user dropping the missing source into `inbox/`, which is
+what just happened.
+
+For each open entry, check whether the material extracted in Step 2 actually fills it.
+If it does, mark it `Status: closed` with today's date. Never mark a gap closed on the
+assumption that a dropped file *probably* covers it — confirm the content is now in
+`research/`.
+
+Mention closed gaps in the Step 3 report; that's the payoff for the user having gone
+and found the source.
+
 ## Step 3 — Report and resume
 
 When done, report what was synced: how many files, which `research/` files were
-updated, any new domains created. If nothing needed extraction, say so plainly ("inbox
-is clean — nothing new to sync").
+updated, any new domains created, and any `_gaps.md` entries this closed. If nothing
+needed extraction, say so plainly ("inbox is clean — nothing new to sync").
 
 If the updated coach is currently active in a session (check `roundtable-session.json`
 or the coach context), tell the user the research files are updated and their next

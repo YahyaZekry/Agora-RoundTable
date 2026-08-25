@@ -4,9 +4,10 @@
 
 ## Current Goal
 
-v2.4.0 complete. Plugin renamed `agora-roundtable`, installed and working. Roundtable
-now runs real independent subagents. Novel coaching personas (Harris, Navarro, Flynn,
-Lehane) built as stubs but need `/coach-refresh` — only David Simon is fully built.
+v2.5.0 shipped: `/discuss` runs multi-round warm-agent debate until positions stop
+moving, then reports where each coach's own sourcing was thin and routes the gaps.
+Mechanism proven on a 2-coach test. Needs a real run against fully-built coaches —
+the stub personas are the blocker.
 
 ---
 
@@ -20,7 +21,17 @@ Lehane) built as stubs but need `/coach-refresh` — only David Simon is fully b
 
 - [ ] **Rebuild novel coaching personas with full pipeline** — Thomas Harris, Joe Navarro,
       Gillian Flynn, Dennis Lehane all only have `persona.md` stubs (no `research/`,
-      most have no `transcripts/`). Run `/coach-refresh` for each. *(added: 2026-08-23)*
+      most have no `transcripts/`). Run `/coach-refresh` for each. Blocks a real test of
+      v2.5.0's debate and gap detection — a coach with no `research/` can only report
+      "everything is thin." *(added: 2026-08-23)*
+- [ ] **Validate v2.5.0 at scale** — the proof run was 2 coaches, 2 rounds. Untested:
+      3+ coaches in a round, the `wantsToPress` 1v1 narrowing, hitting the 5-round cap,
+      and whether `_gaps.md` entries actually get closed correctly by a later
+      `/coach-refresh`. *(added: 2026-08-24)*
+- [ ] **Old `talk-to-anyone` plugin removed but skills may still be cached** — user
+      removed it; `/coach-refresh-all` was not resolving. Verify after a Claude Code
+      restart that all 14 commands resolve under `agora-roundtable`.
+      *(added: 2026-08-24)*
 - [ ] Run the Step 4.5 pass against the Goggins persona's `inbox/` and coverage the
       same way Hormozi was checked — v1.2.3 fixed its `research/` for accuracy, but
       that was before coverage and unsourced-claim checks existed *(added: 2026-08-19)*

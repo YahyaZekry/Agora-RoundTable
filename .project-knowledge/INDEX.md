@@ -1,9 +1,9 @@
 # Agora RoundTable — Knowledge Index
 
-> Last updated: 2026-08-23
+> Last updated: 2026-08-24
 > Status: Active
-> Stack: Claude Code plugin (13 Markdown skills + 1 Python script), zero runtime services
-> Current goal: coaches fully built and usable — roundtable now runs real independent subagents (v2.4.0)
+> Stack: Claude Code plugin (14 Markdown skills + 1 Python script), zero runtime services
+> Current goal: v2.5.0 shipped (warm-agent debate + gap detection) — needs a real multi-round run against fully-built coaches to validate at scale
 
 ## What This Project Does
 

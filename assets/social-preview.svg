@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="640" viewBox="0 0 1280 640" font-family="DejaVu Sans, Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b1020"/>
+      <stop offset="55%" stop-color="#0a0e1a"/>
+      <stop offset="100%" stop-color="#0d1424"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#e8823c" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#e8823c" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0 L0 0 0 40" fill="none" stroke="#1b2436" stroke-width="1" opacity="0.5"/>
+    </pattern>
+    <marker id="arO" markerWidth="11" markerHeight="11" refX="9.5" refY="5.5" orient="auto">
+      <path d="M0,0.5 L10.5,5.5 L0,10.5 z" fill="#e8823c"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <rect width="1280" height="640" fill="url(#grid)"/>
+  <ellipse cx="905" cy="320" rx="350" ry="315" fill="url(#glow)"/>
+
+  <!-- LEFT: text -->
+  <text x="70" y="88" fill="#7d93b2" font-size="16" font-weight="700" letter-spacing="3.2">CLAUDE CODE PLUGIN</text>
+
+  <text x="70" y="160" fill="#f2f6fb" font-size="56" font-weight="700" letter-spacing="-1">Agora</text>
+  <text x="70" y="222" fill="#e8823c" font-size="56" font-weight="700" letter-spacing="-1">RoundTable</text>
+
+  <text x="70" y="278" fill="#b9c9dd" font-size="21">Every mind is its own agent.</text>
+  <text x="70" y="308" fill="#b9c9dd" font-size="21">They argue with each other — and</text>
+  <text x="70" y="338" fill="#b9c9dd" font-size="21">keep going until nobody moves.</text>
+
+  <rect x="70" y="368" width="466" height="48" rx="9" fill="#121a2c" stroke="#26344c" stroke-width="1"/>
+  <text x="90" y="398" font-family="DejaVu Sans Mono, Menlo, monospace" font-size="17">
+    <tspan fill="#f2f6fb" font-weight="700">/discuss</tspan><tspan fill="#8fa6c2" dx="9">is virtue alone enough?</tspan>
+  </text>
+
+  <text x="70" y="456" fill="#6f86a5" font-size="15.5">
+    <tspan fill="#e8823c" font-weight="700">·</tspan> Independent context per mind — no leakage
+  </text>
+  <text x="70" y="484" fill="#6f86a5" font-size="15.5">
+    <tspan fill="#e8823c" font-weight="700">·</tspan> Rounds run until positions stop moving
+  </text>
+  <text x="70" y="512" fill="#6f86a5" font-size="15.5">
+    <tspan fill="#e8823c" font-weight="700">·</tspan> Then each reports where it was thin
+  </text>
+
+  <text x="70" y="578" font-family="DejaVu Sans Mono, Menlo, monospace" font-size="15.5">
+    <tspan fill="#e8823c">★</tspan><tspan fill="#6f86a5" dx="9">github.com/YahyaZekry/Agora-RoundTable</tspan>
+  </text>
+
+  <!-- RIGHT: the roundtable -->
+  <ellipse cx="905" cy="320" rx="200" ry="158" fill="none" stroke="#243247" stroke-width="1.5" stroke-dasharray="5 7"/>
+
+  <!-- any-to-any lines, under the cards -->
+  <g stroke="#31465f" stroke-width="1.2" opacity="0.7">
+    <line x1="905" y1="194" x2="1108" y2="288"/>
+    <line x1="905" y1="446" x2="702" y2="352"/>
+    <line x1="702" y1="288" x2="905" y2="194"/>
+    <line x1="830" y1="320" x2="980" y2="320"/>
+  </g>
+
+  <!-- the sharpest exchange this round: Aristotle <-> Marcus, both conceded -->
+  <line x1="1080" y1="368" x2="944" y2="431" stroke="#e8823c" stroke-width="1.9" opacity="0.95" marker-end="url(#arO)"/>
+  <line x1="940" y1="421" x2="1076" y2="358" stroke="#e8823c" stroke-width="1.9" opacity="0.95" marker-end="url(#arO)"/>
+
+  <!-- centre -->
+  <circle cx="905" cy="320" r="46" fill="#0a0e1a"/>
+  <circle cx="905" cy="320" r="34" fill="#121a2c" stroke="#e8823c" stroke-width="1.6"/>
+  <text x="905" y="315" fill="#e8823c" font-size="11.5" font-weight="700" text-anchor="middle" letter-spacing="0.6">ROUND</text>
+  <text x="905" y="334" fill="#f2f6fb" font-size="15" font-weight="700" text-anchor="middle">2</text>
+
+  <!-- Epictetus (top) -->
+  <g>
+    <rect x="777" y="130" width="256" height="64" rx="9" fill="#141d31" stroke="#2e415a" stroke-width="1.4"/>
+    <circle cx="797" cy="152" r="4.5" fill="#4a6382"/>
+    <text x="811" y="156" fill="#f2f6fb" font-size="15" font-weight="700">Epictetus</text>
+    <text x="795" y="180" fill="#9db4d0" font-size="11" font-style="italic">“the field is not the good. the will is.”</text>
+  </g>
+
+  <!-- Aristotle (right) -->
+  <g>
+    <rect x="980" y="288" width="256" height="64" rx="9" fill="#141d31" stroke="#3c5573" stroke-width="1.4"/>
+    <circle cx="1000" cy="310" r="4.5" fill="#e8823c"/>
+    <text x="1014" y="314" fill="#f2f6fb" font-size="15" font-weight="700">Aristotle</text>
+    <text x="998" y="338" fill="#9db4d0" font-size="11" font-style="italic">“you save the agent. i ask after the life”</text>
+  </g>
+
+  <!-- Marcus Aurelius (bottom) -->
+  <g>
+    <rect x="777" y="446" width="256" height="64" rx="9" fill="#141d31" stroke="#3c5573" stroke-width="1.4"/>
+    <circle cx="797" cy="468" r="4.5" fill="#e8823c"/>
+    <text x="811" y="472" fill="#f2f6fb" font-size="15" font-weight="700">Marcus Aurelius</text>
+    <text x="795" y="496" fill="#9db4d0" font-size="11" font-style="italic">“it ruined the conditions, not the man”</text>
+  </g>
+
+  <!-- Plato (left) -->
+  <g>
+    <rect x="574" y="288" width="256" height="64" rx="9" fill="#141d31" stroke="#2e415a" stroke-width="1.4"/>
+    <circle cx="594" cy="310" r="4.5" fill="#4a6382"/>
+    <text x="608" y="314" fill="#f2f6fb" font-size="15" font-weight="700">Plato</text>
+    <text x="592" y="338" fill="#9db4d0" font-size="11" font-style="italic">“virtue is not all the goods, only the first”</text>
+  </g>
+
+  <text x="905" y="572" fill="#5f7691" font-size="13" text-anchor="middle">
+    all four conceded ground — <tspan fill="#8fa6c2">so it runs again</tspan>
+  </text>
+</svg>

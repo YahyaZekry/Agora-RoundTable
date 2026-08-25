@@ -23,7 +23,7 @@ footprint, living or historical.
 
 ```
 /plugin marketplace add YahyaZekry/Agora-RoundTable
-/plugin install agora-roundtable@agora-roundtable
+/plugin install agora@agora-roundtable
 ```
 
 **Optional (recommended):** [yt-dlp](https://github.com/yt-dlp/yt-dlp) for transcript
@@ -45,6 +45,8 @@ spoken voice mined from transcripts.
 | `/coach-update <name>` | Sync new files from a coach's `inbox/` into their research |
 | `/coach-update-all` | Sync inbox for every built coach |
 | `/coach-update-all <preset>` | Sync inbox for all coaches in a named preset |
+| `/coach-gaps <name>` | Audit where a coach's own sourcing is thin, and what would fix it |
+| `/coach-gaps` | Survey recorded gaps across every built coach |
 | `/roundtable <name1>, <name2>, ...` | Open a roundtable with multiple coaches |
 | `/roundtable <preset-name>` | Load a named preset (e.g. `/roundtable y-table`) |
 | `/roundtable-save <preset-name>` | Save the active session as a named preset |
@@ -54,7 +56,7 @@ spoken voice mined from transcripts.
 | `/roundtable-end` | Close the roundtable, back to normal Claude |
 
 If the short names collide with another plugin, use the namespaced form:
-`/agora-roundtable:coach <name>`.
+`/agora:coach <name>`.
 
 ## Architecture
 
@@ -79,12 +81,24 @@ flowchart TD
     N --> O{Message type?}
     O -- "@name ..." --> P1[Spawn 1 Agent\nreads persona + research]
     P1 --> P2([Coach responds\nin own context])
-    O -- "/discuss topic" --> Q1[Spawn agents\nsequentially]
-    Q1 --> Q2[Each agent gets\nprior responses\nas context]
-    Q2 --> Q3([Real reaction\nnot scripted])
     O -- General --> R1[Spawn all agents\nin parallel]
     R1 --> R2[Each reads own\npersona + research\nindependently]
     R2 --> R3([Facilitator\nsynthesizes])
+
+    O -- "/discuss topic" --> Q1[Round 1: spawn all\nagents in parallel]
+    Q1 --> Q2[Rounds 2..N: SendMessage\nresumes each WARM agent]
+    Q2 --> Q3{Anyone moved?\nAnything new?}
+    Q3 -- Yes --> Q2
+    Q3 -- "No / cap 5" --> Q4([Converged, crystallized,\nor capped])
+    Q4 --> G1[Gap check:\nwhere were you thin?]
+    G1 --> G2{Who can fix it?}
+    G2 -- "In transcripts/" --> G3[Extract now]
+    G2 -- Researchable --> G4[Targeted pass]
+    G2 -- "Only the user" --> G5[Drop in inbox/]
+    G3 --> G6[(research/_gaps.md)]
+    G4 --> G6
+    G5 --> G6
+    G6 -.reads.-> S(["/coach-refresh\ntargets the gaps"])
 ```
 
 ## How it works
@@ -127,19 +141,96 @@ Three message modes:
 
 - **Ask everyone** — all coach agents spawn in parallel. Each responds independently from their own context. Results displayed in sequence, facilitator notes key tensions.
 - **Direct to one** — `@harris your question here` — one dedicated agent for that coach only.
-- **Facilitated discussion** — `/discuss <topic>` — agents run sequentially: coach 2 receives coach 1's actual response as context before responding, coach 3 gets both, and so on. Real reaction, not a scripted exchange.
+- **Real debate** — `/discuss <topic>` — see below.
+
+### `/discuss` — warm agents, dynamic rounds
+
+Each coach is spawned **once** and then resumed across rounds, so it keeps its own
+context. That's what lets a coach defend or revise the position it already took, rather
+than reacting to a transcript of a conversation it wasn't part of.
+
+An agent handed a transcript has no prior claim of its own to walk back. Rounds aren't a
+fixed count — the debate runs until it stops producing movement.
+
+Below is **unedited output**, trimmed only where marked `[...]`:
 
 ```
-/roundtable thomas harris, gillian flynn, dennis lehane
+/roundtable epictetus, aristotle, plato, marcus aurelius
 
-You: /discuss whose POV should the first scene use?
+You: /discuss is virtue alone enough for a good life?
 
-→ Harris agent spawns, reads persona + research, responds
-→ Flynn agent spawns, reads persona + research, receives Harris's response, reacts
-→ Lehane agent spawns, reads persona + research, receives both, responds
+──── ROUND 1 ──── four agents spawn in parallel. no shared context.
 
-[Facilitator: where they agreed, where they diverged, what it means for your decision]
+EPICTETUS   Yes. Nothing else is even a candidate. What else would you add
+            to it? Health? My leg has been useless my whole life; sickness
+            is a hindrance to the body, but not to the will, unless the
+            will consent. [...] Instrument is not ingredient.
+
+ARISTOTLE   Let us first divide the question, for "enough" is said in
+            several ways, and the dispute survives only so long as the
+            ambiguity does. [...] A settled hexis is one thing; its
+            exercise is another. The man in chains has his courage entire
+            and can do almost nothing with it.
+
+PLATO       Epictetus — do you mean that a good man on the rack is happy,
+            or that nothing can be taken from him that was his to begin
+            with? Those are not the same claim, and I suspect the second
+            is far easier to defend than the first.
+
+MARCUS      I grant him the fact and refuse the conclusion. Preferred is
+            not necessary. Give me a bad hand and my task is to play it
+            justly.
+
+──── ROUND 2 ──── same agents resumed. each still holds its own position.
+
+EPICTETUS   Plato, you caught me sliding between two claims and made me
+            pick one. So I pick. [...] But notice the honest part of your
+            question, and I will not slip past it: I have never seen this
+            man.
+
+MARCUS      Plato, you asked the honest question, so take the honest
+            answer: no. My soul's good order never moved a single
+            Marcomanni back across the river. [...] Aristotle — you aimed
+            that at me and you were right to. I buried Verus at seven. So
+            yes, you have moved me, on this: I will not say the man who
+            buried his sons has lost nothing. What I still hold against
+            you is the next step — that his life is thereby spoiled. It
+            ruined the conditions and left the man.
+
+ARISTOTLE   Marcus — you have moved me furthest, and I want to say exactly
+            how far. [...] I concede that this was ordinary Greek opinion
+            carried further into the argument than it can bear. But it
+            defeats only that half. Priam was dealt no hand. You save the
+            agent. I am asking after the life.
+
+PLATO       Aristotle, you have caught me fairly, and I will not wriggle.
+            [...] There is one good which determines whether the others
+            are goods at all, and it is not one item among them.
+
+→ movedBy non-empty for all four. new arguments still landing.
+→ runs again.
 ```
+
+Every one of them gave ground, and each named exactly where. That is the whole point of
+keeping the agents warm: a coach that never held a position cannot revise one.
+
+It ends in one of three states, and the facilitator says which: **converged**,
+**crystallized** (still disagreeing, but nothing moving — a success, not a failure), or
+**capped** at 5 rounds (reported honestly, never dressed up as settled).
+
+### Gap detection — the personas improve because you used them
+
+After a debate, each coach is asked where it was reaching. A coach that just spent four
+rounds defending a position knows where its sourcing was thin — that's something no
+audit can find, because an audit checks `research/` against its sources, never against
+questions nobody has asked yet.
+
+Each gap is routed by who can close it: already in `transcripts/` (free to extract),
+researchable (targeted pass), or only obtainable by you (drop it in `inbox/`). Findings
+persist to `research/_gaps.md`, which `/coach-refresh` then reads — so a rebuild targets
+the known thin spots instead of starting over blind.
+
+Run `/coach-gaps <name>` any time to audit a coach directly, no debate needed.
 
 Coaches must be built first with `/coach <name>`. The active roster persists in
 `DATA_DIR/roundtable-session.json` so `/roundtable-add` and `/roundtable-remove`
@@ -174,7 +265,8 @@ videos.
 Based on [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
 [Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT. The core
 persona-building pipeline (Steps 1–6, the verification pass, inbox system) is his
-original work. The roundtable feature, named presets, and `/coach-update` are by
+original work. The roundtable feature, named presets, `/coach-update`, the warm-agent
+debate engine, and use-driven gap detection are by
 [Yahya Zekry](https://github.com/YahyaZekry).
 
 ## Honest limits
@@ -194,7 +286,7 @@ original work. The roundtable feature, named presets, and `/coach-update` are by
 | `yt-dlp is not installed` | `brew install yt-dlp` (or `pip3 install --user yt-dlp`), then `/coach-refresh <name>` |
 | Zero transcripts fetched | Channel may have captions disabled or region-blocked; persona builds from web research instead |
 | Wrong person picked | `/coach-refresh` with a more specific name ("the podcaster", "the founder of X") |
-| Commands not showing | `/plugin` → verify agora-roundtable is installed + enabled, then restart Claude Code |
+| Commands not showing | `/plugin` → verify Agora RoundTable is installed + enabled, then restart Claude Code |
 
 ## Repo layout
 
@@ -208,7 +300,8 @@ skills/
   coach-update/        # explicit inbox sync (new in v2.2.0)
   coach-update-all/    # inbox sync for all coaches or a preset (new in v2.3.0)
   coach-refresh-all/   # full rebuild for all coaches or a preset (new in v2.3.0)
-  roundtable/          # multi-coach session (named presets: v2.1.0)
+  coach-gaps/          # audit a coach's own sourcing (new in v2.5.0)
+  roundtable/          # multi-coach session (presets v2.1.0, warm-agent debate v2.5.0)
   roundtable-save/     # save/define named presets (new in v2.1.0)
   roundtable-add/  roundtable-remove/  roundtable-end/
 scripts/

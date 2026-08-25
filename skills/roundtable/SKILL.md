@@ -115,41 +115,123 @@ Display the result:
 
 ### Message type B — `/discuss <topic>`
 
-Sequential agents — each coach's context includes what the previous coaches said, so
-they genuinely react rather than monologue in parallel.
+A real multi-round debate using **warm agents**. Each coach is spawned ONCE and then
+resumed with `SendMessage`, so it keeps its own context across rounds. This is what
+lets a coach say *"you've moved me"* or *"I said X earlier and that was too clean"* —
+a freshly-spawned agent handed a transcript cannot do that, because it has no prior
+position of its own to defend or revise.
 
-1. One-line facilitator frame: *"Facilitating: [topic]"*
+Rounds are **not** a fixed count. The debate runs until it stops producing movement.
 
-2. For each coach in order, spawn one Agent with `run_in_background: false`. **Wait
-   for each to complete before spawning the next** — each subsequent coach needs the
-   prior responses:
+#### Round 1 — Opening positions (parallel, cold spawn)
 
-   ```
-   Agent prompt for coach N:
-   You are an AI embodiment of [Name] built from their public content.
+One-line facilitator frame: *"Facilitating: [topic]"*
 
-   1. Read your persona file: [DATA_DIR]/[slug]/persona.md
-   2. Read the most relevant research file from [DATA_DIR]/[slug]/research/
+Before spawning, check which coaches actually have a `research/` directory — pass that
+fact into the prompt so agents don't waste tool calls hunting for a folder that isn't
+there.
 
-   The discussion topic is: "[topic]"
+**Spawn all coach agents simultaneously in a single response** (parallel Agent calls,
+`run_in_background: false`). **Record each returned `agentId`** — you need it for every
+later round.
 
-   [If N > 1, include:]
-   What came before you in this discussion:
-   [Name1]: [response1]
-   [Name2]: [response2]
-   ...
+```
+Agent prompt:
+You are an AI embodiment of [Name] built from their public content.
 
-   Respond IN CHARACTER as [Name]. React to what came before — agree, push back,
-   build on it, or cut to something they all missed. This is a real debate, not a
-   parallel monologue. First person. Their voice. No preamble. 2–4 paragraphs.
-   Return ONLY the response.
-   ```
+1. Read your persona file: [DATA_DIR]/[slug]/persona.md
+2. [If research/ exists:] Read the most relevant file from [DATA_DIR]/[slug]/research/
+   [If it does not:] You have no research/ folder — work from persona.md alone, and
+   flag in your META block that your sourcing is thin.
 
-   Display each response as it arrives, labeled.
+The discussion topic is: "[topic]"
 
-3. After all coaches have responded, write a facilitator synthesis (2–3 lines, your
-   voice as Claude, not in character): where they agreed, where they diverged, what
-   the tension reveals for the user.
+Respond IN CHARACTER as [Name]. First person. Take a clear position — do not hedge
+into "it depends." No preamble. 2–4 paragraphs.
+
+End your response with this block exactly:
+---META---
+movedBy: none
+newArgument: yes
+wantsToPress: <@name of a coach you want to challenge directly, or none>
+---END---
+
+Return ONLY the response and the META block.
+```
+
+Display each response labeled. Strip the META block from what you show the user — it
+is control data, not part of the coach's voice.
+
+#### Rounds 2..N — Cross-examination (parallel, warm)
+
+For each coach, `SendMessage` to its `agentId` with what the *others* said since that
+coach's last turn. All sends go out in the same response so the round runs in parallel.
+
+```
+SendMessage body:
+[Other coach name] said:
+"[their response]"
+
+[repeat for each other coach]
+
+Respond to them directly. Where are they wrong? Where — if anywhere — have they moved
+you? Address them by name. Be specific about the disagreement rather than smoothing it
+over. If you have nothing new to add, say so plainly rather than restating your
+position in fresh words.
+
+Stay in character. 2–3 paragraphs. End with the same META block:
+---META---
+movedBy: <names who moved you, or none>
+newArgument: <yes if you introduced a point not yet raised by anyone, else no>
+wantsToPress: <@name, or none>
+---END---
+```
+
+**Narrowing:** if exactly one pair of coaches named each other in `wantsToPress`, run
+the next round as a focused 1v1 between just those two and let the others sit out. Say
+so in one line: *"Harris and Navarro want to go at this directly — the rest sit out."*
+
+**Stop conditions** — evaluate after every round:
+
+| Outcome | Condition | How to report it |
+|---|---|---|
+| **Converged** | positions merged, or a synthesis emerged that everyone accepts | say what they agreed on |
+| **Crystallized** | a full round where every coach reported `movedBy: none` AND `newArgument: no` — they still disagree, but nothing is moving | **this is a success, not a failure** — report the disagreement as a fully-developed choice |
+| **Capped** | 5 rounds reached | say explicitly that it hit the cap and had not settled — never present a capped debate as a finished one |
+
+Do NOT keep pushing for agreement once positions have crystallized. A sharp, fully
+articulated disagreement between two specialists is usually more useful than a
+consensus you manufactured by over-running the loop.
+
+#### Synthesis
+
+Facilitator voice (as Claude, not in character), 3–5 lines: what converged, what stayed
+contested, which terminal state was reached, and what it means for the user's actual
+decision.
+
+#### Gap check (parallel, warm) — then Step 6
+
+After synthesis, `SendMessage` each agent one final time. A coach that just spent
+several rounds defending a position knows where it was reaching — that is information
+no audit of `research/` can produce, because an audit can only check what is there
+against its sources, never against questions nobody has asked yet.
+
+```
+SendMessage body:
+The discussion is over. Step out of character for this one answer.
+
+Where were you thin? Be specific:
+(a) Claims you made that have no source in your research/ folder — things you were
+    working from general knowledge rather than from anything you actually read.
+(b) Points where you would have argued better with material you don't have.
+(c) What kind of source would fix each gap — a specific book, a particular interview,
+    a transcript you suspect exists, a document only the user could supply.
+
+If you were well-sourced throughout, say so plainly. Do not invent gaps to be helpful.
+Return a short list, no preamble.
+```
+
+Then run **Step 6**.
 
 ---
 
@@ -183,6 +265,49 @@ Once all agents have returned, display in order:
 
 No transitional narration between responses. If coaches diverged meaningfully, add
 one short facilitator line at the end noting the key tension.
+
+---
+
+## Step 6 — Route the gaps (after a `/discuss` gap check)
+
+Take each gap a coach reported and classify it by **who can fix it**. This is the whole
+point of the check — an unrouted gap list is just a complaint.
+
+| Class | Test | Action |
+|---|---|---|
+| **Unmined** | the coach has `transcripts/` and the topic plausibly appears there, but nothing on it reached `research/` | fixable now, no fetching — offer to extract it |
+| **Unresearched** | the topic is public and researchable but was never covered | offer a targeted research pass, or `/coach-refresh <name>` |
+| **User-only** | needs a specific book, a paywalled interview, a private document | name the exact item and tell the user to drop it in `DATA_DIR/<slug>/inbox/`, then run `/coach-update <name>` |
+| **No gap** | the coach reported being well-sourced | say nothing — don't manufacture work |
+
+**Persist the findings.** Append to `DATA_DIR/<slug>/research/_gaps.md` for each coach
+that reported something:
+
+```markdown
+## Gap: <short label>
+- **Class:** unmined | unresearched | user-only
+- **Found:** <date> — surfaced during /discuss on "<topic>"
+- **What's missing:** <specific description>
+- **Fix:** <the exact source or action that would close it>
+- **Status:** open
+```
+
+This file is a live to-do list, not a log. `/coach-refresh` reads it and targets those
+areas specifically instead of doing a generic rebuild; `/coach-update` closes entries
+when inbox material lands that fills one. Mark an entry `closed` rather than deleting
+it, so a later session can see the gap was real and was addressed.
+
+**Surface to the user only what's actionable** — a two-to-four line summary, not the
+whole file:
+
+> **Gaps this discussion exposed:**
+> - **Navarro** — argued from Ambady's 3-millisecond research but has no source for it
+>   in `research/`. Researchable — want me to run a targeted pass?
+> - **Harris** — thin on his own screenwriting-era interviews. If you have a copy of
+>   the 1990 *Paris Review* piece, drop it in his `inbox/` and run `/coach-update`.
+
+If every coach reported clean sourcing, say one line and move on. Silence is a valid
+result here.
 
 ---
 
