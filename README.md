@@ -282,11 +282,26 @@ examples/           real personas built by this pipeline
 
 ## Attribution
 
-Based on [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
-[Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT. The core
-persona-building pipeline, verification pass, and inbox system are his original work.
-The roundtable, named presets, `/coach-update`, the warm-agent debate engine, and
-use-driven gap detection are by [Yahya Zekry](https://github.com/YahyaZekry).
+Forked from [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
+[Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT — and since taken a
+long way past it.
+
+**Colton's original (v1.1.0):** the core idea, the six-step build pipeline
+(identify → find spoken content → transcripts → web research → persona file → embody),
+the persona-as-markdown design, and `scripts/fetch_youtube.py`.
+
+**Everything from v1.2.0 on is by [Yahya Zekry](https://github.com/YahyaZekry):**
+
+| | |
+| --- | --- |
+| v1.2.0–1.2.1 | Domains of authority, and **persisted per-domain `research/`** — before this, deep research was distilled into the persona file and thrown away |
+| v1.2.2 | The **`inbox/` system** — drop your own notes, dossiers or PDFs and have them mined into `research/` |
+| v1.2.3 | **Step 4.5, the verification pass** — added after two real builds silently dropped named frameworks and fabricated a quote |
+| v1.2.4 | Extraction-coverage tracking, and a check for claims with no source in the folder at all |
+| v2.0–2.3 | The whole **roundtable**: independent subagents, named presets, `/coach-update`, bulk operations |
+| v2.4–2.5 | **Warm-agent debate** with dynamic rounds, and **use-driven gap detection** |
+
+Upstream is still at v1.1.0, with no `research/`, no `inbox/`, and no verification pass.
 
 ---
 
