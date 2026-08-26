@@ -21,8 +21,9 @@ Works for anyone with a public footprint, living or historical.
 | [Install](#install) | Two lines, plus optional yt-dlp |
 | [Commands](#commands) | All 15, one table |
 | [See it work](#see-it-work) | Real unedited debate output |
-| [How `/discuss` works](#how-discuss-works) | Warm agents, dynamic rounds |
-| [Gap detection](#gap-detection) | Personas improve because you used them |
+| [How `/discuss` works](#how-discuss-works) | Why they can change their minds |
+| [Gap detection](#gap-detection) | Coaches admit what they don't know |
+| [Working with your own files](#working-with-your-own-files) | `inbox/`, `research/`, and PDFs |
 | [Building a persona](#building-a-persona) | The six-step pipeline |
 | [Architecture](#architecture) | Flow diagram |
 | [Limits & troubleshooting](#limits--troubleshooting) | What it won't do |
@@ -130,42 +131,106 @@ PLATO       Aristotle, you have caught me fairly, and I will not wriggle.
 
 ## How `/discuss` works
 
-Each coach is a **dedicated subagent** with its own context, not Claude switching
-voices in one window. It reads only its own `persona.md` and `research/` files.
+Each coach is a separate AI agent with its own memory. They do not share a brain. Each one
+reads only its own `persona.md` and `research/` files, so nobody knows what the others are
+about to say.
 
-Crucially, each is spawned **once** and then *resumed* across rounds. That's why a coach
-can say *"you have moved me"*: it still remembers the position it took. An agent handed
-a transcript of a debate it wasn't in has no prior claim of its own to walk back.
+The important part: each agent is created once and stays alive for the whole debate. So
+when Aristotle gets pushed in round two, he remembers what he argued in round one and can
+defend it or take it back. An agent that gets handed a transcript of an argument it was
+not in can only agree or disagree. It has no position of its own to change.
 
-Rounds aren't a fixed count. The debate runs until a full round produces no movement and
-no new argument, capped at 5. It ends in one of three states, and the facilitator says
-which:
+There is no fixed number of rounds. It keeps going while anyone is still changing their
+mind or raising something new, and stops when a whole round passes with neither. Maximum
+5 rounds.
 
-- **Converged.** They agree, or found a synthesis
-- **Crystallized.** Still disagreeing, but nothing moving. This is a success: a
-  fully-developed disagreement usually beats a consensus you forced
-- **Capped.** Hit 5 rounds, reported honestly, never dressed up as settled
+It ends one of three ways, and it tells you which:
 
-Other modes: ask everyone (all agents in parallel), or `@name your question` for one.
+- **They agree.** Or they found an answer together.
+- **They still disagree, but nothing is moving.** This counts as done, not as failure.
+  Two experts with fully worked-out opposite positions is usually more useful than forcing
+  them to average out.
+- **It hit 5 rounds.** Says so plainly instead of pretending it was settled.
+
+Other ways to talk to the table: just type a question and everyone answers, or `@plato
+your question` to ask one of them.
 
 ## Gap detection
 
-After a debate, each coach is asked where it was reaching. A coach that just spent four
-rounds defending a position knows where its sourcing was thin. No audit can find that,
-because an audit checks `research/` against its sources, never against questions
-nobody has asked yet.
+After a debate, each coach is asked one more question: where were you making it up?
 
-Each gap is routed by **who can close it**:
+A coach that just spent four rounds defending a position knows where it was reaching. It
+felt the weak spot. You cannot find that by auditing the files, because an audit only
+checks what is written against its sources. It cannot check for things nobody has asked
+about yet.
 
-| Class | Fix |
-| --- | --- |
-| Already in `transcripts/` | Extracted now, free, never sent to the web |
-| Researchable | Targeted research pass |
-| Only you can get it | Named exactly; drop it in `inbox/`, run `/coach-update` |
+Each gap gets sorted by who can fix it:
 
-Findings persist to `research/_gaps.md`, which `/coach-refresh` reads, so a rebuild
-targets known thin spots instead of starting over blind. `/coach-gaps <name>` runs the
-audit any time, no debate needed.
+- **Already in `transcripts/`.** The material is on your disk, it just never made it into
+  `research/`. Fixed immediately, costs nothing, never goes to the web.
+- **Public but never researched.** Worth a targeted search.
+- **Only you can get it.** A specific book, a paywalled interview. It names the exact
+  thing, you put it in `inbox/`, then run `/coach-update`.
+
+Gaps are written to `research/_gaps.md`. When you later run `/coach-refresh`, it reads
+that file first and goes after those specific holes instead of rebuilding blind.
+
+Run `/coach-gaps <name>` any time to ask a coach where it is thin. No debate needed.
+
+## Working with your own files
+
+Every coach has a folder. Two parts of it are yours to use.
+
+### `inbox/` is where you put things in
+
+Drop anything in there: notes, a dossier, a PDF, a saved article. Then run:
+
+```
+/coach-update marcus aurelius
+```
+
+It reads what you dropped, pulls the real content out, and writes it into the coach's
+`research/` files. From then on the coach uses it when answering you.
+
+Nothing happens automatically. Files sit in `inbox/` until you run `/coach-update`. That
+is on purpose, so a big PDF is not reprocessed every time you start a session.
+
+### `research/` is what the coach actually knows
+
+One file per topic the person is known for. Marcus Aurelius has three:
+
+```
+research/dichotomy-of-control-and-judgment.md
+research/duty-cosmopolitanism-and-difficult-people.md
+research/memento-mori-and-present-moment.md
+```
+
+When you ask a question, the coach picks the file matching your topic and reads it before
+answering. That is why answers can go deeper than the short persona summary.
+
+These are plain markdown. Open and edit them yourself if something is wrong or missing.
+
+### About PDFs
+
+**Only the first 1 to 3 pages of a PDF are read by default.** PDFs are expensive in
+tokens, and a 200-page book would cost an enormous amount for one coach.
+
+Where those pages go: into the matching `research/<topic>.md` file, same as any other
+source. A note is added saying which pages were read and how many are left, and
+`inbox/_sync-status.md` marks the file **partial** instead of done, so a later pass knows
+to continue.
+
+**To read the whole PDF**, edit `skills/coach-update/SKILL.md`, line 49:
+
+```
+- **PDFs:** read only the first 1-3 pages (a `pages` range — never the whole file).
+```
+
+Change the range to what you want, or remove the limit. This is a real cost: a long book
+read in full is a lot of tokens.
+
+A cheaper option: split the PDF yourself, drop in only the chapters you care about, and
+let it read those as separate files.
 
 ## Building a persona
 
@@ -261,12 +326,12 @@ examples/           real personas built by this pipeline
 
 ## Limits & troubleshooting
 
-- **It's an emulation, not the person.** Built only from public content; it will say so
-  if you ask. It won't invent personal facts or private opinions.
-- **Not professional advice.** A Huberman persona is not your doctor; a Hormozi persona
-  is not your fiduciary.
-- Voice fidelity scales with source quality. Video-rich people sound sharpest;
-  historical figures are reconstructions from their writings, in their era's register.
+It is an imitation, not the person. Built only from public material, and it will tell you
+so if you ask. It will not invent private opinions or personal facts, and it is not advice
+from a professional. A Huberman persona is not your doctor.
+
+How good it sounds depends on the sources. People with a lot of video sound sharpest.
+Historical figures are rebuilt from their writing, in the language of their time.
 
 <details>
 <summary>Common problems</summary>
