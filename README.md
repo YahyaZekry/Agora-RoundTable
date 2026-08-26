@@ -3,7 +3,7 @@
 ![Agora RoundTable — Claude Code plugin](assets/social-preview.png)
 
 **Your personal assembly of AI agents, inside Claude Code.** Talk to any public figure
-one-on-one — or seat several at a table and let them argue with each other until the
+one-on-one, or seat several at a table and let them argue with each other until the
 argument stops moving.
 
 ```
@@ -35,7 +35,7 @@ Works for anyone with a public footprint, living or historical.
 /plugin install agora@agora-roundtable
 ```
 
-**Optional:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) — `brew install yt-dlp` or
+**Optional:** [yt-dlp](https://github.com/yt-dlp/yt-dlp). Run `brew install yt-dlp` or
 `pip3 install --user yt-dlp`. Without it personas build from web research alone; with
 it, anyone with video gets their real spoken voice mined from transcripts.
 
@@ -59,7 +59,7 @@ Namespaced form if names collide: `/agora:coach <name>`.
 ## See it work
 
 Four philosophers, two rounds, on whether virtue alone suffices. By round two **every one
-of them had conceded ground** — and each named exactly where:
+of them had conceded ground**, and each named exactly where:
 
 > **Aristotle** — *"you have moved me furthest, and I want to say exactly how far."*
 > **Marcus Aurelius** — *"you have moved me, on this: I will not say the man who buried his sons has lost nothing."*
@@ -69,7 +69,7 @@ of them had conceded ground** — and each named exactly where:
 That only happens because each agent still remembers the position it took in round one.
 
 <details>
-<summary><b>Read the full exchange</b> — unedited, trimmed only where marked <code>[...]</code></summary>
+<summary><b>Read the full exchange</b> (unedited, trimmed only where marked <code>[...]</code>)</summary>
 
 ```
 /roundtable epictetus, aristotle, plato, marcus aurelius
@@ -130,29 +130,29 @@ PLATO       Aristotle, you have caught me fairly, and I will not wriggle.
 
 ## How `/discuss` works
 
-Each coach is a **dedicated subagent** with its own context — not Claude switching
+Each coach is a **dedicated subagent** with its own context, not Claude switching
 voices in one window. It reads only its own `persona.md` and `research/` files.
 
 Crucially, each is spawned **once** and then *resumed* across rounds. That's why a coach
-can say *"you have moved me"* — it still remembers the position it took. An agent handed
+can say *"you have moved me"*: it still remembers the position it took. An agent handed
 a transcript of a debate it wasn't in has no prior claim of its own to walk back.
 
 Rounds aren't a fixed count. The debate runs until a full round produces no movement and
 no new argument, capped at 5. It ends in one of three states, and the facilitator says
 which:
 
-- **Converged** — they agree, or found a synthesis
-- **Crystallized** — still disagreeing, but nothing moving. *This is a success* — a
+- **Converged.** They agree, or found a synthesis
+- **Crystallized.** Still disagreeing, but nothing moving. This is a success: a
   fully-developed disagreement usually beats a consensus you forced
-- **Capped** — hit 5 rounds, reported honestly, never dressed up as settled
+- **Capped.** Hit 5 rounds, reported honestly, never dressed up as settled
 
 Other modes: ask everyone (all agents in parallel), or `@name your question` for one.
 
 ## Gap detection
 
 After a debate, each coach is asked where it was reaching. A coach that just spent four
-rounds defending a position knows where its sourcing was thin — something no audit can
-find, because an audit checks `research/` against its sources, never against questions
+rounds defending a position knows where its sourcing was thin. No audit can find that,
+because an audit checks `research/` against its sources, never against questions
 nobody has asked yet.
 
 Each gap is routed by **who can close it**:
@@ -163,7 +163,7 @@ Each gap is routed by **who can close it**:
 | Researchable | Targeted research pass |
 | Only you can get it | Named exactly; drop it in `inbox/`, run `/coach-update` |
 
-Findings persist to `research/_gaps.md`, which `/coach-refresh` reads — so a rebuild
+Findings persist to `research/_gaps.md`, which `/coach-refresh` reads, so a rebuild
 targets known thin spots instead of starting over blind. `/coach-gaps <name>` runs the
 audit any time, no debate needed.
 
@@ -172,18 +172,18 @@ audit any time, no debate needed.
 <details>
 <summary>The six-step pipeline</summary>
 
-1. **Identify** — web-searches the name (handles misspellings: "alex formosi" → Alex
+1. **Identify.** Web-searches the name (handles misspellings, e.g. "alex formosi" to Alex
    Hormozi) and maps their public domains of authority.
-2. **Pull spoken content** — their own channel, or long-form interviews of them on any
+2. **Pull spoken content.** Their own channel, or long-form interviews of them on any
    channel. `scripts/fetch_youtube.py` cleans captions into Markdown transcripts.
-3. **Deep web research** — per domain: books, named frameworks, print interviews,
+3. **Deep web research.** Per domain: books, named frameworks, print interviews,
    verified quotes, bio, criticism. For historical figures the corpus is their own
    writings. Findings are **persisted to disk**, not distilled and discarded.
-4. **Verify** — mandatory every build. Catches frameworks dropped entirely, origin
+4. **Verify.** Mandatory every build. Catches frameworks dropped entirely, origin
    stories flattened to paraphrase, quotes that don't appear verbatim where credited,
    and claims with no source in the folder at all.
-5. **Distill** — into a structured persona file with a Deep-Dive Sources index.
-6. **Embody** — for anything deeper than the summary it reads the matching
+5. **Distill** into a structured persona file with a Deep-Dive Sources index.
+6. **Embody.** For anything deeper than the summary it reads the matching
    `research/<domain>.md` live. A lookup, not a guess.
 
 **Your own material:** drop notes, a dossier, or a PDF into `DATA_DIR/<slug>/inbox/` and
@@ -265,7 +265,7 @@ examples/           real personas built by this pipeline
   if you ask. It won't invent personal facts or private opinions.
 - **Not professional advice.** A Huberman persona is not your doctor; a Hormozi persona
   is not your fiduciary.
-- Voice fidelity scales with source quality — video-rich people sound sharpest;
+- Voice fidelity scales with source quality. Video-rich people sound sharpest;
   historical figures are reconstructions from their writings, in their era's register.
 
 <details>
@@ -283,25 +283,12 @@ examples/           real personas built by this pipeline
 ## Attribution
 
 Forked from [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
-[Colton Dean](https://github.com/coltonjosephdean-rgb), licensed MIT — and since taken a
-long way past it.
+[Colton Dean](https://github.com/coltonjosephdean-rgb), MIT licensed. His v1.1.0 is the
+foundation: the six-step build pipeline, persona-as-markdown, and `fetch_youtube.py`.
 
-**Colton's original (v1.1.0):** the core idea, the six-step build pipeline
-(identify → find spoken content → transcripts → web research → persona file → embody),
-the persona-as-markdown design, and `scripts/fetch_youtube.py`.
-
-**Everything from v1.2.0 on is by [Yahya Zekry](https://github.com/YahyaZekry):**
-
-| | |
-| --- | --- |
-| v1.2.0–1.2.1 | Domains of authority, and **persisted per-domain `research/`** — before this, deep research was distilled into the persona file and thrown away |
-| v1.2.2 | The **`inbox/` system** — drop your own notes, dossiers or PDFs and have them mined into `research/` |
-| v1.2.3 | **Step 4.5, the verification pass** — added after two real builds silently dropped named frameworks and fabricated a quote |
-| v1.2.4 | Extraction-coverage tracking, and a check for claims with no source in the folder at all |
-| v2.0–2.3 | The whole **roundtable**: independent subagents, named presets, `/coach-update`, bulk operations |
-| v2.4–2.5 | **Warm-agent debate** with dynamic rounds, and **use-driven gap detection** |
-
-Upstream is still at v1.1.0, with no `research/`, no `inbox/`, and no verification pass.
+Everything from v1.2.0 on is by [Yahya Zekry](https://github.com/YahyaZekry): the
+persisted `research/` files, the `inbox/` system, the verification pass, and the whole
+roundtable including warm-agent debate and gap detection. Upstream is still v1.1.0.
 
 ---
 
