@@ -1,0 +1,24 @@
+{
+  "name": "agora-roundtable",
+  "version": "2.5.0",
+  "type": "module",
+  "description": "Agora RoundTable for OpenCode — turn any public figure into a personal coach, run multi-coach roundtables and warm-agent debates. /agora coach <name>, /agora roundtable <n1>, <n2>, /agora discuss <topic>, and 12 more.",
+  "license": "MIT",
+  "author": "Yahya Zekry",
+  "keywords": [
+    "opencode",
+    "plugin",
+    "coach",
+    "persona",
+    "roundtable",
+    "multi-agent",
+    "debate"
+  ],
+  "main": "plugin/plugin.js",
+  "exports": {
+    ".": "./plugin/plugin.js"
+  },
+  "dependencies": {
+    "@opencode-ai/plugin": "^1.18.0"
+  }
+}

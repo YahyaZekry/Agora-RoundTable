@@ -1,6 +1,20 @@
 # Features & Workflows
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-23
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+
+## Dual-runtime — identical capabilities
+
+The product ships for **two hosts** with the same feature set and the **same persona
+format and shared data dir**:
+
+- **Claude Code** — commands provided by `skills/*` (e.g. `/coach`, `/roundtable`, `/discuss`).
+- **OpenCode** — the `opencode-plugin/` port mirrors every command under `/agora*`
+  (e.g. `/agora coach`, `/agora roundtable`, `/agora discuss`), sharing the personas
+  directory so a coach built in one host is usable in the other. The opencode side uses
+  `agents/agora-*` subagents for the same agent-based roundtable, and the JS plugin
+  (`plugin/plugin.js`) for path/session resolution. Persona-building steps are identical.
+
+Below, "the command" refers to either runtime's equivalent.
 
 ## Features
 

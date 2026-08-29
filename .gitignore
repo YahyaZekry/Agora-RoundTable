@@ -10,3 +10,8 @@ venv/
 # Local persona caches never belong in the repo
 personas/
 *.local.*
+
+# opencode plugin deps
+opencode-plugin/node_modules/
+opencode-plugin/bun.lock
+opencode-plugin/bun.lockb

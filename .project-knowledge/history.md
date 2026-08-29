@@ -1,6 +1,6 @@
 # History
 
-> Part of talk-to-anyone/.project-knowledge/ | Last updated: 2026-08-22
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
 > Past-only. Append-only — never delete entries.
 
 ## Removed
@@ -152,6 +152,18 @@
   `closed`, never deleted. New `/coach-gaps <name>` exposes the same audit standalone. This is the
   user's idea, and it's a better mechanism than the audit it complements. *(2026-08-24, v2.5.0)*
 - **Agents should be told whether `research/` exists.** Found in the v2.5.0 proof run: the Navarro
-  agent hunted for a `research/` folder that doesn't exist, hit `Exit code 2`, and fell back to a
-  filesystem-wide `find`. Round-1 prompts now state whether the folder exists rather than making the
-  agent discover it — and tell the agent to flag thin sourcing when it doesn't. *(2026-08-24, v2.5.0)*
+   agent hunted for a `research/` folder that doesn't exist, hit `Exit code 2`, and fell back to a
+   filesystem-wide `find`. Round-1 prompts now state whether the folder exists rather than making the
+   agent discover it — and tell the agent to flag thin sourcing when it doesn't. *(2026-08-24, v2.5.0)*
+- **Built an opencode port as a parallel runtime, not a fork.** opencode can't register slash
+   commands from a JS plugin the way Claude Code does — its commands/agents/skills are plain config
+   files. So the port is a hybrid: `commands/agora-*.md` (frontmatter `agent`/`subtask`),
+   `agents/agora-facilitator.md` + `agents/agora-coach.md` (`mode: subagent`, `hidden: true`),
+   `skills/agora-coach/SKILL.md` for the build pipeline, and a small ESM JS plugin (`plugin/plugin.js`,
+   `@opencode-ai/plugin`) that exists **only** for the two things config files can't do: resolve the
+   portable data dir and persist roundtable session/preset JSON (`agora_data_dir` / `agora_slugify` /
+   `agora_session` tools). `install.sh` symlinks the bundle into `~/.config/opencode` so the repo
+   stays the single source of truth. The two runtimes deliberately share one persona format and one
+   data dir (`lib/data-dir.js` resolves `$AGORA_DATA_DIR` → Claude dir → `~/.config/opencode/agora` →
+   legacy `~/.claude`), so a coach built in either host is usable in the other and opencode never
+   *requires* Claude. *(2026-08-29)*

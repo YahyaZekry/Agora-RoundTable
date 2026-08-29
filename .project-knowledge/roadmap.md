@@ -1,13 +1,13 @@
 # Roadmap
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-23
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
 
 ## Current Goal
 
-v2.5.0 shipped: `/discuss` runs multi-round warm-agent debate until positions stop
-moving, then reports where each coach's own sourcing was thin and routes the gaps.
-Mechanism proven on a 2-coach test. Needs a real run against fully-built coaches —
-the stub personas are the blocker.
+v2.5.0 (warm-agent debate + use-driven gap detection) shipped on the Claude side and is
+mirrored in the new **opencode port** (`opencode-plugin/`, full `/agora*` command parity,
+still uncommitted). Two things remain: (1) validate the warm-agent debate at scale against
+fully-built coaches, and (2) commit + smoke-test the opencode port.
 
 ---
 
@@ -19,19 +19,20 @@ the stub personas are the blocker.
 
 ## Active TODOs
 
+- [ ] **Commit and smoke-test the opencode port** — `opencode-plugin/` and `docs/opencode.md`
+      are still untracked/uncommitted. Verify install (`bash opencode-plugin/install.sh`),
+      that all 15 `/agora*` commands resolve after restart, and that personas share with the
+      Claude dir when present. *(added: 2026-08-29)*
 - [ ] **Rebuild novel coaching personas with full pipeline** — Thomas Harris, Joe Navarro,
       Gillian Flynn, Dennis Lehane all only have `persona.md` stubs (no `research/`,
       most have no `transcripts/`). Run `/coach-refresh` for each. Blocks a real test of
       v2.5.0's debate and gap detection — a coach with no `research/` can only report
       "everything is thin." *(added: 2026-08-23)*
 - [ ] **Validate v2.5.0 at scale** — the proof run was 2 coaches, 2 rounds. Untested:
-      3+ coaches in a round, the `wantsToPress` 1v1 narrowing, hitting the 5-round cap,
-      and whether `_gaps.md` entries actually get closed correctly by a later
-      `/coach-refresh`. *(added: 2026-08-24)*
-- [ ] **Old `talk-to-anyone` plugin removed but skills may still be cached** — user
-      removed it; `/coach-refresh-all` was not resolving. Verify after a Claude Code
-      restart that all 14 commands resolve under `agora-roundtable`.
-      *(added: 2026-08-24)*
+       3+ coaches in a round, the `wantsToPress` 1v1 narrowing, hitting the 5-round cap,
+       and whether `_gaps.md` entries actually get closed correctly by a later
+       `/coach-refresh`. Also untested on the opencode port's `agents/agora-*` subagents.
+       *(added: 2026-08-24)*
 - [ ] Run the Step 4.5 pass against the Goggins persona's `inbox/` and coverage the
       same way Hormozi was checked — v1.2.3 fixed its `research/` for accuracy, but
       that was before coverage and unsourced-claim checks existed *(added: 2026-08-19)*
