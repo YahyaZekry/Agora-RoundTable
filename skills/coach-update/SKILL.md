@@ -36,7 +36,8 @@ Read `inbox/_sync-status.md` if it exists — a manifest table: file, last-synce
 **coverage**, which `research/<domain-slug>.md` it was extracted into (PDFs can't hold
 YAML frontmatter, so this manifest is the tracking mechanism). Treat any file with no
 entry, modified after its logged date, **or logged as partial**, as needing extraction.
-No manifest and no files in `inbox/`? Tell the user the inbox is empty and stop.
+If `inbox/` is empty, say so in one line but **do not stop** — skip to Step 2.5, which
+can still close `unmined` gaps from `transcripts/` without needing anything new.
 
 For each file needing extraction:
 - Check `persona.md`'s Deep-Dive Sources for which domains already exist.
@@ -64,20 +65,59 @@ of (every PDF, by definition) is logged as **partial**, naming what's left: "pag
 of ~10 read," "concepts I, III-VI extracted; II and VII-XIII not yet." A partial
 extraction logged as complete is worse than no entry at all.
 
-## Step 2.5 — Close any gaps this material fills
+## Step 2.5 — Close the gaps
 
 If `DATA_DIR/<slug>/research/_gaps.md` exists, read its open entries. These are thin
-spots found during actual use — by `/discuss` or `/coach-gaps` — and a `user-only` gap
-is closed precisely by the user dropping the missing source into `inbox/`, which is
-what just happened.
+spots found during actual use, by `/discuss` or `/coach-gaps`. **This command closes all
+three kinds**, and never rebuilds anything to do it. Work through them cheapest first.
 
-For each open entry, check whether the material extracted in Step 2 actually fills it.
-If it does, mark it `Status: closed` with today's date. Never mark a gap closed on the
-assumption that a dropped file *probably* covers it — confirm the content is now in
-`research/`.
+**a) `unmined` gaps — the material is already on disk.**
 
-Mention closed gaps in the Step 3 report; that's the payoff for the user having gone
-and found the source.
+This is the free fix and it is the reason this step exists. An unmined gap means the
+content sits in `transcripts/` (or in an `inbox/` file already logged as synced) but
+never reached `research/`. No fetching, no web search, no new files from the user.
+
+For each open `unmined` entry: go to `transcripts/` and read the parts that cover that
+topic, then write the content into the matching `research/<domain>.md` directly. Same
+rule as Step 2 — whoever reads the source writes the research file; do not summarize a
+summary.
+
+Do this even when `inbox/` is empty. An empty inbox is not a reason to skip the step,
+and if you stop early here the user has no command that closes these at all short of a
+full `/coach-refresh`, which is far more expensive and rebuilds things that were fine.
+
+**b) `user-only` gaps — the user just supplied the missing source.**
+
+These are closed precisely by a file landing in `inbox/`, which is what Step 2 just
+processed. For each open entry, check whether the extracted material actually fills it.
+
+**c) `unresearched` gaps — offer to research them, additively.**
+
+These need a web search. Do not send the user to `/coach-refresh` for them: that command
+rebuilds the whole cache to fix what is often one missing topic, and it throws away
+transcripts and research that were perfectly good.
+
+Instead, after (a) and (b), re-read `_gaps.md` and collect every entry still `open` (an
+entry with no Status marker counts as open).
+
+- **If none remain**, report "all gaps filled" and continue to Step 3.
+- **If any remain**, stop and ask the user: *"N gaps are still open after the sync.
+  Research them now?"* — and list them.
+  - **If yes**, run the same research the original build used (`/coach` Steps 4 and 4.5:
+    web research per gap, verified against sources), scoped to those gaps only. Write
+    results into the matching `research/<domain>.md`, creating a new domain file if
+    genuinely needed. Then mark what you filled.
+  - **If no**, leave them open and name them in the report.
+
+**This research pass is strictly additive.** Never delete or rebuild anything —
+`persona.md`, `videos.json`, `transcripts/` and existing `research/` content are all
+untouched. You are appending, not refreshing.
+
+**Marking:** set `Status: closed` with today's date only after confirming the content is
+now present in `research/`. Never close a gap on the assumption that a file *probably*
+covered it.
+
+Mention every closed gap in the Step 3 report.
 
 ## Step 3 — Report and resume
 

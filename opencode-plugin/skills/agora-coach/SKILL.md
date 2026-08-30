@@ -127,6 +127,25 @@ For each `research/<domain-slug>.md`, go back to the actual sources and check fo
 
 Fix gaps before moving on. Only once this check is clean does Step 5 read as trustworthy.
 
+## Gap-tracking convention (`_gaps.md`)
+
+Every gap recorded in `research/_gaps.md` carries a `Status` marker so `coach-update`,
+`coach-gaps`, and `coach-refresh` can tell what is still open at a glance. Match the
+file's existing layout:
+
+- **Table layout** (e.g. a `| Gap | Class | … ` table): add a `| Status |` column with
+  `open` or `closed` per row.
+- **Bullet layout** (the `### Unmined` / `### Unresearched` / `### User-only` lists):
+  prefix each item with a GitHub task-list marker — `- [ ]` for open, `- [x]` for closed.
+
+Rules:
+- **Absent marker = open.** Files written before this convention exist stay valid; the
+  first `coach-update` / `coach-gaps` run that touches them should backfill markers.
+- When new material fills a gap, set its Status to `closed` and append a short note
+  naming the source (the inbox file or the `research/<domain>.md` the build produced).
+- `coach-refresh` rebuilds from open gaps, so keep `closed` entries as a record but they
+  do not drive the rebuild.
+
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
 Use the persona template referenced by the Claude plugin

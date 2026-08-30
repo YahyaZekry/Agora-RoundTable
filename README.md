@@ -164,16 +164,17 @@ felt the weak spot. You cannot find that by auditing the files, because an audit
 checks what is written against its sources. It cannot check for things nobody has asked
 about yet.
 
-Each gap gets sorted by who can fix it:
+Gaps are written to `research/_gaps.md`. **`/coach-update` closes all of them**, and it
+never deletes or rebuilds anything. It works through them cheapest first:
 
-- **Already in `transcripts/`.** The material is on your disk, it just never made it into
-  `research/`. Fixed immediately, costs nothing, never goes to the web.
-- **Public but never researched.** Worth a targeted search.
-- **Only you can get it.** A specific book, a paywalled interview. It names the exact
-  thing, you put it in `inbox/`, then run `/coach-update`.
+1. **Already in `transcripts/`.** The material is on your disk, it just never made it
+   into `research/`. Pulled across immediately, costs nothing, never goes to the web.
+2. **Only you can get it.** A specific book or paywalled piece. You put it in `inbox/`,
+   and this is where it gets read.
+3. **Never researched.** Needs a web search, so it asks you first, then researches only
+   those topics and appends the results.
 
-Gaps are written to `research/_gaps.md`. When you later run `/coach-refresh`, it reads
-that file first and goes after those specific holes instead of rebuilding blind.
+Run it even when your inbox is empty. It will still do step 1.
 
 Run `/coach-gaps <name>` any time to ask a coach where it is thin. No debate needed.
 

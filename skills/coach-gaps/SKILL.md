@@ -73,8 +73,8 @@ For each gap the agent reports, decide **who can fix it**:
 
 | Class | Test | Action |
 |---|---|---|
-| **Unmined** | `transcripts/` exists and plausibly covers this, but it never reached `research/` | fixable now with no fetching — offer to extract |
-| **Unresearched** | public and researchable, just never covered | offer a targeted research pass or `/coach-refresh <name>` |
+| **Unmined** | `transcripts/` exists and plausibly covers this, but it never reached `research/` | free to fix, no fetching. Offer to extract it now, and tell the user `/coach-update <name>` also closes it |
+| **Unresearched** | public and researchable, just never covered | needs a web search, so `/coach-refresh <name>` is what closes it |
 | **User-only** | needs a specific book, paywalled piece, or private document | name the exact item; user drops it in `inbox/` then runs `/coach-update <name>` |
 
 Check the `transcripts/` folder before classifying anything as unresearched — an

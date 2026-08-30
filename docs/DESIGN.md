@@ -115,6 +115,34 @@ sitting in a persona's folder before a build. That's a separate concern from thi
 plugin's own research pipeline — left to whatever's managing that folder externally
 (e.g. a vault-sync skill), not duplicated here.
 
+## v2.5.1 — refresh stopped being destructive, update started closing gaps (2026-08-29)
+
+Two bugs, both found by Yahya using the thing.
+
+**`/coach-refresh` deleted before it rebuilt.** Step 3 wiped `persona.md`,
+`transcripts/` and `research/`, then Step 4 rebuilt. Any failure in between — API error,
+a search returning nothing, the user hitting Ctrl-C — destroyed the persona with no undo.
+Much worse than it looks, because a persona folder is usually a symlink into the user's
+notes vault, so this deletes vault content. Fixed: the old cache is *moved* to
+`.refresh-backup/`, the build runs, the result is verified as a real persona file, and
+only then is the backup discarded. Any failure restores it. Also restores old transcripts
+if a fresh fetch returns zero, since videos get deleted and region-blocked and a
+transcript you already have beats an empty re-fetch.
+
+**Gap detection routed to a command that couldn't close the gaps.** The design sorted
+gaps into three kinds, but `/coach-update` only closed the `user-only` kind. `unmined`
+gaps — content already sitting in `transcripts/`, free to extract, no web needed — had no
+command at all except `/coach-refresh`, which meant the *cheapest* fix required the *most
+destructive* command. Worse, `/coach-update` aborted early on an empty inbox, before it
+ever reached the gap step. Fixed: `/coach-update` now mines `transcripts/` for `unmined`
+gaps, runs even with an empty inbox, and offers a consent-gated research pass for
+whatever is still open. It is strictly additive and never rebuilds. `/coach-refresh` is
+now only for genuinely wanting a fresh build, not for filling a hole.
+
+The opencode port had independently arrived at the better answer for the second bug (ask
+the user, then research additively) while still carrying the first. The fixes were
+cross-ported so both runtimes match.
+
 ## v2.5.0 — warm-agent debate + use-driven gap detection (2026-08-24)
 
 Two changes, one enabling the other.

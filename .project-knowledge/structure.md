@@ -16,7 +16,7 @@ skills/                  # Claude Code plugin — commands live here as skills
   coach-switch/SKILL.md   # swap coaches mid-conversation
   coach-end/SKILL.md      # drop character, back to normal Claude
   coach-list/SKILL.md     # list every cached persona + saved presets
-  coach-refresh/SKILL.md  # wipe + rebuild one persona's cache; runs coach-update logic after
+  coach-refresh/SKILL.md  # rebuild one persona; backs the old cache up first, restores on failure
   coach-refresh-all/SKILL.md  # rebuild all coaches or a named preset (v2.3.0)
   coach-update/SKILL.md       # explicit inbox sync for one coach (v2.2.0)
   coach-update-all/SKILL.md   # inbox sync for all coaches or a named preset (v2.3.0)

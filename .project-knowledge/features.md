@@ -23,9 +23,9 @@ Below, "the command" refers to either runtime's equivalent.
 - **`/coach-switch <name>`** — close out the current coach, start/load a different one, no need for `/coach-end` first. *(v1.0.0)*
 - **`/coach-end`** — drop character, back to normal Claude, cache untouched. *(v1.0.0)*
 - **`/coach-list`** — show every persona already built on this machine (name, build date, source-video count) + saved roundtable presets. *(v1.0.0, presets v2.1.0)*
-- **`/coach-refresh <name>`** — wipe a persona's plugin-owned cache (`persona.md`, `videos.json`, `transcripts/`, `research/`, and the `inbox/_sync-status.md` manifest) and rebuild from fresh research + re-extract everything currently in `inbox/`, leaving the dropped files themselves untouched. Explicitly runs `/coach-update` logic as its final step after rebuilding. *(v1.0.0, extended v1.2.0–v1.2.4, inbox-update-on-refresh v2.2.0)*
+- **`/coach-refresh <name>`** — rebuild a persona from fresh research. **Moves the old cache to `.refresh-backup/` rather than deleting it**, builds, verifies the result, and only then discards the backup; on any failure it restores and reports, so a failed refresh can never destroy a persona (v2.5.1). Restores old transcripts if a fresh fetch returns none. Runs `/coach-update` after the build. `inbox/` files are never touched. *(v1.0.0, extended v1.2.0–v1.2.4, inbox-update-on-refresh v2.2.0, non-destructive v2.5.1)*
 - **`/coach-refresh-all [preset]`** — rebuild every built coach (no argument), or every coach in a named preset. Warns upfront: slow operation (several minutes per coach). `inbox/` files are never deleted. *(v2.3.0)*
-- **`/coach-update <name>`** — explicit inbox sync: process any new files in `DATA_DIR/<slug>/inbox/` and merge them into the matching `research/<domain>.md`. Updates `_sync-status.md`. Call this whenever you drop material into a coach's inbox and want it live. *(v2.2.0)*
+- **`/coach-update <name>`** — inbox sync **and the command that closes gaps**: merges new `inbox/` files into `research/<domain>.md`, mines `transcripts/` for open `unmined` gaps, then offers a consent-gated web-research pass for anything still open. Strictly additive — never deletes or rebuilds. Runs even when the inbox is empty. Updates `_sync-status.md`. *(v2.2.0, gap-closing v2.5.1)*
 - **`/coach-update-all [preset]`** — run `/coach-update` logic for every built coach, or every coach in a named preset. *(v2.3.0)*
 
 **Roundtable commands:**
@@ -55,13 +55,20 @@ Reads persona.md and goes straight to embodiment (Step 6). Inbox is no longer au
 on cache hits — call `/coach-update <name>` explicitly when you've dropped something new. *(inbox
 moved to explicit in v2.2.0)*
 
-**Inbox sync (`/coach-update <name>`)**
-1. Locate `DATA_DIR/<slug>/inbox/`; read `_sync-status.md` to know what's already been extracted
+**Inbox sync and gap-closing (`/coach-update <name>`)** *(gap steps added v2.5.1)*
+1. Locate `DATA_DIR/<slug>/inbox/`; read `_sync-status.md` to know what's already been extracted.
+   An empty inbox does NOT abort the command — it continues to the gap steps below.
 2. For each new or partial file: text files read in full, PDFs first 1-3 pages; extract content
    into the matching `research/<domain>.md` directly (no intermediary report)
 3. Update `_sync-status.md`: file, date, coverage (complete/partial), target `research/` file.
    Partial coverage is a re-extraction trigger — logged partial rather than guessing complete.
-4. Report what was synced; resume session if a coach was active
+4. **Close `unmined` gaps** — content already in `transcripts/` that never reached `research/`.
+   Free, no web. This is why an empty inbox must not stop the command.
+5. **Close `user-only` gaps** the freshly-synced inbox files fill.
+6. **Offer a consent-gated research pass** for anything still open, scoped to those gaps only.
+   Strictly additive: never deletes or rebuilds persona.md, videos.json, transcripts/ or
+   existing research/. `/coach-refresh` is for wanting a fresh build, not for filling a hole.
+7. Report what was synced and which gaps closed; resume session if a coach was active
 
 **Multi-domain vs. single-domain figures**
 A person known for genuinely separate things gets one flat `research/<domain-slug>.md` per domain.

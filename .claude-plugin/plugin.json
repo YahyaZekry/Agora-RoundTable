@@ -1,7 +1,7 @@
 {
   "name": "agora",
   "displayName": "Agora RoundTable",
-  "version": "2.5.0",
+  "version": "2.5.1",
   "description": "Turn any public figure into your personal coach, living or historical. /coach <name> researches the person and talks to you as them. /roundtable <name1>, <name2>, ... runs multiple coaches simultaneously, each as an independent subagent. /discuss <topic> runs a real multi-round debate between them until positions stop moving, then reports where each coach's own knowledge was thin. /coach-gaps <name> audits a coach's sourcing directly.",
   "author": {
     "name": "Yahya Zekry"
