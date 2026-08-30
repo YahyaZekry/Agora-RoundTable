@@ -6,11 +6,6 @@
   "author": {
     "name": "Yahya Zekry"
   },
-  "based_on": {
-    "name": "talk-to-anyone",
-    "author": "Colton Dean",
-    "repository": "https://github.com/coltonjosephdean-rgb/talk-to-anyone"
-  },
   "repository": "https://github.com/YahyaZekry/agora",
   "license": "MIT",
   "keywords": [

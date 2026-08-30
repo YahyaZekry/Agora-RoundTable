@@ -1,8 +1,7 @@
-# Design — talk-to-anyone
+# Design — Agora RoundTable
 
-Built 2026-07-06 (overnight autonomous build). Decisions confirmed with Colton before
-the run: Claude Code plugin format, bundled yt-dlp fetcher, repo name `talk-to-anyone`,
-cached personas.
+Started 2026-07-06. Core shape settled up front: Claude Code plugin format, bundled
+yt-dlp fetcher, cached personas on disk.
 
 ## Shape
 
@@ -24,7 +23,7 @@ with `source: "./"`). Five skills, one Python script, zero runtime services:
   (voice rules + beliefs + named frameworks + verbatim quotes + embodiment rules) is
   enough for Claude to hold a voice, is human-inspectable, and costs nothing to store.
 - **Cache in `${CLAUDE_PLUGIN_DATA}`** (survives plugin updates), fallback
-  `~/.claude/talk-to-anyone/` when the variable doesn't substitute (repo used without
+  `~/.claude/agora-roundtable/` when the variable doesn't substitute (repo used without
   plugin install). Raw transcripts are kept next to the persona so a rebuild or a
   deeper question ("what exactly did he say about X?") can re-read them.
 - **Active coach is conversation state, not disk state.** No lock files; two parallel

@@ -7,7 +7,7 @@
 
 ## What This Project Does
 
-A plugin (based on `coltonjosephdean-rgb/talk-to-anyone`, MIT attributed) that turns any
+A Claude Code and OpenCode plugin that turns any
 public figure into an AI coach persona. Ships for **two hosts** with identical capability
 and a shared persona format: **Claude Code** (`/coach`, `/roundtable`, `/discuss`) and
 **OpenCode** (`/agora coach`, `/agora roundtable`, `/agora discuss`). Two modes:

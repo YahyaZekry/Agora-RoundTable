@@ -78,13 +78,14 @@
   v1.2.3, not just ones that feel thin.** Hormozi felt fine and read fine — the gaps
   were 8 unmined concepts and 5 unsourced frameworks, invisible from the output side.
   *(2026-08-19)*
-- **Detached fork, made the repo fully independent.** `YahyaZekry/talk-to-anyone` was a
-  fork of `coltonjosephdean-rgb/talk-to-anyone`. User detached it on GitHub (Settings →
-  Detach fork). `plugin.json` and `marketplace.json` updated to credit Yahya Zekry as
-  author, with a `based_on` field pointing to the original. `LICENSE` kept untouched
-  (MIT requires preserving the original copyright notice). README updated: install
-  command now points to `YahyaZekry/talk-to-anyone`, Colton's personal narrative removed,
-  attribution section added. *(2026-08-22, v2.0.0)*
+- **Repo made fully independent.** Detached on GitHub, manifests updated to name Yahya
+  Zekry as author, README rewritten around this project rather than its origin.
+  *(2026-08-22, v2.0.0)*
+- **All references to the original project removed** from the README, manifests,
+  `DESIGN.md`, `INDEX.md` and skill headings — the product stands as Agora RoundTable
+  only. The `LICENSE` file still carries the original MIT copyright line, which is a
+  legal requirement while any of that code remains, not a branding choice.
+  *(2026-08-29)*
 - **Added roundtable feature** — four new skills: `roundtable`, `roundtable-add`,
   `roundtable-remove`, `roundtable-end`. Roundtable runs multiple already-built personas
   simultaneously. The facilitator (Claude, out of character) handles three message types:

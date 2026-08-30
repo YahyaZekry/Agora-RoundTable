@@ -27,7 +27,6 @@ Works for anyone with a public footprint, living or historical.
 | [Building a persona](#building-a-persona) | The six-step pipeline |
 | [Architecture](#architecture) | Flow diagram |
 | [Limits & troubleshooting](#limits--troubleshooting) | What it won't do |
-| [Attribution](#attribution) | Built on talk-to-anyone |
 
 ## Install
 
@@ -346,15 +345,6 @@ Historical figures are rebuilt from their writing, in the language of their time
 
 </details>
 
-## Attribution
-
-Forked from [talk-to-anyone](https://github.com/coltonjosephdean-rgb/talk-to-anyone) by
-[Colton Dean](https://github.com/coltonjosephdean-rgb), MIT licensed. His v1.1.0 is the
-foundation: the six-step build pipeline, persona-as-markdown, and `fetch_youtube.py`.
-
-Everything from v1.2.0 on is by [Yahya Zekry](https://github.com/YahyaZekry): the
-persisted `research/` files, the `inbox/` system, the verification pass, and the whole
-roundtable including warm-agent debate and gap detection. Upstream is still v1.1.0.
 
 ---
 
