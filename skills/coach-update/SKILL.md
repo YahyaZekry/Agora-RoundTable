@@ -67,9 +67,13 @@ extraction logged as complete is worse than no entry at all.
 
 ## Step 2.5 — Close the gaps
 
-If `DATA_DIR/<slug>/research/_gaps.md` exists, read its open entries. These are thin
-spots found during actual use, by `/discuss` or `/coach-gaps`. **This command closes all
-three kinds**, and never rebuilds anything to do it. Work through them cheapest first.
+**Read `DATA_DIR/<slug>/research/_gaps.md` before doing anything else in this step.** If
+the file does not exist, there are no known gaps — skip to Step 3.
+
+Collect every entry whose `Status` is `open` (an entry with no Status marker counts as
+open). These are thin spots found during actual use, by `/discuss` or `/coach-gaps`.
+**This command closes all three kinds**, and never rebuilds anything to do it. Work
+through them cheapest first.
 
 **a) `unmined` gaps — the material is already on disk.**
 
@@ -116,6 +120,22 @@ untouched. You are appending, not refreshing.
 **Marking:** set `Status: closed` with today's date only after confirming the content is
 now present in `research/`. Never close a gap on the assumption that a file *probably*
 covered it.
+
+**d) Tidy the file when you are done.**
+
+Recount the entries after all the marking is finished.
+
+- **If nothing is open any more**, delete `research/_gaps.md` entirely. An empty gaps
+  file is clutter, and a coach with no known gaps should not carry a file implying it
+  has some. Say one line: *"All gaps closed — removed `_gaps.md`."*
+- **If some are still open**, keep the file and put a status line at the very top so the
+  state is readable at a glance without scrolling:
+
+  ```markdown
+  <!-- 2 open, 3 closed — last checked 2026-08-29 -->
+  ```
+
+  Update that line every time; do not add a second one.
 
 Mention every closed gap in the Step 3 report.
 
