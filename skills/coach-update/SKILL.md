@@ -70,21 +70,42 @@ extraction logged as complete is worse than no entry at all.
 **Read `DATA_DIR/<slug>/research/_gaps.md` before doing anything else in this step.** If
 the file does not exist, there are no known gaps — skip to Step 3.
 
-Collect every entry whose `Status` is `open` (an entry with no Status marker counts as
-open). These are thin spots found during actual use, by `/discuss` or `/coach-gaps`.
-**This command closes all three kinds**, and never rebuilds anything to do it. Work
-through them cheapest first.
+**The file may be in either of two shapes. Handle both.**
 
-**a) `unmined` gaps — the material is already on disk.**
+- **Structured:** `## Gap: <label>` blocks each carrying `- **Class:**` and
+  `- **Status:**`. Collect the ones that are not `closed`.
+- **Sectioned:** free-form prose under `### Unmined` / `### Unresearched` / `### User-only`
+  headings, with gaps as bullets and no Status markers at all. This is what `/coach-gaps`
+  and post-debate audits actually produce today. Treat **every bullet as open** unless it
+  is explicitly marked done.
 
-This is the free fix and it is the reason this step exists. An unmined gap means the
-content sits in `transcripts/` (or in an `inbox/` file already logged as synced) but
-never reached `research/`. No fetching, no web search, no new files from the user.
+Do not report "all gaps filled" just because no `Status:` marker was found. An audit
+written as prose is still a list of real gaps. If you cannot tell which shape you are
+looking at, read the whole file and work from what it plainly says.
 
-For each open `unmined` entry: go to `transcripts/` and read the parts that cover that
-topic, then write the content into the matching `research/<domain>.md` directly. Same
-rule as Step 2 — whoever reads the source writes the research file; do not summarize a
-summary.
+These are thin spots found during actual use, by `/discuss` or `/coach-gaps`. **This
+command closes all three kinds**, and never rebuilds anything to do it. Work through them
+cheapest first.
+
+**a) `unmined` gaps — the material is already on disk somewhere.**
+
+This is the free fix and it is the reason this step exists. Nothing is fetched, nothing is
+searched, nothing is asked of the user. **Unmined covers two cases, and historical figures
+only ever have the second:**
+
+1. **Content in `transcripts/` that never reached `research/`.** Read the relevant parts
+   of the transcript and write them into the matching `research/<domain>.md`.
+2. **Content in `research/` that never reached `persona.md`.** A figure with no video has
+   no transcripts at all, so for them every unmined gap is this kind — a framework or
+   passage sitting in a research file that the persona never surfaces. Pull it up into
+   `persona.md`, keeping that file's compressed style: a rule, a named framework, a short
+   quote. Do not paste a research section into it wholesale.
+
+Check which case applies before deciding a gap cannot be closed. A coach with an empty
+`transcripts/` folder is not a coach with no unmined gaps.
+
+Same rule as Step 2 either way — whoever reads the source writes the destination file; do
+not summarize a summary.
 
 Do this even when `inbox/` is empty. An empty inbox is not a reason to skip the step,
 and if you stop early here the user has no command that closes these at all short of a

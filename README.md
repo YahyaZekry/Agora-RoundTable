@@ -351,7 +351,7 @@ Historical figures are rebuilt from their writing, in the language of their time
 <details>
 <summary>🧠 AI Context</summary>
 
-This project uses the [project-knowledge](https://github.com/YahyaZekry/claude-code-skills) skill to maintain a `.project-knowledge/` folder — a living, AI-readable map of the codebase. Every AI session loads only the files relevant to the current task instead of scanning from scratch.
+This project uses the [project-knowledge](https://github.com/YahyaZekry/project-knowledge-skill) skill to maintain a `.project-knowledge/` folder — a living, AI-readable map of the codebase. Every AI session loads only the files relevant to the current task instead of scanning from scratch.
 
 Built by [Yahya Zekry](https://github.com/YahyaZekry).
 

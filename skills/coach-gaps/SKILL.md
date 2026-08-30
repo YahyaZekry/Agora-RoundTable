@@ -29,8 +29,11 @@ suggest `/coach <name>` to build them.
 
 ## Step 2 — Show what's already recorded
 
-If `DATA_DIR/<slug>/research/_gaps.md` exists, read it and show any entries with
-`Status: open`. These were found during earlier `/discuss` sessions.
+If `DATA_DIR/<slug>/research/_gaps.md` exists, read the whole file and show what is
+still open. It may be structured `## Gap:` blocks with `Status:` markers, or free-form
+prose under `### Unmined` / `### Unresearched` / `### User-only` headings with no markers
+at all — in that shape, every bullet is open unless it says otherwise. These were found
+during earlier `/discuss` sessions or audits.
 
 If the user only wanted the existing list, stop here.
 
@@ -73,16 +76,26 @@ For each gap the agent reports, decide **who can fix it**:
 
 | Class | Test | Action |
 |---|---|---|
-| **Unmined** | `transcripts/` exists and plausibly covers this, but it never reached `research/` | free to fix, no fetching. Offer to extract it now, and tell the user `/coach-update <name>` also closes it |
-| **Unresearched** | public and researchable, just never covered | needs a web search, so `/coach-refresh <name>` is what closes it |
+| **Unmined** | the material is already on disk: either in `transcripts/` but not in `research/`, **or** in `research/` but never surfaced into `persona.md` (this second case is the only one historical figures have, since they have no transcripts) | free to fix, no fetching. Offer to extract it now, and tell the user `/coach-update <name>` also closes it |
+| **Unresearched** | public and researchable, just never covered | needs a web search. `/coach-update <name>` will offer to do it as an additive pass — do not send the user to `/coach-refresh`, which rebuilds the whole cache to fill one hole |
 | **User-only** | needs a specific book, paywalled piece, or private document | name the exact item; user drops it in `inbox/` then runs `/coach-update <name>` |
 
-Check the `transcripts/` folder before classifying anything as unresearched — an
-unmined gap is free to fix and should never be sent out to the web.
+Check both places before classifying anything as unresearched: `transcripts/` **and**
+the `research/` files themselves. An unmined gap is free to fix and should never be sent
+out to the web. A coach with an empty `transcripts/` folder can still have plenty of
+unmined gaps — material sitting in `research/` that `persona.md` never reaches for.
 
 ## Step 5 — Record and report
 
-Append new entries to `DATA_DIR/<slug>/research/_gaps.md` (create it if absent):
+Append new entries to `DATA_DIR/<slug>/research/_gaps.md` (create it if absent).
+
+**If the file already exists in a different shape** — free-form prose under
+`### Unmined` / `### Unresearched` / `### User-only` headings, which is what post-debate
+audits produce — **keep that shape and append to the matching section.** Do not rewrite
+someone else's audit into this template. `/coach-update` reads both shapes. What matters
+is that each gap says what is missing, which class it is, and what would close it.
+
+For a new file, use:
 
 ```markdown
 ## Gap: <short label>

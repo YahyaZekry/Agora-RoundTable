@@ -1,13 +1,13 @@
 # Roadmap
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30
 
 ## Current Goal
 
-v2.5.0 (warm-agent debate + use-driven gap detection) shipped on the Claude side and is
-mirrored in the new **opencode port** (`opencode-plugin/`, full `/agora*` command parity,
-still uncommitted). Two things remain: (1) validate the warm-agent debate at scale against
-fully-built coaches, and (2) commit + smoke-test the opencode port.
+v2.5.1 shipped on both runtimes: `/coach-refresh` no longer deletes before it rebuilds,
+and `/coach-update` now closes all three kinds of gap without rebuilding anything. The
+opencode port is committed and at parity. Remaining: run an end-to-end test of the gap
+flow against a real coach, and validate the warm-agent debate at scale.
 
 ---
 
@@ -19,10 +19,17 @@ fully-built coaches, and (2) commit + smoke-test the opencode port.
 
 ## Active TODOs
 
-- [ ] **Commit and smoke-test the opencode port** — `opencode-plugin/` and `docs/opencode.md`
-      are still untracked/uncommitted. Verify install (`bash opencode-plugin/install.sh`),
-      that all 15 `/agora*` commands resolve after restart, and that personas share with the
-      Claude dir when present. *(added: 2026-08-29)*
+- [ ] **Smoke-test the opencode port** — committed as of 2026-08-29. Still unverified:
+      install (`bash opencode-plugin/install.sh`), that all 15 `/agora*` commands resolve
+      after restart, and that personas share with the Claude dir when present.
+      *(added: 2026-08-29)*
+- [ ] **End-to-end test the v2.5.1 gap flow** — `/coach-gaps` on a real coach to record
+      gaps, then `/coach-update` to close them, checking each kind routes correctly and
+      that `_gaps.md` is deleted when everything closes and gets a status header when it
+      does not. Never actually run start-to-finish. *(added: 2026-08-30)*
+- [ ] **Verify the refresh backup path actually restores** — force a build failure and
+      confirm `.refresh-backup/` is put back and nothing is lost. The safety net is
+      written but untested. *(added: 2026-08-30)*
 - [ ] **Rebuild novel coaching personas with full pipeline** — Thomas Harris, Joe Navarro,
       Gillian Flynn, Dennis Lehane all only have `persona.md` stubs (no `research/`,
       most have no `transcripts/`). Run `/coach-refresh` for each. Blocks a real test of

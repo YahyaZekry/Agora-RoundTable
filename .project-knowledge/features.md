@@ -1,6 +1,6 @@
 # Features & Workflows
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30
 
 ## Dual-runtime — identical capabilities
 
@@ -24,9 +24,9 @@ Below, "the command" refers to either runtime's equivalent.
 - **`/coach-end`** — drop character, back to normal Claude, cache untouched. *(v1.0.0)*
 - **`/coach-list`** — show every persona already built on this machine (name, build date, source-video count) + saved roundtable presets. *(v1.0.0, presets v2.1.0)*
 - **`/coach-refresh <name>`** — rebuild a persona from fresh research. **Moves the old cache to `.refresh-backup/` rather than deleting it**, builds, verifies the result, and only then discards the backup; on any failure it restores and reports, so a failed refresh can never destroy a persona (v2.5.1). Restores old transcripts if a fresh fetch returns none. Runs `/coach-update` after the build. `inbox/` files are never touched. *(v1.0.0, extended v1.2.0–v1.2.4, inbox-update-on-refresh v2.2.0, non-destructive v2.5.1)*
-- **`/coach-refresh-all [preset]`** — rebuild every built coach (no argument), or every coach in a named preset. Warns upfront: slow operation (several minutes per coach). `inbox/` files are never deleted. *(v2.3.0)*
+- **`/coach-refresh-all [preset]`** — rebuild every built coach (no argument), or every coach in a named preset. **Delegates to `/coach-refresh` rather than restating its steps**, so it inherits the backup-and-restore behaviour; a coach whose build fails is restored and the run continues to the next one. Warns upfront: slow (several minutes per coach). `inbox/` files are never touched. *(v2.3.0, delegating + non-destructive v2.5.1)*
 - **`/coach-update <name>`** — inbox sync **and the command that closes gaps**: merges new `inbox/` files into `research/<domain>.md`, mines `transcripts/` for open `unmined` gaps, then offers a consent-gated web-research pass for anything still open. Strictly additive — never deletes or rebuilds. Runs even when the inbox is empty. Updates `_sync-status.md`. *(v2.2.0, gap-closing v2.5.1)*
-- **`/coach-update-all [preset]`** — run `/coach-update` logic for every built coach, or every coach in a named preset. *(v2.3.0)*
+- **`/coach-update-all [preset]`** — run the **full** `/coach-update` flow (inbox sync *and* gap closing) for every built coach, or every coach in a named preset. Differs from the single-coach version in one way: it does not stop to ask before web research per coach — it collects every gap needing research across all coaches and asks once at the end. *(v2.3.0, gap-closing v2.5.1)*
 
 **Roundtable commands:**
 - **`/roundtable <name1>, <name2>, ...`** — start a multi-coach session with two or more already-built personas. Coaches must exist in cache; if any are missing, the skill tells the user to build them first with `/coach`. Writes `DATA_DIR/roundtable-session.json` to persist the active roster. *(v2.0.0)*

@@ -7,9 +7,9 @@ Resolve the shared data dir, identify the coach ($ARGUMENTS, or ask if empty), c
 
 **1. Process inbox/.** Read inbox/_sync-status.md and extract any file with no entry, modified after its logged date, or logged partial — merge into matching research/<domain>.md (or create a new domain). For PDFs, read only the first 1-3 pages and log coverage as partial. An empty inbox is NOT a reason to stop: say so in one line and carry on to the gap work, which can still close gaps without anything new.
 
-**2. Read research/_gaps.md.** Collect every entry whose Status is still `open` (no Status marker counts as open). If the file does not exist there are no known gaps — report the sync and stop.
+**2. Read research/_gaps.md.** It comes in two shapes and you must handle both: structured `## Gap:` blocks carrying `Status:`, or free-form prose under `### Unmined` / `### Unresearched` / `### User-only` headings with no Status markers at all (what post-debate audits actually produce). In the second shape treat every bullet as open. Never report "all gaps filled" just because no Status marker was found. If the file does not exist there are no known gaps — report the sync and stop.
 
-**3. Close `unmined` gaps first — they are free.** The content is already in transcripts/ but never reached research/. Read the relevant parts of transcripts/ and write them into the matching research/<domain>.md directly. No fetching, no web search. Whoever reads the source writes the research file — never summarize a summary.
+**3. Close `unmined` gaps first — they are free.** Unmined covers two cases: content in transcripts/ that never reached research/, or content in research/ that never surfaced into persona.md. Historical figures have no transcripts, so for them every unmined gap is the second kind — pull it up into persona.md in that file's compressed style, not wholesale. An empty transcripts/ folder does not mean there are no unmined gaps. No fetching, no web search. Whoever reads the source writes the destination — never summarize a summary.
 
 **4. Close `user-only` gaps** that the files just synced from inbox/ actually fill. Confirm the content is really in research/ before marking anything closed — never close on the assumption that a dropped file probably covered it.
 

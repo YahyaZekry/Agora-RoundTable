@@ -31,19 +31,28 @@ rebuilt one at a time."**
 If no coaches are found, tell the user nothing is built yet and stop.
 
 **Warn before starting:** rebuilding replaces all transcripts, research files, and
-persona.md for each coach. The user's own `inbox/` files are NOT deleted — they'll be
-re-extracted into the fresh research. Confirm with one line: **"Starting rebuild. inbox/
-files are safe."**
+persona.md for each coach. Nothing is deleted until its replacement is verified — each
+coach's old cache is moved to `.refresh-backup/` and restored if the build fails. The
+user's own `inbox/` files are never touched. Confirm with one line: **"Starting rebuild.
+Existing personas are backed up per coach and restored if a build fails."**
 
 ## Step 2 — Rebuild each coach in sequence
 
-For each coach in the target list, run the full `/coach-refresh` pipeline:
+For each coach in the target list, run the full `/coach-refresh` pipeline **exactly as
+that skill defines it** — read `${CLAUDE_PLUGIN_ROOT}/skills/coach-refresh/SKILL.md` and
+follow it. Do not reimplement the steps here; that is how this command previously ended
+up deleting caches outright while `/coach-refresh` had already been fixed not to.
 
-1. Delete `persona.md`, `videos.json`, `transcripts/`, `research/` contents, and
-   `inbox/_sync-status.md` (not `inbox/` itself — user files are preserved)
-2. Run the full `/coach` build from Step 1 (fetch transcripts, deep web research,
-   verify, distill into persona.md)
-3. Run `/coach-update` inbox sync for this coach
+In particular that means, per coach:
+
+1. Move the old cache to `.refresh-backup/` — never delete it up front
+2. Run the full `/coach` build
+3. Verify the rebuild produced a real `persona.md` and at least one research file, then
+   discard the backup. **If the build failed, restore the backup and report it** — then
+   carry on to the next coach rather than aborting the whole run
+4. Run `/coach-update` for this coach (inbox sync and gap closing)
+
+A failed coach must never leave that persona destroyed or half-built.
 
 Label each coach as you go:
 
@@ -53,6 +62,13 @@ Label each coach as you go:
 
 **Rebuilding Joe Navarro** (2 of 2)...
   ✅ Joe Navarro rebuilt — 6 transcripts, 2 research domains, inbox clean.
+```
+
+If a coach fails, say so plainly and note that it was restored:
+
+```
+**Rebuilding Gillian Flynn** (3 of 4)...
+  ⚠️ Build failed (no search results). Original persona restored, unchanged.
 ```
 
 ## Step 3 — Summary

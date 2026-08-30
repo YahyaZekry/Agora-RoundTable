@@ -1,6 +1,6 @@
 # History
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30
 > Past-only. Append-only — never delete entries.
 
 ## Removed
@@ -22,6 +22,27 @@
   fabricated quote) caught only by an independent verification pass against the raw
   sources. Not a one-off mistake — structural (two lossy hops compound even when each
   looks fine alone). *(fixed: 2026-08-11, v1.2.3 — Step 4.5)*
+- **`/coach-refresh` destroyed personas on any failure** — it deleted `persona.md`,
+  `transcripts/` and `research/` and *then* ran the build, so an API error, an empty
+  search or a user interrupt left nothing. Worse in practice than in theory: persona
+  folders are usually symlinks into the user's vault, so this deleted vault content with
+  no undo. Fixed by moving the cache to `.refresh-backup/`, verifying the rebuild
+  produced a real persona file, and only then discarding it; any failure restores. Also
+  restores old transcripts when a fresh fetch returns zero.
+  *(fixed: 2026-08-29, v2.5.1)*
+- **Gap detection routed to commands that could not close the gaps** — the design sorted
+  gaps into three kinds but `/coach-update` only closed `user-only`. `unmined` gaps
+  (content already in `transcripts/`, free to extract) had no command except
+  `/coach-refresh`, so the cheapest fix required the most destructive tool. `/coach-update`
+  also aborted on an empty inbox before reaching the gap step at all. Fixed: it now closes
+  all three kinds, runs on an empty inbox, and offers a consent-gated additive research
+  pass instead of sending anyone to refresh. *(fixed: 2026-08-29, v2.5.1)*
+- **Both bulk commands silently did less than their single-coach versions** —
+  `/coach-update-all` ran only `/coach-update` Step 2, skipping the gap step;
+  `/coach-refresh-all` reimplemented the cache delete inline instead of delegating, so it
+  kept deleting outright after `/coach-refresh` had been fixed. Both now delegate to the
+  single-coach skill rather than restating its steps, which is what let them drift in the
+  first place. *(fixed: 2026-08-30, v2.5.1)*
 
 ---
 
@@ -81,6 +102,17 @@
 - **Repo made fully independent.** Detached on GitHub, manifests updated to name Yahya
   Zekry as author, README rewritten around this project rather than its origin.
   *(2026-08-22, v2.0.0)*
+- **Bulk commands must delegate, never restate.** Both `-all` commands had copies of the
+  single-coach logic written out inline, and both drifted out of sync the moment the
+  single-coach version was fixed — one skipped gap closing, the other kept deleting caches
+  that the fixed command no longer deleted. They now say "run that skill, exactly as it
+  defines it" and list steps only as a summary. *(2026-08-30, v2.5.1)*
+- **`_gaps.md` is deleted when nothing is open, not kept as an archive of closed items.**
+  Earlier design marked entries closed and kept them forever, on the reasoning that a
+  later session should see the gap was real. In practice that leaves every coach carrying
+  a file that implies it has gaps when it does not. Now: delete when nothing is open, and
+  when some remain keep a single status header (`<!-- 2 open, 3 closed — last checked
+  DATE -->`) so state is readable without scrolling. *(2026-08-30, v2.5.1)*
 - **All references to the original project removed** from the README, manifests,
   `DESIGN.md`, `INDEX.md` and skill headings — the product stands as Agora RoundTable
   only. The `LICENSE` file still carries the original MIT copyright line, which is a
