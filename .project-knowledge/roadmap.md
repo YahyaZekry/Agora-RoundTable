@@ -31,13 +31,14 @@ warm-agent debate at scale, and get the user's two outstanding persona decisions
       phrases word-for-word. The run also correctly caught that the old Symposium wording
       was Jowett's *Introduction* rather than dialogue text, which is exactly the
       discrimination the gap existed to enforce. Purely additive, nothing clobbered.
-- [ ] **Two Plato decisions are waiting on the user** — which translation the persona
-      quotes in (currently all Jowett 1892), and how to treat the disputed Seventh Letter
-      that carries the whole Syracuse biography. Both sit in `plato/inbox/` as questions.
-      *(added: 2026-08-30)*
-- [ ] **Re-check whether the Phaedo-immortality gap is still blocked** — it was left open
-      because extracting it would propagate unverified text, but the research pass has
-      since run. Likely closeable now. *(added: 2026-08-30)*
+- [x] ~~**Two Plato decisions**~~ — **DECIDED 2026-08-30.** Seventh Letter: treat as
+      disputed and flag it; now Embodiment Rule 0, marking anything resting on it with ❗.
+      Translation: stay with Jowett 1892, no change needed.
+- [x] ~~**Phaedo-immortality gap**~~ — **CLOSED 2026-08-30.** The dialogue was cited in
+      the source index but the persona had nothing from it to say. Added as a framework
+      from the three verified Jowett lines only; the two still-unverified arguments were
+      deliberately left out. Plato is now at zero open gaps and `_gaps.md` was deleted per
+      the tidy rule.
 - [ ] **Verify the refresh backup path actually restores** — force a build failure and
       confirm `.refresh-backup/` is put back and nothing is lost. The safety net is
       written but untested. *(added: 2026-08-30)*

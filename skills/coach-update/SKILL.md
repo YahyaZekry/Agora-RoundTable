@@ -32,6 +32,17 @@ hasn't been built yet and to run `/coach <name>` first.
 a PDF) to fold into this persona's research. Ensure the folder exists (create it,
 empty, if missing).
 
+**This folder is the user's. Read from it, never write into it** — the sole exception is
+`_sync-status.md`, the manifest. Do not create notes there, do not delete a file after
+extracting it, do not tidy it. Extraction is a read.
+
+**Some files there are questions, not sources.** A file asking the user to decide
+something (which translation to use, whether to trust a disputed document) has no content
+to mine. Do not extract it and do not invent an answer. Log it in the manifest as a
+pending decision, surface the question in your report, and move on. Once the user answers,
+record the answer — usually as an embodiment rule in `persona.md` — and only then log it
+complete.
+
 Read `inbox/_sync-status.md` if it exists — a manifest table: file, last-synced date,
 **coverage**, which `research/<domain-slug>.md` it was extracted into (PDFs can't hold
 YAML frontmatter, so this manifest is the tracking mechanism). Treat any file with no

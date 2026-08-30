@@ -78,12 +78,26 @@ For each gap the agent reports, decide **who can fix it**:
 |---|---|---|
 | **Unmined** | the material is already on disk: either in `transcripts/` but not in `research/`, **or** in `research/` but never surfaced into `persona.md` (this second case is the only one historical figures have, since they have no transcripts) | free to fix, no fetching. Offer to extract it now, and tell the user `/coach-update <name>` also closes it |
 | **Unresearched** | public and researchable, just never covered | needs a web search. `/coach-update <name>` will offer to do it as an additive pass — do not send the user to `/coach-refresh`, which rebuilds the whole cache to fill one hole |
-| **User-only** | needs a specific book, paywalled piece, or private document | name the exact item; user drops it in `inbox/` then runs `/coach-update <name>` |
+| **User-only** | needs a specific book, paywalled piece, or private document, **or a decision only the user can make** | name the exact item in `_gaps.md` and tell the user. They drop the file in `inbox/` and run `/coach-update <name>`. **Do not write a note into `inbox/` yourself** — see below |
 
 Check both places before classifying anything as unresearched: `transcripts/` **and**
 the `research/` files themselves. An unmined gap is free to fix and should never be sent
 out to the web. A coach with an empty `transcripts/` folder can still have plenty of
 unmined gaps — material sitting in `research/` that `persona.md` never reaches for.
+
+## `inbox/` belongs to the user — never write into it
+
+`inbox/` is the user's drop zone. Read from it, never write to it. The only file this
+plugin may create there is `_sync-status.md`, the extraction manifest.
+
+**Never park a question in `inbox/`.** A `user-only` gap is a question, and questions
+belong in `_gaps.md` next to the gap they came from, plus in what you tell the user.
+Writing a note into `inbox/` puts a file the user did not create into the one folder
+they own — they will find it, not recognise it, and delete it. That has already
+happened once.
+
+Never delete or modify anything the user put there either, including after extracting
+it. Extraction is a read.
 
 ## Step 5 — Record and report
 

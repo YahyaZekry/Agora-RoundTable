@@ -120,11 +120,21 @@
 - **A recorded gap can be stale.** One of Plato's six unmined gaps was already closed and
   nothing had re-checked. Gap lists are point-in-time observations, not live state; verify
   before acting on one. *(2026-08-30)*
-- **`inbox/` can hold questions, not just material.** Plato's two inbox files are notes
-  asking the *user* to decide something (which translation, how to treat the Seventh
-  Letter), not sources to extract. `/coach-update` Step 2 assumes everything in `inbox/`
-  is material to mine and has no concept of an open question awaiting an answer. Known
-  limitation, not yet handled. *(2026-08-30)*
+- **`inbox/` belongs to the user and the plugin must never write into it.** A sourcing
+  audit on 2026-08-29 wrote two question-notes into Plato's `inbox/`
+  (`seventh-letter-authenticity.md`, `translation-choice.md`) and logged that it had.
+  **No skill instructed this** — the audit invented the behaviour because it needed
+  somewhere to park a question. The user later found two files in the one folder that is
+  documented as his, did not recognise them, and deleted them. Correctly. Fixed: both
+  runtimes now carry an explicit rule that `inbox/` is read-only to the plugin apart from
+  `_sync-status.md`, that a `user-only` gap is recorded in `_gaps.md` and raised in
+  conversation rather than parked as a file, and that user files are never deleted or
+  modified after extraction. *(2026-08-30, v2.5.1)*
+- **`inbox/` can also hold questions rather than sources.** A file asking the user to
+  decide something has nothing to mine. `/coach-update` now logs it as a pending decision
+  and surfaces the question instead of extracting it or inventing an answer; once
+  answered, the answer is recorded as an embodiment rule and only then logged complete.
+  *(2026-08-30, v2.5.1)*
 - **Bulk commands must delegate, never restate.** Both `-all` commands had copies of the
   single-coach logic written out inline, and both drifted out of sync the moment the
   single-coach version was fixed — one skipped gap closing, the other kept deleting caches
