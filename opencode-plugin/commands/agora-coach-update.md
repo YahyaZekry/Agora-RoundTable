@@ -17,6 +17,6 @@ Resolve the shared data dir, identify the coach ($ARGUMENTS, or ask if empty), c
 
 This research pass is strictly additive — never delete or rebuild the cache (persona.md, videos.json, transcripts/, or research/ except as appended to).
 
-**6. Tidy the gaps file.** Recount after all marking is done. If nothing is open any more, DELETE research/_gaps.md entirely — an empty gaps file is clutter and implies gaps that no longer exist — and say so in one line. If some are still open, keep it and put a single status line at the very top, `<!-- 2 open, 3 closed — last checked YYYY-MM-DD -->`, updating that line rather than adding a second one.
+**6. Tidy the gaps file.** Recount after all marking is done. If nothing is open any more, DELETE research/_gaps.md entirely — an empty gaps file is clutter and implies gaps that no longer exist — and say so in one line. If some are still open, keep it and put a single status line at the very top: `<!-- N open, M closed — last checked YYYY-MM-DD -->`. One line, starting with the counts, updated in place — never a second one, and nothing beyond the counts and the date (detail belongs in the entries). Both runtimes must write this identically.
 
 Report what was synced, which gaps closed, and what is still open.

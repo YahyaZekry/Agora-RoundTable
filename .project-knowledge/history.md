@@ -1,6 +1,6 @@
 # History
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30 (2)
 > Past-only. Append-only — never delete entries.
 
 ## Removed
@@ -102,6 +102,29 @@
 - **Repo made fully independent.** Detached on GitHub, manifests updated to name Yahya
   Zekry as author, README rewritten around this project rather than its origin.
   *(2026-08-22, v2.0.0)*
+- **The gaps file had two incompatible formats and nobody had checked.** `/coach-gaps`
+  wrote free-form prose under `### Unmined` / `### Unresearched` / `### User-only`
+  headings; `/coach-update` was written to read `## Gap:` blocks with `Status:` markers.
+  All five files on disk used the first shape and none used the second, so update would
+  have read a twenty-gap audit, found no markers, and reported "all gaps filled." Found by
+  looking at the actual files before running anything. Both shapes are now read, and
+  `/coach-gaps` appends to whichever shape it finds rather than rewriting an existing
+  audit. *(2026-08-30, v2.5.1)*
+- **"Unmined" means two things, and historical figures only ever have the second.**
+  Defined as "in `transcripts/` but not `research/`" — but a figure with no video has no
+  transcripts, so under that definition every unmined gap on Plato, Aristotle, Epictetus,
+  Marcus and Ibn al-Qayyim was permanently unfixable. Plato's own audit said so outright:
+  "No transcripts exist, so unmined means material already present in the build that is
+  un-mined," meaning content in `research/` that never reached `persona.md`. Both cases are
+  now covered. *(2026-08-30, v2.5.1)*
+- **A recorded gap can be stale.** One of Plato's six unmined gaps was already closed and
+  nothing had re-checked. Gap lists are point-in-time observations, not live state; verify
+  before acting on one. *(2026-08-30)*
+- **`inbox/` can hold questions, not just material.** Plato's two inbox files are notes
+  asking the *user* to decide something (which translation, how to treat the Seventh
+  Letter), not sources to extract. `/coach-update` Step 2 assumes everything in `inbox/`
+  is material to mine and has no concept of an open question awaiting an answer. Known
+  limitation, not yet handled. *(2026-08-30)*
 - **Bulk commands must delegate, never restate.** Both `-all` commands had copies of the
   single-coach logic written out inline, and both drifted out of sync the moment the
   single-coach version was fixed — one skipped gap closing, the other kept deleting caches

@@ -153,10 +153,11 @@ Recount the entries after all the marking is finished.
   state is readable at a glance without scrolling:
 
   ```markdown
-  <!-- 2 open, 3 closed — last checked 2026-08-29 -->
+  <!-- N open, M closed — last checked YYYY-MM-DD -->
   ```
 
-  Update that line every time; do not add a second one.
+  One line, at the very top, starting with the counts. Update it in place; never add a
+  second one. Anything more than the counts and the date belongs in the entries.
 
 Mention every closed gap in the Step 3 report.
 

@@ -1,10 +1,11 @@
 # Agora RoundTable
 
-![Agora RoundTable — Claude Code plugin](assets/social-preview.png)
+![Agora RoundTable](assets/social-preview.png)
 
-**Your personal assembly of AI agents, inside Claude Code.** Talk to any public figure
-one-on-one, or seat several at a table and let them argue with each other until the
-argument stops moving.
+**Your personal assembly of AI agents.** Talk to any public figure one-on-one, or seat
+several at a table and let them argue with each other until the argument stops moving.
+
+Runs on **Claude Code** and **OpenCode**, sharing the same personas.
 
 ```
 /coach marcus aurelius                    → built from his actual writings
@@ -18,7 +19,7 @@ Works for anyone with a public footprint, living or historical.
 
 | | |
 | --- | --- |
-| [Install](#install) | Two lines, plus optional yt-dlp |
+| [Install](#install) | Claude Code or OpenCode, plus optional yt-dlp |
 | [Commands](#commands) | All 15, one table |
 | [See it work](#see-it-work) | Real unedited debate output |
 | [How `/discuss` works](#how-discuss-works) | Why they can change their minds |
@@ -30,13 +31,27 @@ Works for anyone with a public footprint, living or historical.
 
 ## Install
 
+**Claude Code:**
+
 ```
 /plugin marketplace add YahyaZekry/Agora-RoundTable
 /plugin install agora@agora-roundtable
 ```
 
-**Optional:** [yt-dlp](https://github.com/yt-dlp/yt-dlp). Run `brew install yt-dlp` or
-`pip3 install --user yt-dlp`. Without it personas build from web research alone; with
+**OpenCode:**
+
+```
+git clone https://github.com/YahyaZekry/Agora-RoundTable
+bash Agora-RoundTable/opencode-plugin/install.sh
+```
+
+Commands are the same, prefixed: `/agora coach`, `/agora roundtable`, `/agora discuss`.
+The installer symlinks into `~/.config/opencode`, so the repo stays the source of truth,
+and it points at Claude's personas directory when it finds one. **A coach built in either
+one works in the other** — same persona format, same folder.
+
+**Optional, both:** [yt-dlp](https://github.com/yt-dlp/yt-dlp). Run `brew install yt-dlp`
+or `pip3 install --user yt-dlp`. Without it personas build from web research alone; with
 it, anyone with video gets their real spoken voice mined from transcripts.
 
 ## Commands
@@ -54,7 +69,8 @@ it, anyone with video gets their real spoken voice mined from transcripts.
 | `/roundtable-add` · `/roundtable-remove` · `/roundtable-end` | Manage the table |
 | `/coach-refresh-all` · `/coach-update-all` | Same, across every coach or a preset |
 
-Namespaced form if names collide: `/agora:coach <name>`.
+Namespaced form if names collide on Claude Code: `/agora:coach <name>`. On OpenCode every
+command is `/agora <command>` already.
 
 ## See it work
 
@@ -310,17 +326,25 @@ flowchart TD
 
 ```
 .claude-plugin/     plugin.json + marketplace.json (repo is its own marketplace)
-skills/
+skills/             Claude Code — one folder per command
   coach/            main skill + persona template
   coach-switch/  coach-end/  coach-list/  coach-refresh/  coach-refresh-all/
   coach-update/  coach-update-all/
   coach-gaps/       audit a coach's own sourcing            (v2.5.0)
   roundtable/       presets v2.1.0, warm-agent debate       (v2.5.0)
   roundtable-save/  roundtable-add/  roundtable-remove/  roundtable-end/
+opencode-plugin/    OpenCode port — same commands under /agora*
+  install.sh        symlinks into ~/.config/opencode; links to Claude's personas if found
+  commands/         one file per /agora command
+  agents/           facilitator + hidden per-coach subagent
+  lib/data-dir.js   where personas live — the one source of truth for both runtimes
 scripts/
   fetch_youtube.py  channel/search/URLs → clean transcripts
 examples/           real personas built by this pipeline
 ```
+
+Both runtimes read and write the same persona folders, so a coach built in one is
+immediately usable in the other.
 
 </details>
 
@@ -341,7 +365,8 @@ Historical figures are rebuilt from their writing, in the language of their time
 | `yt-dlp is not installed` | `brew install yt-dlp`, then `/coach-refresh <name>` |
 | Zero transcripts fetched | Captions disabled or region-blocked; persona builds from web research instead |
 | Wrong person picked | `/coach-refresh` with a more specific name ("the founder of X") |
-| Commands not showing | `/plugin` → verify it's installed + enabled, then restart Claude Code |
+| Commands not showing (Claude Code) | `/plugin` → verify it's installed + enabled, then restart |
+| Commands not showing (OpenCode) | re-run `opencode-plugin/install.sh`, then restart OpenCode |
 
 </details>
 
