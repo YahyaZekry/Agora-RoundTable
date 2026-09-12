@@ -22,8 +22,6 @@
   <ellipse cx="905" cy="320" rx="350" ry="315" fill="url(#glow)"/>
 
   <!-- LEFT: text -->
-  <text x="70" y="88" fill="#7d93b2" font-size="16" font-weight="700" letter-spacing="3.2">CLAUDE CODE PLUGIN</text>
-
   <text x="70" y="160" fill="#f2f6fb" font-size="56" font-weight="700" letter-spacing="-1">Agora</text>
   <text x="70" y="222" fill="#e8823c" font-size="56" font-weight="700" letter-spacing="-1">RoundTable</text>
 
