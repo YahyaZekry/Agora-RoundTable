@@ -2,7 +2,7 @@
 
 > Last updated: 2026-10-10
 > Status: Active
-> Stack: Dual-runtime — Claude Code plugin (`skills/`) + opencode port (`opencode-plugin/`, config files + a dependency-free ESM JS plugin), shared persona format & data dir, zero runtime services
+> Stack: Dual-runtime — Claude Code plugin (`skills/`) + opencode port (`opencode-plugin/`, config files + a dependency-free ESM JS plugin), shared persona format & agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`), zero runtime services
 > Current goal: The opencode v2 plugin port is done and verified (tools load and run on OpenCode v2.0.24); validate the warm-agent debate at scale on both runtimes, then rebuild the novel-coaching persona stubs that gate that test
 
 ## What This Project Does
@@ -26,7 +26,7 @@ and a shared persona format: **Claude Code** (`/coach`, `/roundtable`, `/discuss
 
 | File | Contents | Load when... |
 |------|----------|--------------|
-| `stack.md` | Dual-runtime tech (Claude + opencode, Python + Markdown + ESM JS), dev/install commands, the portable data-dir env vars (`$CLAUDE_PLUGIN_DATA`, `$AGORA_DATA_DIR`, `$OPENCODE_CONFIG`) | Touching `fetch_youtube.py`, the opencode port, adding a skill, checking how plugin paths resolve |
+| `stack.md` | Dual-runtime tech (Claude + opencode, Python + Markdown + ESM JS), dev/install commands, the agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`) | Touching `fetch_youtube.py`, the opencode port, adding a skill, checking how plugin paths resolve |
 | `structure.md` | File tree (both runtimes), key files, the runtime (gitignored) per-persona output shape | Navigating the repo, understanding what a build actually produces on disk |
 | `systems.md` | Portable persona cache + data-dir resolver, opencode JS plugin, YouTube fetching, web research, AI embodiment — the actual cross-cutting concerns (no auth/DB/payments here) | Touching the research pipeline, the cache layout, or the opencode port |
 | `features.md` | Dual-runtime (Claude `/coach` + opencode `/agora coach`) + all 15 commands + the build/embodiment/roundtable/inbox workflows, step by step | Understanding or changing how a persona gets built, or how roundtable works |

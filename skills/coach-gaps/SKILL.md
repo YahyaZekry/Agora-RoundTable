@@ -15,8 +15,9 @@ Two modes, depending on whether gaps have already been recorded.
 
 ## Step 0 — Resolve DATA_DIR
 
-1. `${CLAUDE_PLUGIN_DATA}/personas` if that substituted to a real absolute path
-2. Otherwise `~/.claude/agora-roundtable/personas`
+Same as /coach Step 0:
+1. `$AGORA_DATA_DIR/personas` if set (explicit override)
+2. Otherwise `$HOME/.agora/personas` — the neutral default
 
 ## Step 1 — Identify the coach
 

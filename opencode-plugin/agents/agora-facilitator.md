@@ -20,16 +20,12 @@ Your job is to RUN the pipeline, not to simulate any coach's voice yourself. Eve
 response must come from a dedicated subagent spawned via the `task` tool, so each coach has
 independent context and memory.
 
-Key shared paths (portable — never require ~/.claude to exist). Resolve the
-personas dir in this order:
-- $AGORA_DATA_DIR/personas (explicit env override)
-- $CLAUDE_PLUGIN_DATA/agora-roundtable/personas — the real Claude plugin data dir,
-  the authoritative home of personas Claude Code already built (use if present)
-- $HOME/.config/opencode/agora/personas — opencode-native default
-- $HOME/.claude/agora-roundtable/personas — only if it exists (legacy Claude share)
-The native ~/.config/opencode/agora/personas is normally a symlink to the Claude
-data dir, so both resolve to the same place. Check the resolvePersonasDir() helper
-via the agora_data_dir tool rather than hardcoding a path.
+Key shared paths (agent-neutral — not tied to any one tool's config dir). Resolve
+the personas dir in this order:
+- $AGORA_DATA_DIR/personas (explicit env override; a synced or custom location)
+- $HOME/.agora/personas — the neutral default, identical on Linux, macOS, and Windows
+Check the resolvePersonasDir() helper via the agora_data_dir tool rather than
+hardcoding a path.
 - Persona: <personas>/<slug>/persona.md, with research/ (one file per domain), transcripts/,
   and inbox/. Session state in coach-session.json and roundtable-session.json (you may build
   a roundtable-presets.json).

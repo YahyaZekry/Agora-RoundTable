@@ -38,15 +38,18 @@ appear.
 
 Resolved in this order by `lib/data-dir.js` and the facilitator agent:
 
-1. `$AGORA_DATA_DIR/personas` — explicit override
-2. `$CLAUDE_PLUGIN_DATA/agora-roundtable/personas` — the real Claude Code plugin data dir, when present
-3. `~/.config/opencode/agora/personas` — opencode-native (honours `$OPENCODE_CONFIG`)
-4. `~/.claude/agora-roundtable/personas` — legacy Claude fallback, only if it exists
+1. `$AGORA_DATA_DIR/personas` — explicit override (a synced or custom location)
+2. `~/.agora/personas` — the neutral default
 
-The install script makes `~/.config/opencode/agora/personas` a **symlink to the Claude
-dir when present**, so a persona built by Claude's `/coach` is immediately usable in
-opencode and vice versa. On a machine with no Claude, you get a clean isolated dir — the
-port never *requires* `~/.claude`.
+The location is agent-neutral on purpose: it belongs to no single tool, so opencode, Claude,
+codex, and any other agent share one set of people. `~/.agora` resolves identically on Linux,
+macOS, and Windows. The installer creates it and migrates data from the old
+opencode-config-native dir (`~/.config/opencode/agora`) once; the plugin still reads that path
+if `~/.agora/personas` is missing.
+
+Older installs could share personas with Claude via `$CLAUDE_PLUGIN_DATA` or
+`~/.claude/agora-roundtable/personas`; those are now read-only legacy locations, never
+written to.
 
 ## Commands
 

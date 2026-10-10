@@ -14,6 +14,13 @@
 
 ## Fixed
 
+- **Persona data dir moved to an agent-neutral `~/.agora`** — the cache used to live in
+  whichever tool owned the plugin (`$CLAUDE_PLUGIN_DATA`/`~/.claude/agora-roundtable` on
+  Claude, `~/.config/opencode/agora` on opencode, symlinked together), tying the user's
+  personas to a single agent's config dir. Now `lib/data-dir.js` and every `skills/*` Step 0
+  resolve `$AGORA_DATA_DIR` → `~/.agora`, the same path on Linux, macOS, and Windows, so
+  opencode, Claude, codex, and any other agent share one set of people. The old locations are
+  read-only legacy and `install.sh` migrates them once. *(fixed: 2026-10-10)*
 - **The opencode plugin stopped loading on OpenCode v2** — `plugin/plugin.js` was written
   for the v1 plugin API (`export const AgoraPlugin = async (_ctx) => ({ tool: {...} })`).
   OpenCode v2 requires a **default-exported definition** with an `id` and a `setup`

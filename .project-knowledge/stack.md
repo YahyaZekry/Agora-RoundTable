@@ -37,20 +37,20 @@ No build step, no test suite, no lockfile — this is a plugin repo (skills + on
 
 | Variable | Used In | What It Enables |
 |----------|---------|----------------|
-| `${CLAUDE_PLUGIN_DATA}` | All `skills/*/SKILL.md` (Step 0 in `coach`, referenced by the others) | Primary persona-cache location on the Claude side, survives plugin updates. Personas live at `${CLAUDE_PLUGIN_DATA}/agora-roundtable/personas/`. Falls back to `~/.claude/agora-roundtable/personas` when unset |
+| `${AGORA_DATA_DIR}` | `opencode-plugin/lib/data-dir.js` (highest precedence) + all `skills/*/SKILL.md` (Step 0) | Explicit override for the shared persona data dir (a synced or custom location). When unset, the default is `~/.agora` |
 | `${CLAUDE_PLUGIN_ROOT}` | `skills/coach/SKILL.md` (Steps 3, 5) | Resolves the absolute path to `scripts/fetch_youtube.py` and `skills/coach/references/persona-template.md` regardless of where the plugin is installed |
-| `${AGORA_DATA_DIR}` | `opencode-plugin/lib/data-dir.js` (preferred first) | Explicit override for where personas live in the opencode port. Highest-precedence resolution on that side |
-| `${OPENCODE_CONFIG}` | `opencode-plugin/lib/data-dir.js` | Base for the opencode-native default data dir (`$OPENCODE_CONFIG/agora`); defaults to `~/.config/opencode/agora` when unset |
+| `${CLAUDE_PLUGIN_DATA}` | Legacy only — read, never written | The Claude Code plugin data dir. Now a legacy persona location; data is moved to `~/.agora` once and never written back |
+| `${OPENCODE_CONFIG}` | Legacy only — read bridge | Base for the old opencode-native data dir (`$OPENCODE_CONFIG/agora`) that `lib/data-dir.js` still reads as a migration bridge; not used for new writes |
 
 ### Portable persona data dir (both runtimes)
 
 `opencode-plugin/lib/data-dir.js` resolves the single shared personas directory in this
-order (so a persona built by Claude's `/coach` is instantly usable in opencode and vice
-versa, but opencode never *requires* Claude):
+order (agent-neutral, so opencode, Claude, codex, and any other agent share one set of
+people):
 
-1. `$AGORA_DATA_DIR` (env override)
-2. `$CLAUDE_PLUGIN_DATA/agora-roundtable` — only if its `personas/` already exists
-3. `~/.config/opencode/agora` (opencode-native default)
-4. `~/.claude/agora-roundtable` (legacy Claude fallback, only if it exists)
+1. `$AGORA_DATA_DIR` (env override — a synced or custom location)
+2. `~/.agora` (the neutral default; identical on Linux, macOS, and Windows)
 
-`install.sh` symlinks `~/.config/opencode/agora/personas` → the Claude dir when present.
+Older installs kept personas under the Claude plugin data dir or `~/.config/opencode/agora`;
+`lib/data-dir.js` still reads the latter as a bridge and `install.sh` migrates the data into
+`~/.agora` once. Those legacy locations are never written to again.

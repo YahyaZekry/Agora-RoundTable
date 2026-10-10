@@ -27,7 +27,7 @@ skills/                  # Claude Code plugin — commands live here as skills
   roundtable-remove/SKILL.md  # remove a coach mid-session
   roundtable-end/SKILL.md     # end the roundtable
 opencode-plugin/          # OpenCode port — full parity with the Claude skills, /agora* commands
-  install.sh              # links commands/agents/skills into ~/.config/opencode + writes the plugin shim (idempotent)
+  install.sh              # links commands/agents/skills into ~/.config/opencode, writes the plugin shim, creates the agent-neutral ~/.agora data dir (idempotent)
   package.json            # plugin manifest — no runtime dependencies
   commands/agora-*.md     # 15 slash commands (coach, coach-switch/end/list, coach-refresh[-all],
                           #   coach-update[-all], coach-gaps, roundtable, roundtable-save/add/remove/end, discuss)
@@ -62,17 +62,16 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 | `skills/coach/references/persona-template.md` | The persona.md contract: what sections exist, target word count (1,500-3,000), and the Deep-Dive Sources index format |
 | `scripts/fetch_youtube.py` | The one piece of real code on the Claude side — deterministic YouTube caption fetching. `main()` orchestrates: list/search videos → fetch captions per video → write `transcripts/*.md` + `videos.json` |
 | `opencode-plugin/plugin/plugin.js` | The opencode-side runtime: a dependency-free ESM plugin (default export `{ id, setup }`) that registers three tools (`agora_data_dir`, `agora_slugify`, `agora_session`) via `ctx.tool.transform` — resolving the portable data dir and persisting roundtable session/preset JSON for the config-file commands. |
-| `opencode-plugin/lib/data-dir.js` | **Single source of truth for where personas live** across both runtimes. Resolution order: `$AGORA_DATA_DIR` → `$CLAUDE_PLUGIN_DATA/agora-roundtable` (if exists) → `~/.config/opencode/agora` → `~/.claude/agora-roundtable` (if exists). |
-| `opencode-plugin/install.sh` | Links the bundle into `~/.config/opencode` so the repo stays the source of truth, writes the `plugins/plugin.js` shim that re-exports the real plugin (opencode can't load a symlinked plugin entry), and links the personas dir to Claude's when present. |
+| `opencode-plugin/lib/data-dir.js` | **Single source of truth for where personas live.** Resolution order: `$AGORA_DATA_DIR` → `~/.agora/personas` (agent-neutral default, identical on Linux/macOS/Windows), with a read-only bridge to `~/.config/opencode/agora/personas` for older installs. |
+| `opencode-plugin/install.sh` | Links the bundle into `~/.config/opencode` so the repo stays the source of truth, writes the `plugins/plugin.js` shim that re-exports the real plugin (opencode can't load a symlinked plugin entry), and creates the agent-neutral `~/.agora/personas` data dir (migrating old `~/.config/opencode/agora` data once). |
 | `docs/DESIGN.md` | Why things are shaped this way (Claude side), plus a version-by-version decision log — read before making an architectural change here |
 | `docs/opencode.md` | Opencode port architecture: why commands/agents/skills are config files + a small JS plugin, install steps, data-dir portability |
 | `.claude-plugin/marketplace.json` | What makes `/plugin marketplace add YahyaZekry/Agora-RoundTable` work without a separate marketplace repo |
 
 ## Runtime output structure (not committed — `personas/` is gitignored)
 
-Per persona, in the resolved portable data dir (see `lib/data-dir.js`; on the Claude side
-that's `${CLAUDE_PLUGIN_DATA}/agora-roundtable/personas/<slug>/`, on opencode
-`~/.config/opencode/agora/personas/<slug>/` or `$AGORA_DATA_DIR/personas/<slug>/`):
+Per persona, in the resolved agent-neutral data dir (see `lib/data-dir.js`):
+`~/.agora/personas/<slug>/`, or `$AGORA_DATA_DIR/personas/<slug>/` when the override is set:
 ```
 persona.md              # compact voice/identity summary + Deep-Dive Sources index
 videos.json              # video metadata

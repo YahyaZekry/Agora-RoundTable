@@ -14,17 +14,19 @@ If `$ARGUMENTS` is empty, ask who they want to talk to, then continue.
 
 ## Step 0 — Resolve the persona directory
 
-Personas are cached so a person only has to be built once. Resolve `DATA_DIR` in this order:
+Personas are cached so a person only has to be built once. The data lives outside any single
+tool's config dir, so opencode, Claude, codex, and any other agent share the same people.
+Resolve `DATA_DIR` in this order:
 
-1. `${CLAUDE_PLUGIN_DATA}` — if that substituted to a real absolute path, use `<that path>/personas`
-2. Otherwise fall back to `~/.claude/agora-roundtable/personas`
+1. `$AGORA_DATA_DIR/personas` — explicit env override (a synced or custom location)
+2. `$HOME/.agora/personas` — the neutral default (identical on Linux, macOS, and Windows)
 
-When READING (cache checks, loading a persona), check the primary location first and
-then `~/.claude/agora-roundtable/personas` as a legacy fallback — personas built before
-the plugin was installed live there. When WRITING, always use the primary location.
-Create the directory if it doesn't exist. Slugify the person's name (lowercase,
-hyphens: "Alex Hormozi" → `alex-hormozi`) — but FIRST correct the spelling in Step 1;
-the slug comes from the resolved real name, not the raw input.
+When READING, older installs may hold personas under the Claude plugin data dir or
+`~/.claude/agora-roundtable/personas` — if `~/.agora` is empty but one of those exists, move
+its personas into `~/.agora` once rather than rebuilding. Never create or write to those
+legacy locations. Create `~/.agora/personas` if it doesn't exist. Slugify the person's name
+(lowercase, hyphens: "Alex Hormozi" → `alex-hormozi`) — but FIRST correct the spelling in
+Step 1; the slug comes from the resolved real name, not the raw input.
 
 ## Step 1 — Identify the real person
 

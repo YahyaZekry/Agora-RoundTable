@@ -2,15 +2,13 @@ import { homedir } from "node:os"
 import { join } from "node:path"
 import { existsSync } from "node:fs"
 
-// Resolve where Agora personas live, opencode-native with an optional
-// Claude-share fallback. Never REQUIRES Claude to exist.
+// Resolve where Agora personas live. The location is deliberately agent-neutral:
+// it belongs to no single tool (not opencode, Claude, or codex), so every agent
+// that runs the Agora port reads and writes the same people.
 //
 // Resolution order:
-//   1. $AGORA_DATA_DIR                      — explicit override (env)
-//   2. $CLAUDE_PLUGIN_DATA/agora-roundtable — the real Claude plugin data dir
-//      (the authoritative place built personas live; only if it exists)
-//   3. ~/.config/opencode/agora            — opencode-native default
-//   4. ~/.claude/agora-roundtable          — legacy Claude fallback (only if it exists)
+//   1. $AGORA_DATA_DIR — explicit override (env), e.g. a synced or custom location
+//   2. ~/.agora        — the neutral default, identical on Linux, macOS, and Windows
 //
 // The "personas" subfolder holds one folder per person (a slug folder with
 // persona.md, research/, transcripts/, inbox/). Session/preset state lives
@@ -19,18 +17,7 @@ export function personaRoot() {
   if (process.env.AGORA_DATA_DIR) {
     return process.env.AGORA_DATA_DIR
   }
-  // Prefer the real Claude plugin data dir when present, so opencode reuses
-  // the same personas Claude Code built (and vice versa).
-  const pluginData = process.env.CLAUDE_PLUGIN_DATA
-    ? join(process.env.CLAUDE_PLUGIN_DATA, "agora-roundtable")
-    : ""
-  if (pluginData && existsSync(join(pluginData, "personas"))) {
-    return pluginData
-  }
-  const base = process.env.OPENCODE_CONFIG
-    ? join(process.env.OPENCODE_CONFIG, "agora")
-    : join(homedir(), ".config", "opencode", "agora")
-  return base
+  return join(homedir(), ".agora")
 }
 
 // Full personas directory (the canonical location for this root).
@@ -38,16 +25,12 @@ export function personasDir() {
   return join(personaRoot(), "personas")
 }
 
-// The active shared personas path, with fallbacks for machines where the
-// opencode-native or Claude-share dirs exist but the resolved root didn't match.
+// The active shared personas path, with a one-time bridge to data written by
+// older installs (which kept personas under the opencode config dir).
 export function resolvePersonasDir() {
   const native = personasDir()
   if (existsSync(native)) return native
-  const pluginData = process.env.CLAUDE_PLUGIN_DATA
-    ? join(process.env.CLAUDE_PLUGIN_DATA, "agora-roundtable", "personas")
-    : ""
-  if (pluginData && existsSync(pluginData)) return pluginData
-  const legacy = join(homedir(), ".claude", "agora-roundtable", "personas")
+  const legacy = join(homedir(), ".config", "opencode", "agora", "personas")
   if (existsSync(legacy)) return legacy
   return native
 }

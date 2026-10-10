@@ -14,8 +14,8 @@ minutes per coach.
 ## Step 0 — Resolve DATA_DIR
 
 Same as /coach Step 0:
-1. `${CLAUDE_PLUGIN_DATA}/personas` if that substituted to a real absolute path
-2. Otherwise fall back to `~/.claude/agora-roundtable/personas`
+1. `$AGORA_DATA_DIR/personas` if set (explicit override)
+2. Otherwise `$HOME/.agora/personas` — the neutral default
 
 ## Step 1 — Build the target list
 

@@ -4,8 +4,8 @@ The opencode-native port of [Agora RoundTable](../README.md) — turn any public
 into a personal coach, run multi-coach roundtables, and run real multi-round **warm-agent
 debates** between them.
 
-It shares the **same persona format and data directory** as the Claude Code plugin, so a
-persona you build with Claude's `/coach` is instantly usable here and vice versa.
+It stores personas in an **agent-neutral** directory (`~/.agora`), so a persona is shared
+across opencode, Claude, codex, and any other tool that runs the Agora port.
 
 ## Install
 
@@ -29,17 +29,17 @@ dir, so the installer writes a one-line `export { default } from "file://…"` p
 instead. The repo stays the single source of truth; the plugin has no runtime
 dependencies.
 
-It also links `~/.config/opencode/agora/personas` to `~/.claude/agora-roundtable/personas`
-**if Claude's folder exists** (shared personas). If it doesn't, you get an opencode-native
-`~/.config/opencode/agora/personas` instead — no Claude required.
+Personas live in an agent-neutral `~/.agora/personas` (override with `$AGORA_DATA_DIR`), so
+opencode, Claude, codex, and any other tool share one set of people. No Claude installation
+is required, and no single tool's config dir owns the data.
 
 opencode picks up the change automatically; **restart it** if the commands or plugin
 don't appear.
 
 > Uninstall: `rm -rf ~/.config/opencode/commands ~/.config/opencode/agents
-> ~/.config/opencode/skills/agora-coach ~/.config/opencode/plugins/plugin.js
-> ~/.config/opencode/agora` (the repo is untouched; the symlinks and the generated
-> plugin shim are removed).
+> ~/.config/opencode/skills/agora-coach ~/.config/opencode/plugins/plugin.js`
+> (the repo is untouched; the symlinks and the generated plugin shim are removed).
+> Your personas in `~/.agora` are left alone.
 
 ## Commands
 
@@ -67,11 +67,13 @@ thin and writes those gaps to `research/_gaps.md`.
 
 The plugin resolves the personas directory in this order:
 
-1. `$AGORA_DATA_DIR/personas` — explicit env override
-2. `$CLAUDE_PLUGIN_DATA/agora-roundtable/personas` — the real Claude Code plugin data
-   dir, when it already exists (shared personas)
-3. `~/.config/opencode/agora/personas` — opencode-native (honours `$OPENCODE_CONFIG`)
-4. `~/.claude/agora-roundtable/personas` — legacy Claude fallback, only if it exists
+1. `$AGORA_DATA_DIR/personas` — explicit env override (a synced or custom location)
+2. `~/.agora/personas` — the neutral default
 
-So the opencode port never requires Claude to be installed, but reuses Claude personas when
-present. A user who only runs opencode gets an isolated, self-contained setup.
+The location is agent-neutral on purpose: it belongs to no single tool, so opencode, Claude,
+codex, and any other agent share the same people. `~/.agora` resolves identically on Linux,
+macOS, and Windows (Node's `homedir()`), and nothing has to be installed to use it.
+
+Older installs that kept personas under `~/.config/opencode/agora` are bridged automatically
+(the plugin still reads that path if `~/.agora/personas` is missing), and `install.sh`
+migrates the data across once.

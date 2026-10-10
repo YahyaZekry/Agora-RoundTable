@@ -22,9 +22,10 @@ with `source: "./"`). Five skills, one Python script, zero runtime services:
 - **Persona = markdown file, not fine-tuning or RAG.** A 2-3k-word structured persona
   (voice rules + beliefs + named frameworks + verbatim quotes + embodiment rules) is
   enough for Claude to hold a voice, is human-inspectable, and costs nothing to store.
-- **Cache in `${CLAUDE_PLUGIN_DATA}`** (survives plugin updates), fallback
-  `~/.claude/agora-roundtable/` when the variable doesn't substitute (repo used without
-  plugin install). Raw transcripts are kept next to the persona so a rebuild or a
+- **Cache in an agent-neutral `~/.agora`** (override with `$AGORA_DATA_DIR`), so opencode,
+  Claude, codex, and any other agent share one set of people. Older installs that used the
+  Claude plugin data dir (`${CLAUDE_PLUGIN_DATA}`) or `~/.claude/agora-roundtable/` are
+  migrated once. Raw transcripts are kept next to the persona so a rebuild or a
   deeper question ("what exactly did he say about X?") can re-read them.
 - **Active coach is conversation state, not disk state.** No lock files; two parallel
   chats can talk to two different coaches. /coach-end only drops character, never data.

@@ -10,9 +10,8 @@ disable-model-invocation: true
 The user wants **$ARGUMENTS** rebuilt from scratch (their content has moved on, or the
 first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
 
-1. Resolve the personas directories the same way as /coach Step 0
-   (`${CLAUDE_PLUGIN_DATA}/personas` primary, `~/.claude/agora-roundtable/personas`
-   legacy fallback) and the person's slug.
+1. Resolve the personas directory the same way as /coach Step 0
+   (`$AGORA_DATA_DIR/personas` if set, otherwise `~/.agora/personas`) and the person's slug.
 2. **Read `<personas>/<slug>/research/_gaps.md` if it exists** and keep its open
    entries in mind. Those are known thin spots found by `/discuss` or `/coach-gaps`
    during actual use, and they turn this from a generic rebuild into a targeted one.

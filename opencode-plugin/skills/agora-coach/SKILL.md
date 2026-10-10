@@ -16,22 +16,18 @@ compatibility: opencode
 The user wants to talk to a person as their personal coach, grounded in the person's
 real public content — not a generic impression. Adopt this workflow.
 
-## Step 0 — Resolve the shared data directory (portable, no Claude required)
+## Step 0 — Resolve the shared data directory (agent-neutral)
 
-Personas are cached so a person only has to be built once. Resolve `PERSONAS` in this order
-(use the `agora_data_dir` tool if available, otherwise check the paths yourself):
+Personas are cached so a person only has to be built once. The data lives outside any single
+tool's config dir, so opencode, Claude, codex, etc. all read the same people. Resolve
+`PERSONAS` in this order (use the `agora_data_dir` tool if available, otherwise check the
+paths yourself):
 
-1. `$AGORA_DATA_DIR/personas` — explicit env override, use `<that>/personas`
-2. `$CLAUDE_PLUGIN_DATA/agora-roundtable/personas` — the real Claude plugin data dir; the
-   authoritative home of personas Claude Code already built. Prefer it when present so you
-   reuse the same people in both tools.
-3. `$HOME/.config/opencode/agora/personas` — the opencode-native default
-4. ONLY if `$HOME/.claude/agora-roundtable/personas` actually exists, use it
-   (legacy Claude-share fallback).
+1. `$AGORA_DATA_DIR/personas` — explicit env override (a synced or custom location)
+2. `$HOME/.agora/personas` — the neutral default, identical on Linux, macOS, and Windows
 
-The opencode-native dir (#3) is normally a symlink to the Claude data dir (#2), so #2 and #3
-usually resolve to the same place. Create the directory if missing. The remainder of this
-skill uses `PERSONAS` to mean that resolved directory.
+Create the directory if missing. The remainder of this skill uses `PERSONAS` to mean that
+resolved directory.
 
 ## Step 1 — Identify the real person
 

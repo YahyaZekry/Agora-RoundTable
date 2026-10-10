@@ -9,9 +9,9 @@
 # - Writes a small real *shim* for the JS plugin (see the note further down) rather
 #   than symlinking it, because opencode's plugin loader cannot load a symlinked
 #   entry point.
-# - Optionally symlinks the personas data dir to the Claude plugin's dir for sharing
-#   (only if ~/.claude/agora-roundtable exists; skipped otherwise so non-Claude users
-#   are unaffected).
+# - Creates the shared, agent-neutral persona data dir (~/.agora, or $AGORA_DATA_DIR)
+#   so opencode, Claude, codex, etc. all use the same people. Data from older installs
+#   that kept personas under the opencode config dir is migrated once.
 #
 # Works in-place from the repo. Safe to re-run (idempotent).
 
@@ -93,20 +93,19 @@ fi
 # The plugin has no runtime dependencies (it uses opencode's own setup context),
 # so there is nothing to install here.
 
-# Persona data dir — share with Claude if it exists, else opencode-native.
-PERSONAS_SRC="$HOME/.claude/agora-roundtable/personas"
-AGORA_DIR="$CONFIG_DIR/agora"
-if [ -d "$PERSONAS_SRC" ]; then
-  mkdir -p "$AGORA_DIR"
-  if [ -e "$AGORA_DIR/personas" ] && [ ! -L "$AGORA_DIR/personas" ]; then
-    echo "  WARN $AGORA_DIR/personas exists and is not a symlink — leaving as-is"
-  else
-    ln -sfn "$PERSONAS_SRC" "$AGORA_DIR/personas"
-    echo "  linked personas -> $PERSONAS_SRC (Claude share)"
-  fi
-else
-  mkdir -p "$AGORA_DIR/personas"
-  echo "  personas dir: $AGORA_DIR/personas (opencode-native; no Claude detected)"
+# Persona data dir — agent-neutral, so no single tool owns it.
+# Default ~/.agora (identical on Linux, macOS, Windows); override with $AGORA_DATA_DIR.
+AGORA_DIR="${AGORA_DATA_DIR:-$HOME/.agora}"
+mkdir -p "$AGORA_DIR/personas"
+echo "  personas dir: $AGORA_DIR/personas (agent-neutral)"
+
+# One-time migration from the old opencode-config-native location, only if the
+# neutral dir is still empty and the legacy one has real (non-symlink) data.
+LEGACY_AGORA="$CONFIG_DIR/agora"
+if [ -d "$LEGACY_AGORA/personas" ] && [ ! -L "$LEGACY_AGORA/personas" ] \
+   && [ -z "$(ls -A "$AGORA_DIR/personas" 2>/dev/null)" ]; then
+  cp -a "$LEGACY_AGORA/personas/." "$AGORA_DIR/personas/"
+  echo "  migrated personas from $LEGACY_AGORA/personas"
 fi
 
 echo "Done. Commands are available as /agora* (restart opencode if they don't appear)."

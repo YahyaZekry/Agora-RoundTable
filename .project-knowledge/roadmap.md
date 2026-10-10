@@ -12,6 +12,9 @@ v2.5.1 validation: prove the warm-agent debate at scale (3+ coaches, the `wantsT
 narrowing, the 5-round cap, and gaps actually closing on a later refresh) on both runtimes,
 then rebuild the novel-coaching stubs (Harris / Navarro / Flynn / Lehane) that gate that test.
 
+Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 2026-10-10
+(see the closed TODO below) — completed, not pending.
+
 ---
 
 ## Known Bugs
@@ -22,6 +25,12 @@ then rebuild the novel-coaching stubs (Harris / Navarro / Flynn / Lehane) that g
 
 ## Active TODOs
 
+- [x] ~~**Move the persona data dir to agent-neutral `~/.agora`**~~ — **DONE 2026-10-10.**
+      `lib/data-dir.js` and every `skills/*` Step 0 now resolve `$AGORA_DATA_DIR` → `~/.agora`
+      (identical on Linux/macOS/Windows), so no single tool owns the data. The old locations
+      (`$CLAUDE_PLUGIN_DATA`, `~/.claude/agora-roundtable`, `~/.config/opencode/agora`) are
+      read-only legacy locations; `install.sh` migrates them once. Live data migrated and the
+      installer re-run to verify. *(added: 2026-10-10; done: 2026-10-10)*
 - [x] ~~**Port `plugin/plugin.js` to the OpenCode v2 plugin API**~~ — **DONE 2026-10-10.**
       The plugin now default-exports a raw v2 definition `{ id: "agora-roundtable", async
       setup(ctx) {...} }` and registers all three tools via

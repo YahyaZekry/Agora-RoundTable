@@ -47,8 +47,8 @@ bash Agora-RoundTable/opencode-plugin/install.sh
 
 Commands are the same, prefixed: `/agora coach`, `/agora roundtable`, `/agora discuss`.
 The installer symlinks into `~/.config/opencode`, so the repo stays the source of truth,
-and it points at Claude's personas directory when it finds one. **A coach built in either
-one works in the other** — same persona format, same folder.
+and both runtimes read and write the same agent-neutral `~/.agora` persona folder. **A coach
+built in either one works in the other** — same persona format, same folder.
 
 **Optional, both:** [yt-dlp](https://github.com/yt-dlp/yt-dlp). Run `brew install yt-dlp`
 or `pip3 install --user yt-dlp`. Without it personas build from web research alone; with
@@ -270,8 +270,8 @@ let it read those as separate files.
 **Your own material:** drop notes, a dossier, or a PDF into `DATA_DIR/<slug>/inbox/` and
 run `/coach-update <name>`.
 
-Personas live in `${CLAUDE_PLUGIN_DATA}/personas/<slug>/`, falling back to
-`~/.claude/agora-roundtable/personas/`.
+Personas live in an agent-neutral `~/.agora/personas/<slug>/` (override with
+`$AGORA_DATA_DIR`), shared by opencode, Claude, codex, and any other agent.
 
 **Examples built by this exact pipeline:**
 
@@ -334,7 +334,7 @@ skills/             Claude Code — one folder per command
   roundtable/       presets v2.1.0, warm-agent debate       (v2.5.0)
   roundtable-save/  roundtable-add/  roundtable-remove/  roundtable-end/
 opencode-plugin/    OpenCode port — same commands under /agora*
-  install.sh        symlinks into ~/.config/opencode; links to Claude's personas if found
+  install.sh        symlinks into ~/.config/opencode; creates the agent-neutral ~/.agora data dir
   commands/         one file per /agora command
   agents/           facilitator + hidden per-coach subagent
   lib/data-dir.js   where personas live — the one source of truth for both runtimes
