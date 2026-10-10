@@ -17,8 +17,5 @@
   "main": "plugin/plugin.js",
   "exports": {
     ".": "./plugin/plugin.js"
-  },
-  "dependencies": {
-    "@opencode-ai/plugin": "^1.18.0"
   }
 }

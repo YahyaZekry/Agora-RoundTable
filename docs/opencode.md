@@ -21,23 +21,27 @@ dir and persisting roundtable session/preset JSON. Everything else is declarativ
 ## Install
 
 ```bash
-bash opencode-plugin/install.sh          # the pack itself
-cd opencode-plugin && bun install         # only for the JS plugin dep
+bash opencode-plugin/install.sh
 ```
 
-Install symlinks the bundle into `~/.config/opencode` (commands → `commands/`, agents →
-`agents/`, skill → `skills/agora-coach`, plugin → `plugins/`). The repo stays the single
-source of truth; re-running is safe.
+The installer links the bundle into `~/.config/opencode` (commands → `commands/`, agents →
+`agents/`, skill → `skills/agora-coach`) so the repo stays the single source of truth, and
+writes a tiny `plugins/plugin.js` **shim** that re-exports the real plugin from this
+checkout — opencode's plugin loader can't load a plugin whose entry point is a symlink.
+Re-running is safe (idempotent). There is nothing to install: the plugin has no runtime
+dependencies.
 
-**Restart opencode** after installing.
+opencode picks up changes automatically; **restart it** if the commands or plugin don't
+appear.
 
 ## Personas data dir (portability)
 
 Resolved in this order by `lib/data-dir.js` and the facilitator agent:
 
-1. `$AGORA_DATA_DIR/personas`
-2. `~/.config/opencode/agora/personas` (opencode-native)
-3. `~/.claude/agora-roundtable/personas` — **only if it already exists**
+1. `$AGORA_DATA_DIR/personas` — explicit override
+2. `$CLAUDE_PLUGIN_DATA/agora-roundtable/personas` — the real Claude Code plugin data dir, when present
+3. `~/.config/opencode/agora/personas` — opencode-native (honours `$OPENCODE_CONFIG`)
+4. `~/.claude/agora-roundtable/personas` — legacy Claude fallback, only if it exists
 
 The install script makes `~/.config/opencode/agora/personas` a **symlink to the Claude
 dir when present**, so a persona built by Claude's `/coach` is immediately usable in
@@ -82,8 +86,8 @@ what lets a coach say "you've moved me" — it still holds the position it stake
 
 ```
 opencode-plugin/
-  install.sh              symlinks the bundle into ~/.config/opencode
-  package.json            declares @opencode-ai/plugin (for plugin.js)
+  install.sh              links the bundle into ~/.config/opencode; writes the plugin shim
+  package.json            plugin manifest (no runtime dependencies)
   commands/agora-*.md     15 slash commands
   agents/
     agora-facilitator.md  orchestrator (builds personas, runs debates)
@@ -96,6 +100,7 @@ opencode-plugin/
 
 ## Publish path (future)
 
-Because the bundle is plain config files + a small ESM plugin with a package.json, it can
-be distributed as a repo (clone → `install.sh`) or as an npm package referenced from the
-config's `plugin` array. Commands/agents/skills then ride alongside as config files.
+Because the bundle is plain config files + a small, dependency-free ESM plugin (with a
+`package.json` that's just a manifest), it can be distributed as a repo (clone →
+`install.sh`) or as an npm package referenced from the config's `plugin` array.
+Commands/agents/skills then ride alongside as config files.
