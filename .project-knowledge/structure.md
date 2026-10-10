@@ -6,7 +6,7 @@
 
 ```
 .claude-plugin/
-  plugin.json          # Claude Code plugin manifest (name, version, author, repo, keywords, based_on)
+  plugin.json          # Claude Code plugin manifest (name, displayName, version, description, author, repository, license, keywords)
   marketplace.json      # this repo doubles as its own marketplace (source: "./")
 skills/                  # Claude Code plugin — commands live here as skills
   coach/
