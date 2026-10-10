@@ -1,6 +1,6 @@
 # Project Structure
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
 
 ## File Tree
 
@@ -27,16 +27,15 @@ skills/                  # Claude Code plugin — commands live here as skills
   roundtable-remove/SKILL.md  # remove a coach mid-session
   roundtable-end/SKILL.md     # end the roundtable
 opencode-plugin/          # OpenCode port — full parity with the Claude skills, /agora* commands
-  install.sh              # symlinks commands/agents/skills/plugin into ~/.config/opencode (idempotent)
-  package.json            # declares @opencode-ai/plugin (for plugin.js)
-  bun.lock
+  install.sh              # links commands/agents/skills into ~/.config/opencode + writes the plugin shim (idempotent)
+  package.json            # plugin manifest — no runtime dependencies
   commands/agora-*.md     # 15 slash commands (coach, coach-switch/end/list, coach-refresh[-all],
                           #   coach-update[-all], coach-gaps, roundtable, roundtable-save/add/remove/end, discuss)
   agents/
     agora-facilitator.md  # orchestrator: builds personas, runs warm-agent debates
     agora-coach.md        # hidden single-coach subagent (mode: subagent, hidden: true)
   skills/agora-coach/SKILL.md  # shared persona-building pipeline (same steps as skills/coach)
-  plugin/plugin.js        # ESM plugin: agora_data_dir / agora_slugify / agora_session tools
+  plugin/plugin.js        # dependency-free ESM plugin: agora_data_dir / agora_slugify / agora_session
   lib/data-dir.js         # portable data-dir resolver + slugify (the single source of truth for paths)
 scripts/
   fetch_youtube.py       # channel/search/URLs → long-form videos → clean Markdown transcripts
@@ -62,9 +61,9 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 | `skills/coach-update/SKILL.md` | Inbox processing — the only place that reads `inbox/` and writes into `research/`. Called explicitly by the user and by `coach-refresh` after a rebuild. |
 | `skills/coach/references/persona-template.md` | The persona.md contract: what sections exist, target word count (1,500-3,000), and the Deep-Dive Sources index format |
 | `scripts/fetch_youtube.py` | The one piece of real code on the Claude side — deterministic YouTube caption fetching. `main()` orchestrates: list/search videos → fetch captions per video → write `transcripts/*.md` + `videos.json` |
-| `opencode-plugin/plugin/plugin.js` | The opencode-side runtime: three tools (`agora_data_dir`, `agora_slugify`, `agora_session`) that give the config-file commands the power they lack — resolving the portable data dir and persisting roundtable session/preset JSON. |
+| `opencode-plugin/plugin/plugin.js` | The opencode-side runtime: a dependency-free ESM plugin (default export `{ id, setup }`) that registers three tools (`agora_data_dir`, `agora_slugify`, `agora_session`) via `ctx.tool.transform` — resolving the portable data dir and persisting roundtable session/preset JSON for the config-file commands. |
 | `opencode-plugin/lib/data-dir.js` | **Single source of truth for where personas live** across both runtimes. Resolution order: `$AGORA_DATA_DIR` → `$CLAUDE_PLUGIN_DATA/agora-roundtable` (if exists) → `~/.config/opencode/agora` → `~/.claude/agora-roundtable` (if exists). |
-| `opencode-plugin/install.sh` | Symlinks the bundle into `~/.config/opencode` so the repo stays the source of truth; links the personas dir to Claude's when present. |
+| `opencode-plugin/install.sh` | Links the bundle into `~/.config/opencode` so the repo stays the source of truth, writes the `plugins/plugin.js` shim that re-exports the real plugin (opencode can't load a symlinked plugin entry), and links the personas dir to Claude's when present. |
 | `docs/DESIGN.md` | Why things are shaped this way (Claude side), plus a version-by-version decision log — read before making an architectural change here |
 | `docs/opencode.md` | Opencode port architecture: why commands/agents/skills are config files + a small JS plugin, install steps, data-dir portability |
 | `.claude-plugin/marketplace.json` | What makes `/plugin marketplace add YahyaZekry/Agora-RoundTable` work without a separate marketplace repo |

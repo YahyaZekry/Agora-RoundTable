@@ -1,9 +1,9 @@
 # Agora RoundTable — Knowledge Index
 
-> Last updated: 2026-08-30 (2)
+> Last updated: 2026-10-10
 > Status: Active
-> Stack: Dual-runtime — Claude Code plugin (`skills/`) + opencode port (`opencode-plugin/`, config files + ESM JS plugin), shared persona format & data dir, zero runtime services
-> Current goal: v2.5.1 shipped and the gap flow tested end to end on both runtimes — validate the warm-agent debate at scale, and get the two outstanding Plato decisions from the user
+> Stack: Dual-runtime — Claude Code plugin (`skills/`) + opencode port (`opencode-plugin/`, config files + a dependency-free ESM JS plugin), shared persona format & data dir, zero runtime services
+> Current goal: The opencode v2 plugin port is done and verified (tools load and run on OpenCode v2.0.24); validate the warm-agent debate at scale on both runtimes, then rebuild the novel-coaching persona stubs that gate that test
 
 ## What This Project Does
 

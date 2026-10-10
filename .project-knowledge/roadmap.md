@@ -1,14 +1,16 @@
 # Roadmap
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30 (2)
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
 
 ## Current Goal
 
-v2.5.1 shipped on both runtimes: `/coach-refresh` no longer deletes before it rebuilds,
-and `/coach-update` now closes all three kinds of gap without rebuilding anything. The
-opencode port is committed and at parity. The gap flow has now been run end to end on Plato in
-both runtimes and the output spot-verified against primary text. Remaining: validate the
-warm-agent debate at scale, and get the user's two outstanding persona decisions.
+The opencode port is **back on OpenCode v2** as of 2026-10-10: `plugin/plugin.js` was
+ported to the v2 shape, `install.sh` now writes a loadable shim, and the three tools
+(`agora_data_dir`, `agora_slugify`, `agora_session`) are verified working in a live session
+(`agora-roundtable` is `active`). The port TODO below is closed. What remains is the broader
+v2.5.1 validation: prove the warm-agent debate at scale (3+ coaches, the `wantsToPress` 1v1
+narrowing, the 5-round cap, and gaps actually closing on a later refresh) on both runtimes,
+then rebuild the novel-coaching stubs (Harris / Navarro / Flynn / Lehane) that gate that test.
 
 ---
 
@@ -20,10 +22,28 @@ warm-agent debate at scale, and get the user's two outstanding persona decisions
 
 ## Active TODOs
 
-- [ ] **Smoke-test the opencode port** — committed as of 2026-08-29. Still unverified:
-      install (`bash opencode-plugin/install.sh`), that all 15 `/agora*` commands resolve
-      after restart, and that personas share with the Claude dir when present.
-      *(added: 2026-08-29)*
+- [x] ~~**Port `plugin/plugin.js` to the OpenCode v2 plugin API**~~ — **DONE 2026-10-10.**
+      The plugin now default-exports a raw v2 definition `{ id: "agora-roundtable", async
+      setup(ctx) {...} }` and registers all three tools via
+      `ctx.tool.transform(editor => editor.add({ name, description, input, execute }))`,
+      with JSON-Schema inputs and `{ content }` returns. Two deviations from the plan
+      originally written here, both deliberate (see history.md):
+      (a) **No SDK import** — `import { Plugin } from "@opencode/plugin"` did not resolve in
+      opencode's own module loader (it produced the same "missing default" error), so the
+      plugin uses the loader-provided `ctx` directly with a plain object default export.
+      (b) **No dependency at all** — instead of swapping to `@opencode/plugin`, the unused
+      `@opencode-ai/plugin` dep was removed; `package.json` now declares no dependencies.
+      Separately, `install.sh` can no longer symlink the plugin entry: opencode's loader
+      fails to load a plugin whose entry point is a symlink pointing outside the config dir
+      (verified by bisection — a byte-identical copy loaded, the symlink failed). It now
+      writes a real one-line shim (`export { default } from "file://…"`) so the repo stays
+      the single source of truth. Verified live: `agora-roundtable` active, all 3 tools
+      execute, `install.sh` idempotent. *(added: 2026-10-03; done: 2026-10-10)*
+- [ ] **Smoke-test the opencode port** — install + plugin load + the 3 tools are verified
+      working as of 2026-10-10 (see above). Still unverified: a full end-to-end
+      `/agora coach` / `/agora discuss` run through the port (the declarative command/agent/
+      skill layer is unchanged, so this is a behavioural check, not a loadability one).
+      *(added: 2026-08-29; updated: 2026-10-10)*
 - [x] ~~**End-to-end test the v2.5.1 gap flow**~~ — **DONE 2026-08-30.** Ran on Plato.
       Claude side closed 4 unmined gaps (one turned out already closed — stale entry);
       the opencode side then closed all 9 unresearched plus the blocked 518b–d item.

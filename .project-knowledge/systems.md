@@ -1,6 +1,6 @@
 # Systems
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-29
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
 > This isn't a web app — the standard categories below mostly don't apply. Rows are
 > relabeled to this project's actual cross-cutting concerns instead of forced into
 > auth/DB/payments boxes that don't exist here.
@@ -13,7 +13,7 @@
 | Payments | N/A | — |
 | **Persona cache (storage)** | Active | Portable across both runtimes via `opencode-plugin/lib/data-dir.js`. Claude side: `${CLAUDE_PLUGIN_DATA}/agora-roundtable/personas/<slug>/`; opencode side: `~/.config/opencode/agora/personas/<slug>/` (or `$AGORA_DATA_DIR/personas/...`, or the Claude dir when symlinked). No lock files — active coach is conversation state, not disk state (two parallel chats can talk to two different coaches) |
 | **Portable data-dir resolver** | Active | `opencode-plugin/lib/data-dir.js` — the single source of truth for persona/session/preset paths on the opencode side, and the authority the Claude side's `${CLAUDE_PLUGIN_DATA}` fallback agrees with. Opencode's `plugin/plugin.js` exposes `agora_data_dir` so commands can resolve paths at runtime |
-| **OpenCode JS plugin** | Active | `opencode-plugin/plugin/plugin.js` (ESM, `@opencode-ai/plugin`) exposes three tools: `agora_data_dir` (resolve paths), `agora_slugify` (name → slug), `agora_session` (read/write `roundtable-session.json` + `roundtable-presets.json`). This is the only place opencode has real runtime code — everything else (commands/agents/skills) is declarative config |
+| **OpenCode JS plugin** | Active | `opencode-plugin/plugin/plugin.js` — a **dependency-free** ESM plugin that default-exports `{ id: "agora-roundtable", setup(ctx) }` and registers three tools via `ctx.tool.transform(editor => editor.add(...))`: `agora_data_dir` (resolve paths), `agora_slugify` (name → slug), `agora_session` (read/write `roundtable-session.json` + `roundtable-presets.json`). It uses opencode's own setup context, so it imports **no** SDK. `install.sh` installs it as a real **shim** file (`export { default } from "file://…"`) rather than a symlink, because opencode's plugin loader can't load a plugin whose entry point is a symlink. The only place opencode has real runtime code — everything else (commands/agents/skills) is declarative config |
 | **YouTube caption fetching** | Active | `scripts/fetch_youtube.py` via `yt-dlp` (manual subs preferred, auto-captions fallback), optional `youtube-transcript-api` per-video fallback. Zero-API-key design |
 | Realtime | N/A | — |
 | Background Jobs | N/A | — |

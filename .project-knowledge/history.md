@@ -1,6 +1,6 @@
 # History
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-08-30 (2)
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
 > Past-only. Append-only — never delete entries.
 
 ## Removed
@@ -14,6 +14,23 @@
 
 ## Fixed
 
+- **The opencode plugin stopped loading on OpenCode v2** — `plugin/plugin.js` was written
+  for the v1 plugin API (`export const AgoraPlugin = async (_ctx) => ({ tool: {...} })`).
+  OpenCode v2 requires a **default-exported definition** with an `id` and a `setup`
+  (or effect) function, and registers tools through `ctx.tool.transform`. On v2 every
+  startup logged `PluginModule.LoadError: Plugin must export a default definition with an
+  id and an effect or setup function`, so all three tools (`agora_data_dir`,
+  `agora_slugify`, `agora_session`) were silently gone. Ported to a raw v2 default export
+  registering the three tools via `editor.add(...)` with plain JSON Schemas and `{ content }`
+  returns. Two further findings during the fix: (a) importing the SDK
+  (`@opencode/plugin`) did **not** resolve inside opencode's own loader, so the plugin uses
+  no SDK at all; (b) opencode's loader cannot load a plugin whose entry point is a
+  **symlink** pointing outside the config dir (bisected: a byte-identical copy in the same
+  directory loaded, the symlink failed), so `install.sh` now writes a real shim file.
+  Dropped the unused `@opencode-ai/plugin` dependency. Also corrected the personas
+  resolution order documented in `README.md` / `docs/opencode.md`, which omitted
+  `$CLAUDE_PLUGIN_DATA` and `$OPENCODE_CONFIG`. Verified live: plugin `active`, all three
+  tools execute, installer idempotent. *(fixed: 2026-10-10)*
 - **Silent content loss from double-summarization** — two separate real persona builds
   (Alex Hormozi, David Goggins) had research written by compressing a subagent's
   *report* of the primary transcripts instead of the transcripts themselves. Both
@@ -48,6 +65,22 @@
 
 ## Decisions
 
+- **The opencode plugin uses a plain v2 object export, not `Plugin.define`, and carries no
+  SDK dependency.** `import { Plugin } from "@opencode/plugin"` failed to resolve inside
+  opencode's own plugin loader (it reproduced the same "missing default" error), whereas a
+  plain `export default { id, setup }` loaded fine — the loader only needs an `id` and a
+  `setup`/effect function, and the setup context supplies tool registration. So the SDK is
+  unnecessary and was left out; `package.json` declares no dependencies. This deviates
+  deliberately from the earlier v2-port plan (which said to use `Plugin.define` and swap to
+  `@opencode/plugin`) — don't "restore" the import without re-checking the loader.
+  *(2026-10-10)*
+- **The opencode plugin is installed as a shim file, not a symlink.** Bisection showed
+  opencode's loader does not see the default export of a plugin whose entry point is a
+  symlink pointing outside the config dir, while a real file in the same directory loads.
+  `install.sh` therefore writes a one-line `export { default } from "file://…"` pointer at
+  `~/.config/opencode/plugins/plugin.js`. Every other installed artifact
+  (commands/agents/skills) stays a symlink — the repo remains the single source of truth
+  either way; only the plugin entry cannot be one. *(2026-10-10)*
 - **Persist deep research per domain instead of discarding it into `persona.md`** — the
   template's 1,500-3,000-word budget is right for voice, but Step 4's web research was
   being distilled in and thrown away, with no way to go deeper than the summary later.
