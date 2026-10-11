@@ -72,6 +72,18 @@
 
 ## Decisions
 
+- **The README architecture figure is two hand-authored SVGs, not one Mermaid block.** The
+  single Mermaid flowchart carried 24 nodes / 23 edges — roughly 3x the readable budget for a
+  doc diagram, and cramped once GitHub rendered it. Split along the two real seams: *how a
+  coach gets built* (`/coach` cache check, the identify→fetch→research→verify→distill
+  pipeline, embody, plus the `/coach-update` path) and *the roundtable debate loop* (the
+  everyone-built gate, facilitation mode, round 1 parallel spawn vs later warm-agent rounds,
+  the "anyone moved?" loop, the gap check feeding `/coach-refresh`). Authored as HTML with the
+  `diagram-design` skill, exported to self-contained SVG (`assets/diagrams/*.svg`), skinned to
+  the repo's own brand tokens from `assets/social-preview.svg` (dark navy `#0a0e1a`, orange
+  `#e8823c`). The two Mermaid-only branches (`Message type?` → `1 agent` / `All agents,
+  parallel`) were already covered by the Roundtable-mode prose, so they were dropped rather
+  than duplicated — that prose is now their only home. *(2026-10-10)*
 - **The opencode plugin uses a plain v2 object export, not `Plugin.define`, and carries no
   SDK dependency.** `import { Plugin } from "@opencode/plugin"` failed to resolve inside
   opencode's own plugin loader (it reproduced the same "missing default" error), whereas a

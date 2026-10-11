@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The roundtable debate loop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #0a0e1a;
+      --color-paper-2: #141d31;
+      --color-ink:     #f2f6fb;
+      --color-muted:   #9db4d0;
+      --color-soft:    #6f86a5;
+      --color-rule:    rgba(242,246,251,0.12);
+      --color-accent:  #e8823c;
+      --color-link:    #8fa6c2;
+      --font-sans:  'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono:  'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1040px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Agora RoundTable</p>
+    <h1>The roundtable debate loop</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="debate-loop-title debate-loop-desc">
+        <title id="debate-loop-title">The roundtable debate loop</title>
+        <desc id="debate-loop-desc">Flowchart of /roundtable checking that every coach is built, entering facilitation mode, then a debate loop where round one spawns all coaches in parallel and later rounds resume the same warm agents until the argument stops moving, followed by a gap check that feeds /coach-refresh.</desc>
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M40 0 L0 0 0 40" fill="none" stroke="rgba(157,180,208,0.06)" stroke-width="1"/>
+          </pattern>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9db4d0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#e8823c"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8fa6c2"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#0a0e1a"/>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+
+        <!-- Connectors (drawn first, behind nodes) -->
+        <path d="M170 104 V156" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M170 244 V296" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M250 200 H352 Q360 200 360 192 V108 Q360 100 368 100 H420" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M520 124 V166" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M520 214 V256" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M520 304 V326" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M610 370 H700 Q708 370 708 362 V288 Q708 280 700 280 H620" fill="none" stroke="#e8823c" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <path d="M430 370 H138 Q130 370 130 378 V496" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M220 520 H280" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M440 520 H510" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M670 520 H730" fill="none" stroke="#9db4d0" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+        <!-- Arrow labels (opaque mask, 6-10px clear of the stroke) -->
+        <rect x="178" y="264" width="26" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="191" y="273" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NO</text>
+
+        <rect x="368" y="144" width="30" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="383" y="153" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">YES</text>
+
+        <rect x="528" y="139" width="52" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="554" y="148" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">/discuss</text>
+
+        <rect x="716" y="319" width="30" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="731" y="328" fill="#e8823c" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">YES</text>
+
+        <rect x="248" y="350" width="64" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="280" y="359" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NO / CAP</text>
+
+        <rect x="678" y="500" width="44" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="700" y="509" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">READS</text>
+
+        <!-- Nodes -->
+        <!-- J: /roundtable <names> (input / start) -->
+        <rect x="70" y="56" width="200" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
+        <text x="170" y="85" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/roundtable &lt;names&gt;</text>
+
+        <!-- K: everyone built? (decision) -->
+        <polygon points="170,156 250,200 170,244 90,200" fill="#141d31" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
+        <text x="170" y="196" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">everyone</text>
+        <text x="170" y="210" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">built?</text>
+
+        <!-- L: Tell user to /coach (input / terminal) -->
+        <rect x="70" y="296" width="200" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
+        <text x="170" y="325" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Tell user to /coach</text>
+
+        <!-- N: Facilitation mode -->
+        <rect x="420" y="76" width="200" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="520" y="105" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Facilitation mode</text>
+
+        <!-- Q1: Round 1 -->
+        <rect x="420" y="166" width="200" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="520" y="189" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Round 1: spawn all</text>
+        <text x="520" y="203" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">parallel</text>
+
+        <!-- Q2: Rounds 2..N -->
+        <rect x="420" y="256" width="200" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="520" y="279" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Rounds 2..N: resume</text>
+        <text x="520" y="293" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">warm agents</text>
+
+        <!-- Q3: anyone moved? (decision) -->
+        <polygon points="520,326 610,370 520,414 430,370" fill="#141d31" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
+        <text x="520" y="366" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">anyone</text>
+        <text x="520" y="380" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">moved?</text>
+
+        <!-- Q4: Converged (focal payoff) -->
+        <rect x="40" y="496" width="180" height="48" rx="20" fill="rgba(232,130,60,0.10)" stroke="#e8823c" stroke-width="1.2"/>
+        <text x="130" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Converged</text>
+        <text x="130" y="533" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">or capped</text>
+
+        <!-- G1: Gap check -->
+        <rect x="280" y="496" width="160" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="360" y="525" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Gap check</text>
+
+        <!-- G6: research/_gaps.md (store) -->
+        <rect x="510" y="496" width="160" height="48" rx="6" fill="rgba(157,180,208,0.08)" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
+        <text x="590" y="525" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">research/_gaps.md</text>
+
+        <!-- S: /coach-refresh (input / terminal) -->
+        <rect x="730" y="496" width="180" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
+        <text x="820" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-refresh</text>
+        <text x="820" y="533" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">targets gaps</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

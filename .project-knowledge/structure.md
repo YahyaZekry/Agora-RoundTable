@@ -48,6 +48,9 @@ docs/
   opencode.md            # opencode port architecture, install, data-dir portability
 assets/
   social-preview.png
+  diagrams/               # README architecture figures — hand-authored HTML + exported SVG
+    coach-build.html/.svg   # "How a coach gets built" (cache check → pipeline → embody, + /coach-update)
+    debate-loop.html/.svg   # "The roundtable debate loop" (gate → warm rounds → gap check)
 README.md                 # user-facing docs, install/usage/troubleshooting
 .gitignore                 # excludes personas/ (local cache) — never committed
 ```
@@ -67,6 +70,7 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 | `docs/DESIGN.md` | Why things are shaped this way (Claude side), plus a version-by-version decision log — read before making an architectural change here |
 | `docs/opencode.md` | Opencode port architecture: why commands/agents/skills are config files + a small JS plugin, install steps, data-dir portability |
 | `.claude-plugin/marketplace.json` | What makes `/plugin marketplace add YahyaZekry/Agora-RoundTable` work without a separate marketplace repo |
+| `assets/diagrams/*.svg` | README architecture figures — self-contained SVGs skinned to the repo's brand tokens (`#0a0e1a` / `#e8823c`). Sources are the sibling `.html` files; regenerate with the `diagram-design` skill's `export_svg.py`. Referenced from README by `<img … width="100%">`. |
 
 ## Runtime output structure (not committed — `personas/` is gitignored)
 

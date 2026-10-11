@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How a coach gets built</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #0a0e1a;
+      --color-paper-2: #141d31;
+      --color-ink:     #f2f6fb;
+      --color-muted:   #9db4d0;
+      --color-soft:    #6f86a5;
+      --color-rule:    rgba(242,246,251,0.12);
+      --color-accent:  #e8823c;
+      --color-link:    #8fa6c2;
+      --font-sans:  'Geist', system-ui, sans-serif;
+      --font-serif: 'Instrument Serif', serif;
+      --font-mono:  'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1040px; width: 100%; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+    }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Agora RoundTable</p>
+    <h1>How a coach gets built</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="coach-build-title coach-build-desc">
+        <title id="coach-build-title">How a coach gets built</title>
+        <desc id="coach-build-desc">Flowchart showing /coach checking for a cached persona, then either loading it straight away or running a five-step build pipeline from identifying the person to distilling persona.md, plus a /coach-update path that folds inbox files into research.</desc>
+        <defs>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M40 0 L0 0 0 40" fill="none" stroke="rgba(157,180,208,0.06)" stroke-width="1"/>
+          </pattern>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9db4d0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#e8823c"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#8fa6c2"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#0a0e1a"/>
+        <rect width="100%" height="100%" fill="url(#grid)"/>
+
+        <!-- Connectors (drawn first, behind nodes) -->
+        <path d="M220 80 H250" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M350 80 H734" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M300 120 V192 Q300 200 292 200 H144 Q136 200 136 208 V280" fill="none" stroke="#e8823c" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <path d="M212 304 H232" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M384 304 H404" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M556 304 H576" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M728 304 H748" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M824 280 V104" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M200 460 V512" fill="none" stroke="#9db4d0" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <path d="M300 536 H472 Q480 536 480 528 V328" fill="none" stroke="#9db4d0" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+
+        <!-- Arrow labels (opaque mask, 6-10px clear of the stroke) -->
+        <rect x="520" y="60" width="44" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="542" y="69" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">YES</text>
+
+        <rect x="308" y="142" width="26" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="321" y="151" fill="#e8823c" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NO</text>
+
+        <rect x="832" y="180" width="48" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="856" y="189" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">READY</text>
+
+        <rect x="356" y="516" width="64" height="12" rx="2" fill="#0a0e1a"/>
+        <text x="388" y="525" fill="#6f86a5" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">NEW SOURCES</text>
+
+        <!-- Nodes -->
+        <!-- A: /coach <name> (input / start) -->
+        <rect x="40" y="56" width="180" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
+        <text x="130" y="85" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach &lt;name&gt;</text>
+
+        <!-- B: persona cached? (decision) -->
+        <polygon points="300,40 350,80 300,120 250,80" fill="#141d31" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
+        <text x="300" y="76" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">persona</text>
+        <text x="300" y="90" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">cached?</text>
+
+        <!-- I: Embody (focal payoff) -->
+        <rect x="734" y="56" width="180" height="48" rx="20" fill="rgba(232,130,60,0.10)" stroke="#e8823c" stroke-width="1.2"/>
+        <text x="824" y="79" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Embody</text>
+        <text x="824" y="93" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">your persona</text>
+
+        <!-- D: Identify person -->
+        <rect x="60" y="280" width="152" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="136" y="308" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Identify person</text>
+
+        <!-- E: Fetch transcripts -->
+        <rect x="232" y="280" width="152" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="308" y="303" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Fetch transcripts</text>
+        <text x="308" y="317" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">yt-dlp</text>
+
+        <!-- F: Deep research -->
+        <rect x="404" y="280" width="152" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="480" y="303" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Deep research</text>
+        <text x="480" y="317" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">per domain</text>
+
+        <!-- G: Verify sources -->
+        <rect x="576" y="280" width="152" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="652" y="308" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Verify sources</text>
+
+        <!-- H: Distill persona -->
+        <rect x="748" y="280" width="152" height="48" rx="6" fill="#141d31" stroke="rgba(157,180,208,0.30)" stroke-width="1"/>
+        <text x="824" y="303" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Distill persona</text>
+        <text x="824" y="317" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">persona.md</text>
+
+        <!-- U: /coach-update (input / secondary start) -->
+        <rect x="100" y="412" width="200" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
+        <text x="200" y="441" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-update</text>
+
+        <!-- V: inbox/ -> research/ (store) -->
+        <rect x="100" y="512" width="200" height="48" rx="6" fill="rgba(157,180,208,0.08)" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
+        <text x="200" y="541" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">inbox/ -&gt; research/</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

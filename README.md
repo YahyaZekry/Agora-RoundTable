@@ -26,7 +26,7 @@ Works for anyone with a public footprint, living or historical.
 | [Gap detection](#gap-detection) | Coaches admit what they don't know |
 | [Working with your own files](#working-with-your-own-files) | `inbox/`, `research/`, and PDFs |
 | [Building a persona](#building-a-persona) | The six-step pipeline |
-| [Architecture](#architecture) | Flow diagram |
+| [Architecture](#architecture) | Two flow diagrams + repo layout |
 | [Limits & troubleshooting](#limits--troubleshooting) | What it won't do |
 
 ## Install
@@ -45,13 +45,14 @@ git clone https://github.com/YahyaZekry/Agora-RoundTable
 bash Agora-RoundTable/opencode-plugin/install.sh
 ```
 
-Commands are the same, prefixed: `/agora coach`, `/agora roundtable`, `/agora discuss`.
-The installer symlinks into `~/.config/opencode`, so the repo stays the source of truth,
-and both runtimes read and write the same agent-neutral `~/.agora` persona folder. **A coach
-built in either one works in the other** — same persona format, same folder.
+Commands are identical on both, just prefixed on OpenCode: `/agora coach`,
+`/agora roundtable`, `/agora discuss`. The installer symlinks into `~/.config/opencode`,
+so the repo stays the source of truth, and both runtimes read and write the same
+agent-neutral `~/.agora` persona folder. **A coach built in either one works in the other** —
+same persona format, same folder.
 
-**Optional, both:** [yt-dlp](https://github.com/yt-dlp/yt-dlp). Run `brew install yt-dlp`
-or `pip3 install --user yt-dlp`. Without it personas build from web research alone; with
+**Optional on both:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) (`brew install yt-dlp`
+or `pip3 install --user yt-dlp`). Without it, personas build from web research alone. With
 it, anyone with video gets their real spoken voice mined from transcripts.
 
 ## Commands
@@ -146,20 +147,18 @@ PLATO       Aristotle, you have caught me fairly, and I will not wriggle.
 
 ## How `/discuss` works
 
-Each coach is a separate AI agent with its own memory. They do not share a brain. Each one
+Each coach is a separate AI agent with its own memory — they do not share a brain. Each one
 reads only its own `persona.md` and `research/` files, so nobody knows what the others are
 about to say.
 
-The important part: each agent is created once and stays alive for the whole debate. So
-when Aristotle gets pushed in round two, he remembers what he argued in round one and can
-defend it or take it back. An agent that gets handed a transcript of an argument it was
-not in can only agree or disagree. It has no position of its own to change.
+**Each agent is created once and stays alive for the whole debate.** So when Aristotle gets
+pushed in round two, he remembers what he argued in round one and can defend it or take it
+back. An agent that gets handed a transcript of an argument it was not in can only agree or
+disagree; it has no position of its own to change.
 
 There is no fixed number of rounds. It keeps going while anyone is still changing their
-mind or raising something new, and stops when a whole round passes with neither. Maximum
-5 rounds.
-
-It ends one of three ways, and it tells you which:
+mind or raising something new, and stops when a whole round passes with neither. Maximum 5
+rounds. It ends one of three ways, and it tells you which:
 
 - **They agree.** Or they found an answer together.
 - **They still disagree, but nothing is moving.** This counts as done, not as failure.
@@ -172,9 +171,9 @@ your question` to ask one of them.
 
 ## Gap detection
 
-After a debate, each coach is asked one more question: where were you making it up?
+After a debate, each coach is asked one more question: **where were you making it up?**
 
-A coach that just spent four rounds defending a position knows where it was reaching. It
+A coach that just spent four rounds defending a position knows where it was reaching — it
 felt the weak spot. You cannot find that by auditing the files, because an audit only
 checks what is written against its sources. It cannot check for things nobody has asked
 about yet.
@@ -285,41 +284,15 @@ Personas live in an agent-neutral `~/.agora/personas/<slug>/` (override with
 
 ## Architecture
 
-<details>
-<summary>Flow diagram</summary>
+Two flow diagrams: how a coach gets built, and how a table debates.
 
-```mermaid
-flowchart TD
-    A(["/coach &lt;name&gt;"]) --> B{Persona cached?}
-    B -- Yes --> I
-    B -- No --> D[Identify person\n+ map domains]
-    D --> E[Fetch transcripts]
-    E --> F[Deep web research\nper domain]
-    F --> G[Verify vs. sources]
-    G --> H[Distill into\npersona.md]
-    H --> I([Embody])
+<img src="assets/diagrams/coach-build.svg" alt="Flowchart. /coach checks for a cached persona, then either loads it straight away or runs the build pipeline: identify the person, fetch transcripts, deep web research, verify sources, distill persona.md, then embody. A separate /coach-update path folds files from inbox/ into research/." width="100%">
 
-    U(["/coach-update"]) --> V[inbox/ → research/]
+*Building a coach: the cache check, the build pipeline, and the `/coach-update` path.*
 
-    J(["/roundtable"]) --> K{All built?}
-    K -- No --> L([Tell user to /coach first])
-    K -- Yes --> N([Facilitation mode])
+<img src="assets/diagrams/debate-loop.svg" alt="Flowchart. /roundtable checks that every coach is built, then enters facilitation mode. Round 1 spawns all coaches in parallel; later rounds resume the same warm agents until nothing moves. Then a gap check writes research/_gaps.md, which /coach-refresh reads to target the gaps." width="100%">
 
-    N --> O{Message type?}
-    O -- "@name" --> P1([1 agent])
-    O -- General --> R1([All agents, parallel])
-
-    O -- "/discuss" --> Q1[Round 1: spawn all\nagents in parallel]
-    Q1 --> Q2[Rounds 2..N: SendMessage\nresumes each WARM agent]
-    Q2 --> Q3{Anyone moved?\nAnything new?}
-    Q3 -- Yes --> Q2
-    Q3 -- "No / cap 5" --> Q4([Converged, crystallized,\nor capped])
-    Q4 --> G1[Gap check]
-    G1 --> G6[(research/_gaps.md)]
-    G6 -.reads.-> S(["/coach-refresh\ntargets the gaps"])
-```
-
-</details>
+*The debate loop: round 1 spawns every coach in parallel, later rounds resume the same warm agents, and a gap check feeds `/coach-refresh`.*
 
 <details>
 <summary>Repo layout</summary>
