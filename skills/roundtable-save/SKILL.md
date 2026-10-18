@@ -2,7 +2,7 @@
 name: roundtable-save
 description: Save the current roundtable as a named preset, or define a new preset from a list of coaches. Run /roundtable <preset-name> to load it later.
 argument-hint: <preset-name> [coach1, coach2, ...]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /roundtable-save — save a named roundtable preset

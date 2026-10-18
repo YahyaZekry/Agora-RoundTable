@@ -2,7 +2,7 @@
 name: roundtable-add
 description: Add a coach to an active roundtable session mid-conversation.
 argument-hint: [person's name]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /roundtable-add — add a coach to the room

@@ -1,7 +1,7 @@
 ---
 name: coach-end
 description: End the active coach persona and return to normal Claude. Use when the user wants to stop talking to their coach.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-end — back to normal

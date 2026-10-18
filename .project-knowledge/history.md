@@ -285,3 +285,9 @@
    data dir (`lib/data-dir.js` resolves `$AGORA_DATA_DIR` → Claude dir → `~/.config/opencode/agora` →
    legacy `~/.claude`), so a coach built in either host is usable in the other and opencode never
    *requires* Claude. *(2026-08-29)*
+
+- **Added Codex as a native third runtime, not a wrapper fork.** The existing shared
+  `skills/` directory remains the source of behavior. `.codex-plugin/plugin.json` adds Codex
+  packaging and UI metadata, while `.agents/plugins/marketplace.json` publishes the repository
+  as `agora-roundtable`; the skill frontmatter and root-path guidance were made portable so the
+  same files remain usable by Claude Code, OpenCode, and Codex. *(2026-10-18)*

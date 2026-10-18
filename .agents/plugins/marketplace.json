@@ -1,0 +1,20 @@
+{
+  "name": "agora-roundtable",
+  "interface": {
+    "displayName": "Agora RoundTable"
+  },
+  "plugins": [
+    {
+      "name": "agora-roundtable",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

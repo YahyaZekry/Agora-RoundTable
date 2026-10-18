@@ -1,6 +1,6 @@
 # Systems
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-18
 > This isn't a web app — the standard categories below mostly don't apply. Rows are
 > relabeled to this project's actual cross-cutting concerns instead of forced into
 > auth/DB/payments boxes that don't exist here.
@@ -14,6 +14,7 @@
 | **Persona cache (storage)** | Active | Agent-neutral: `~/.agora/personas/<slug>/` (override `$AGORA_DATA_DIR`), resolved by `opencode-plugin/lib/data-dir.js` and mirrored by the `skills/*` Step 0 on the Claude side. Same path on Linux, macOS, and Windows. Older Claude-side data (`$CLAUDE_PLUGIN_DATA`, `~/.claude/agora-roundtable`) and old opencode-config data (`~/.config/opencode/agora`) are read-only legacy, migrated once. No lock files — active coach is conversation state, not disk state (two parallel chats can talk to two different coaches) |
 | **Portable data-dir resolver** | Active | `opencode-plugin/lib/data-dir.js` — single source of truth for persona/session/preset paths: `$AGORA_DATA_DIR` → `~/.agora`, with a read-only bridge to `~/.config/opencode/agora/personas` for older installs. Opencode's `plugin/plugin.js` exposes `agora_data_dir` so commands can resolve paths at runtime; the Claude `skills/*` Step 0 mirrors the same order |
 | **OpenCode JS plugin** | Active | `opencode-plugin/plugin/plugin.js` — a **dependency-free** ESM plugin that default-exports `{ id: "agora-roundtable", setup(ctx) }` and registers three tools via `ctx.tool.transform(editor => editor.add(...))`: `agora_data_dir` (resolve paths), `agora_slugify` (name → slug), `agora_session` (read/write `roundtable-session.json` + `roundtable-presets.json`). It uses opencode's own setup context, so it imports **no** SDK. `install.sh` installs it as a real **shim** file (`export { default } from "file://…"`) rather than a symlink, because opencode's plugin loader can't load a plugin whose entry point is a symlink. The only place opencode has real runtime code — everything else (commands/agents/skills) is declarative config |
+| **Codex plugin packaging** | Active | `.codex-plugin/plugin.json` packages the shared `skills/` directory with Codex UI metadata. `.agents/plugins/marketplace.json` exposes the repo as the `agora-roundtable` marketplace so the Codex CLI can install it directly. Codex-specific skill metadata permits model invocation and uses portable plugin-root instructions instead of Claude-only root variables. |
 | **YouTube caption fetching** | Active | `scripts/fetch_youtube.py` via `yt-dlp` (manual subs preferred, auto-captions fallback), optional `youtube-transcript-api` per-video fallback. Zero-API-key design |
 | Realtime | N/A | — |
 | Background Jobs | N/A | — |

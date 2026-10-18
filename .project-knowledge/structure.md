@@ -1,6 +1,6 @@
 # Project Structure
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-18
 
 ## File Tree
 
@@ -8,7 +8,11 @@
 .claude-plugin/
   plugin.json          # Claude Code plugin manifest (name, displayName, version, description, author, repository, license, keywords)
   marketplace.json      # this repo doubles as its own marketplace (source: "./")
-skills/                  # Claude Code plugin — commands live here as skills
+.codex-plugin/
+  plugin.json           # native Codex plugin manifest; exposes the shared skills/
+.agents/plugins/
+  marketplace.json      # native Codex marketplace entry (source: "./")
+skills/                  # shared skill definitions; Claude Code commands and Codex skills
   coach/
     SKILL.md             # the whole product: resolve → identify → fetch → research → write → embody
     references/
@@ -70,6 +74,8 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 | `docs/DESIGN.md` | Why things are shaped this way (Claude side), plus a version-by-version decision log — read before making an architectural change here |
 | `docs/opencode.md` | Opencode port architecture: why commands/agents/skills are config files + a small JS plugin, install steps, data-dir portability |
 | `.claude-plugin/marketplace.json` | What makes `/plugin marketplace add YahyaZekry/Agora-RoundTable` work without a separate marketplace repo |
+| `.codex-plugin/plugin.json` | Native Codex manifest: packages the shared `skills/` directory with Codex-specific plugin metadata. |
+| `.agents/plugins/marketplace.json` | Lets `codex plugin marketplace add YahyaZekry/Agora-RoundTable` discover and install the repository's native Codex plugin. |
 | `assets/diagrams/*.svg` | README architecture figures — self-contained SVGs skinned to the repo's brand tokens (`#0a0e1a` / `#e8823c`). Sources are the sibling `.html` files; regenerate with the `diagram-design` skill's `export_svg.py`. Referenced from README by `<img … width="100%">`. |
 
 ## Runtime output structure (not committed — `personas/` is gitignored)

@@ -1,7 +1,7 @@
 ---
 name: roundtable-end
 description: End the active roundtable session and return to normal Claude.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /roundtable-end — close the roundtable

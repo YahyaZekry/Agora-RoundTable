@@ -2,7 +2,7 @@
 name: roundtable-remove
 description: Remove a coach from an active roundtable session mid-conversation.
 argument-hint: [person's name]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /roundtable-remove — remove a coach from the room

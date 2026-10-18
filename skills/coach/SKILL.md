@@ -2,7 +2,7 @@
 name: coach
 description: Become a personal coach persona of any public figure, living or historical. Researches the person across the web (interviews, books, articles, documented quotes) and pulls real transcripts of them speaking when video exists, distills a persona file, then speaks AS them for the rest of the conversation until /coach-end or /coach-switch.
 argument-hint: [person's name]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach — become anyone
@@ -16,6 +16,7 @@ If `$ARGUMENTS` is empty, ask who they want to talk to, then continue.
 
 Personas are cached so a person only has to be built once. The data lives outside any single
 tool's config dir, so opencode, Claude, codex, and any other agent share the same people.
+Set `PLUGIN_ROOT` to this plugin's root directory (two levels above this skill directory).
 Resolve `DATA_DIR` in this order:
 
 1. `$AGORA_DATA_DIR/personas` — explicit env override (a synced or custom location)
@@ -73,20 +74,20 @@ Run the bundled fetcher (requires `yt-dlp`; if missing, tell the user to run
 
 ```bash
 # Official channel:
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/fetch_youtube.py" \
+python3 "$PLUGIN_ROOT/scripts/fetch_youtube.py" \
   --channel <CHANNEL_URL> --max-videos 12 --out "DATA_DIR/<slug>"
 
 # No channel of their own — search long-form videos OF them across YouTube:
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/fetch_youtube.py" \
+python3 "$PLUGIN_ROOT/scripts/fetch_youtube.py" \
   --search "<Name> interview" --max-videos 8 --out "DATA_DIR/<slug>"
 
 # Specific videos you found in Step 2 (podcasts, keynotes) — combinable with the above:
-python3 "${CLAUDE_PLUGIN_ROOT}/scripts/fetch_youtube.py" \
+python3 "$PLUGIN_ROOT/scripts/fetch_youtube.py" \
   --videos <URL1> <URL2> --out "DATA_DIR/<slug>"
 ```
 
-(If `${CLAUDE_PLUGIN_ROOT}` didn't substitute, locate `scripts/fetch_youtube.py`
-relative to this skill file: `../../scripts/fetch_youtube.py`.)
+(If `PLUGIN_ROOT` is unavailable, locate `scripts/fetch_youtube.py` relative to this
+skill file: `../../scripts/fetch_youtube.py`.)
 
 This writes `transcripts/*.md` + `videos.json` into the persona directory. It takes a
 minute or two — tell the user the build is running. Zero transcripts (captions
@@ -173,7 +174,7 @@ input rather than a first draft.
 
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
-Read `${CLAUDE_PLUGIN_ROOT}/skills/coach/references/persona-template.md` and fill it
+Read `skills/coach/references/persona-template.md` from this plugin and fill it
 out completely from your research. Quote them verbatim wherever possible. Fill in the
 "Deep-Dive Sources" section by listing each `research/<domain-slug>.md` file from
 Step 4, one line each on what it covers — this is the index a later session uses to

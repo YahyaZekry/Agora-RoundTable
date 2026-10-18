@@ -1,7 +1,7 @@
 ---
 name: coach-list
 description: List all coach personas already built and cached on this machine.
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-list — saved coaches

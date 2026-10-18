@@ -2,7 +2,7 @@
 name: coach-refresh-all
 description: Rebuild every built coach from fresh research, or every coach in a named preset. Same as running /coach-refresh for each one individually. This is slow — it pulls new transcripts and does full web research per coach.
 argument-hint: (optional preset name — e.g. y-table)
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-refresh-all — full rebuild for all coaches
@@ -39,7 +39,7 @@ Existing personas are backed up per coach and restored if a build fails."**
 ## Step 2 — Rebuild each coach in sequence
 
 For each coach in the target list, run the full `/coach-refresh` pipeline **exactly as
-that skill defines it** — read `${CLAUDE_PLUGIN_ROOT}/skills/coach-refresh/SKILL.md` and
+that skill defines it** — read the `coach-refresh` skill in this same plugin and
 follow it. Do not reimplement the steps here; that is how this command previously ended
 up deleting caches outright while `/coach-refresh` had already been fixed not to.
 

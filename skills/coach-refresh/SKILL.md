@@ -2,7 +2,7 @@
 name: coach-refresh
 description: Rebuild a cached coach persona from fresh research — new videos, updated frameworks.
 argument-hint: [person's name]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-refresh — rebuild a persona
@@ -41,7 +41,7 @@ first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
    Never touch the rest of `inbox/` — those are the user's own dropped files, not cache.
 
 4. Run the full `/coach` build for the name: read
-   `${CLAUDE_PLUGIN_ROOT}/skills/coach/SKILL.md` and follow it from Step 1 (the cache
+   the `coach` skill in this same plugin and follow it from Step 1 (the cache
    check will miss, forcing fresh research and transcript pulls). **Give the open
    `_gaps.md` entries priority during Step 4's research** — an unmined gap means the
    content is already in `transcripts/` and just needs extracting; an unresearched gap
@@ -70,7 +70,7 @@ first build was thin). If `$ARGUMENTS` is empty, ask who to refresh.
      ```
      Then tell the user plainly what failed and that the original persona is intact.
 5. After the build completes, run `/coach-update` for this coach: read
-   `${CLAUDE_PLUGIN_ROOT}/skills/coach-update/SKILL.md` and follow its Step 2 to
+   the `coach-update` skill in this same plugin and follow its Step 2 to
    re-extract everything currently in `inbox/` into the freshly rebuilt `research/`.
 6. **Reconcile `_gaps.md`** — for each open entry, check whether the rebuild actually
    closed it. Mark closed ones `Status: closed` with the date; leave genuinely

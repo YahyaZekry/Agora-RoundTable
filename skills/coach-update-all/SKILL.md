@@ -2,7 +2,7 @@
 name: coach-update-all
 description: Process inbox/ and close known gaps for every built coach, or every coach in a named preset. Same as running /coach-update for each one individually.
 argument-hint: (optional preset name — e.g. y-table)
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-update-all — sync inbox and close gaps for all coaches

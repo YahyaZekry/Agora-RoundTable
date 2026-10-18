@@ -1,8 +1,8 @@
 ---
 name: coach-gaps
 description: Ask a coach where their own knowledge is thin, or show the gaps already recorded for them. Surfaces claims they make without a source, topics they'd argue better with material they don't have, and what would fix each one. Routes each gap to whoever can close it.
-argument-hint: [coach name] (optional — omit to list gaps for every built coach)
-disable-model-invocation: true
+argument-hint: "[coach name] (optional — omit to list gaps for every built coach)"
+disable-model-invocation: false
 ---
 
 # /coach-gaps — where is this coach thin?

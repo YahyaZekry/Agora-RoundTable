@@ -2,7 +2,7 @@
 name: roundtable
 description: Start a multi-coach session with two or more built personas. All coaches respond to each message in their own voice. Direct a question to one with @name, or use /discuss <topic> to have the coaches dialogue with each other, facilitated by Claude.
 argument-hint: [name1, name2, ...]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /roundtable — multi-coach session

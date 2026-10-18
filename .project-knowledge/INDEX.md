@@ -1,16 +1,17 @@
 # Agora RoundTable — Knowledge Index
 
-> Last updated: 2026-10-10
+> Last updated: 2026-10-18
 > Status: Active
-> Stack: Dual-runtime — Claude Code plugin (`skills/`) + opencode port (`opencode-plugin/`, config files + a dependency-free ESM JS plugin), shared persona format & agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`), zero runtime services
-> Current goal: The opencode v2 plugin port is done and verified (tools load and run on OpenCode v2.0.24); validate the warm-agent debate at scale on both runtimes, then rebuild the novel-coaching persona stubs that gate that test
+> Stack: Three runtimes — Claude Code + OpenCode + Codex plugins, shared persona format & agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`), zero runtime services
+> Current goal: Validate the warm-agent debate at scale across all three runtimes, then rebuild the novel-coaching persona stubs that gate that test
 
 ## What This Project Does
 
-A Claude Code and OpenCode plugin that turns any
-public figure into an AI coach persona. Ships for **two hosts** with identical capability
+A Claude Code, OpenCode, and Codex plugin that turns any
+public figure into an AI coach persona. Ships for **three hosts** with identical capability
 and a shared persona format: **Claude Code** (`/coach`, `/roundtable`, `/discuss`) and
-**OpenCode** (`/agora coach`, `/agora roundtable`, `/agora discuss`). Two modes:
+**OpenCode** (`/agora coach`, `/agora roundtable`, `/agora discuss`), and **Codex**
+(`coach`, `roundtable`, and related skills). Two modes:
 
 - **Single coach** — `/coach <name>` (or `/agora coach`) researches them across the web
   and YouTube, builds a persona file grounded in their real content, and the host model
@@ -26,10 +27,10 @@ and a shared persona format: **Claude Code** (`/coach`, `/roundtable`, `/discuss
 
 | File | Contents | Load when... |
 |------|----------|--------------|
-| `stack.md` | Dual-runtime tech (Claude + opencode, Python + Markdown + ESM JS), dev/install commands, the agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`) | Touching `fetch_youtube.py`, the opencode port, adding a skill, checking how plugin paths resolve |
-| `structure.md` | File tree (both runtimes), key files, the runtime (gitignored) per-persona output shape | Navigating the repo, understanding what a build actually produces on disk |
-| `systems.md` | Portable persona cache + data-dir resolver, opencode JS plugin, YouTube fetching, web research, AI embodiment — the actual cross-cutting concerns (no auth/DB/payments here) | Touching the research pipeline, the cache layout, or the opencode port |
-| `features.md` | Dual-runtime (Claude `/coach` + opencode `/agora coach`) + all 15 commands + the build/embodiment/roundtable/inbox workflows, step by step | Understanding or changing how a persona gets built, or how roundtable works |
+| `stack.md` | Three-runtime tech (Claude + OpenCode + Codex), dev/install commands, and the agent-neutral data dir (`~/.agora`, override `$AGORA_DATA_DIR`) | Touching `fetch_youtube.py`, a runtime port, adding a skill, checking how plugin paths resolve |
+| `structure.md` | File tree (all runtimes), key files, the runtime (gitignored) per-persona output shape | Navigating the repo, understanding what a build actually produces on disk |
+| `systems.md` | Portable persona cache + data-dir resolver, OpenCode JS plugin, Codex plugin packaging, YouTube fetching, web research, AI embodiment | Touching the research pipeline, the cache layout, or a runtime integration |
+| `features.md` | Three-runtime coaching and roundtable workflows, all 15 skills, and the build/embodiment/inbox paths | Understanding or changing how a persona gets built, or how roundtable works |
 | `roadmap.md` | Current goal, active TODOs | Starting any task — know what's still pending |
 | `history.md` | Architectural decisions (why `research/` exists, why transcripts are `.md`, why roundtable was added, why inbox is explicit, why the opencode port is a hybrid) | Debugging or reconsidering a design choice |
 | `sessions.md` | Session-by-session log | Reviewing what's been done |
@@ -47,6 +48,7 @@ and a shared persona format: **Claude Code** (`/coach`, `/roundtable`, `/discuss
 | Changing `skills/coach/SKILL.md` or the research pipeline | `features.md` + `history.md` |
 | Changing `skills/roundtable/SKILL.md` or roundtable behavior | `features.md` + `structure.md` |
 | Changing the opencode port (`opencode-plugin/`) | `features.md` + `structure.md` + `systems.md` (data-dir resolver) |
+| Changing Codex packaging (`.codex-plugin/` or `.agents/plugins/`) | `stack.md` + `structure.md` + `systems.md` |
 | Changing `scripts/fetch_youtube.py` | `stack.md` + `structure.md` |
 | Understanding the runtime persona-folder shape | `structure.md` |
 | Picking up pending work | `roadmap.md` |

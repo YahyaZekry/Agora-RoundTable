@@ -2,7 +2,7 @@
 name: coach-update
 description: Process any new files dropped into a coach's inbox/ folder and merge them into their research files. Does not rebuild the persona — use /coach-refresh for that.
 argument-hint: [person's name]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 # /coach-update — sync inbox into research

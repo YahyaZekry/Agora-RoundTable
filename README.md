@@ -5,7 +5,7 @@
 **Your personal assembly of AI agents.** Talk to any public figure one-on-one, or seat
 several at a table and let them argue with each other until the argument stops moving.
 
-Runs on **Claude Code** and **OpenCode**, sharing the same personas.
+Runs on **Claude Code**, **OpenCode**, and **Codex**, sharing the same personas.
 
 ```
 /coach marcus aurelius                    → built from his actual writings
@@ -19,7 +19,7 @@ Works for anyone with a public footprint, living or historical.
 
 | | |
 | --- | --- |
-| [Install](#install) | Claude Code or OpenCode, plus optional yt-dlp |
+| [Install](#install) | Claude Code, OpenCode, or Codex, plus optional yt-dlp |
 | [Commands](#commands) | All 15, one table |
 | [See it work](#see-it-work) | Real unedited debate output |
 | [How `/discuss` works](#how-discuss-works) | Why they can change their minds |
@@ -45,13 +45,20 @@ git clone https://github.com/YahyaZekry/Agora-RoundTable
 bash Agora-RoundTable/opencode-plugin/install.sh
 ```
 
-Commands are identical on both, just prefixed on OpenCode: `/agora coach`,
-`/agora roundtable`, `/agora discuss`. The installer symlinks into `~/.config/opencode`,
-so the repo stays the source of truth, and both runtimes read and write the same
-agent-neutral `~/.agora` persona folder. **A coach built in either one works in the other** —
-same persona format, same folder.
+**Codex:**
 
-**Optional on both:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) (`brew install yt-dlp`
+```bash
+codex plugin marketplace add YahyaZekry/Agora-RoundTable
+codex plugin add agora-roundtable@agora-roundtable
+```
+
+Claude Code uses `/coach` and `/roundtable`; OpenCode prefixes those commands with
+`/agora`; Codex exposes the same skills by name. The OpenCode installer links into
+`~/.config/opencode`, while Codex installs the repo's native `.codex-plugin` manifest.
+All three runtimes read and write the same agent-neutral `~/.agora` persona folder.
+**A coach built in one works in the others** — same persona format, same folder.
+
+**Optional on all three:** [yt-dlp](https://github.com/yt-dlp/yt-dlp) (`brew install yt-dlp`
 or `pip3 install --user yt-dlp`). Without it, personas build from web research alone. With
 it, anyone with video gets their real spoken voice mined from transcripts.
 
@@ -71,7 +78,8 @@ it, anyone with video gets their real spoken voice mined from transcripts.
 | `/coach-refresh-all` · `/coach-update-all` | Same, across every coach or a preset |
 
 Namespaced form if names collide on Claude Code: `/agora:coach <name>`. On OpenCode every
-command is `/agora <command>` already.
+command is `/agora <command>` already. In Codex, invoke the matching skill by name or describe
+the coach/roundtable task naturally.
 
 ## See it work
 
@@ -299,7 +307,9 @@ Two flow diagrams: how a coach gets built, and how a table debates.
 
 ```
 .claude-plugin/     plugin.json + marketplace.json (repo is its own marketplace)
-skills/             Claude Code — one folder per command
+.codex-plugin/      native Codex plugin manifest
+.agents/plugins/    Codex marketplace entry (repo is its own marketplace)
+skills/             shared skill definitions — one folder per command
   coach/            main skill + persona template
   coach-switch/  coach-end/  coach-list/  coach-refresh/  coach-refresh-all/
   coach-update/  coach-update-all/
@@ -316,8 +326,8 @@ scripts/
 examples/           real personas built by this pipeline
 ```
 
-Both runtimes read and write the same persona folders, so a coach built in one is
-immediately usable in the other.
+All three runtimes read and write the same persona folders, so a coach built in one is
+immediately usable in the others.
 
 </details>
 
@@ -340,6 +350,7 @@ Historical figures are rebuilt from their writing, in the language of their time
 | Wrong person picked | `/coach-refresh` with a more specific name ("the founder of X") |
 | Commands not showing (Claude Code) | `/plugin` → verify it's installed + enabled, then restart |
 | Commands not showing (OpenCode) | re-run `opencode-plugin/install.sh`, then restart OpenCode |
+| Skills not appearing (Codex) | Start a new task after installing or updating the plugin |
 
 </details>
 

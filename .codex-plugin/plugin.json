@@ -1,0 +1,39 @@
+{
+  "name": "agora-roundtable",
+  "version": "2.5.1+codex.20261018165523",
+  "description": "Build source-grounded public-figure coaches and facilitate multi-coach roundtables.",
+  "author": {
+    "name": "Yahya Zekry",
+    "url": "https://github.com/YahyaZekry"
+  },
+  "homepage": "https://github.com/YahyaZekry/Agora-RoundTable",
+  "repository": "https://github.com/YahyaZekry/Agora-RoundTable",
+  "license": "MIT",
+  "keywords": [
+    "coach",
+    "persona",
+    "mentor",
+    "roundtable",
+    "research",
+    "transcripts"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Agora RoundTable",
+    "shortDescription": "Build source-grounded coaches and multi-coach roundtables.",
+    "longDescription": "Agora researches a public figure from primary sources and transcripts, builds a reusable source-grounded coach persona, and facilitates multi-coach roundtables and debates using those saved personas.",
+    "developerName": "Yahya Zekry",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write",
+      "Execute"
+    ],
+    "websiteURL": "https://github.com/YahyaZekry/Agora-RoundTable",
+    "defaultPrompt": [
+      "Create a coach for Maya Angelou.",
+      "Start a roundtable with my saved coaches.",
+      "Audit gaps in my coach's research."
+    ]
+  }
+}

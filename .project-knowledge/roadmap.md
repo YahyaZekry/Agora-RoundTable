@@ -1,6 +1,6 @@
 # Roadmap
 
-> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-10
+> Part of agora-roundtable/.project-knowledge/ | Last updated: 2026-10-18
 
 ## Current Goal
 
@@ -9,7 +9,7 @@ ported to the v2 shape, `install.sh` now writes a loadable shim, and the three t
 (`agora_data_dir`, `agora_slugify`, `agora_session`) are verified working in a live session
 (`agora-roundtable` is `active`). The port TODO below is closed. What remains is the broader
 v2.5.1 validation: prove the warm-agent debate at scale (3+ coaches, the `wantsToPress` 1v1
-narrowing, the 5-round cap, and gaps actually closing on a later refresh) on both runtimes,
+narrowing, the 5-round cap, and gaps actually closing on a later refresh) on all three runtimes,
 then rebuild the novel-coaching stubs (Harris / Navarro / Flynn / Lehane) that gate that test.
 
 Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 2026-10-10
@@ -53,6 +53,9 @@ Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 202
       `/agora coach` / `/agora discuss` run through the port (the declarative command/agent/
       skill layer is unchanged, so this is a behavioural check, not a loadability one).
       *(added: 2026-08-29; updated: 2026-10-10)*
+- [ ] **Smoke-test the Codex plugin** — marketplace discovery, manifest validation, and
+      installation are verified; start a fresh Codex task and run a full `coach` / `roundtable`
+      flow to confirm the host's skill invocation and multi-agent behavior. *(added: 2026-10-18)*
 - [x] ~~**End-to-end test the v2.5.1 gap flow**~~ — **DONE 2026-08-30.** Ran on Plato.
       Claude side closed 4 unmined gaps (one turned out already closed — stale entry);
       the opencode side then closed all 9 unresearched plus the blocked 518b–d item.
