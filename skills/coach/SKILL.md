@@ -37,11 +37,14 @@ genuinely famous people share the name, ask the user which one — otherwise jus
 and state your assumption in one line ("Assuming you mean Alex Hormozi, the
 Acquisition.com founder").
 
-While you're doing this search, also note their **1-4 distinct public domains of
-authority** — the genuinely separate lanes they're known for, not synonyms for the same
-thing (Alex Hormozi: business offers/pricing, lead generation, content creation — not
-"business" once and "entrepreneurship" again). Most people have exactly one; don't force
-a split that isn't there. This list drives how Step 4's research gets organized on disk.
+While you're doing this search, also map their **topic areas** — every distinct subject
+or named system they teach, with no cap on the count (Alex Hormozi: offers and pricing,
+lead generation, sales, scaling, content, decision-making — not "business" once and
+"entrepreneurship" again). Don't guess what a user will ask; follow the person's own
+structure: the parts of their books, their named frameworks, their recurring talk topics.
+Also note how the areas depend on each other (what comes first, what builds on what) —
+Step 4.6 turns that into the system map. This list drives how Step 4's research gets
+organized on disk; see `references/research-template.md` for the splitting rules.
 
 Check the cache: if `DATA_DIR/<slug>/persona.md` exists, read it and **skip straight to
 Step 6**. Mention it loaded from cache in one line.
@@ -101,9 +104,9 @@ words you mine are the PERSON's, not the interviewer's.
 ## Step 4 — Deep web research (EVERY build — primary source when video is thin)
 
 Targeted web searches, scaled to how much Step 3 delivered: 2-4 searches when
-transcripts are rich, 6-8 when they're thin or absent. Run this **per domain** from
-Step 1 — a multi-domain figure gets separate research passes per lane, not one
-undifferentiated sweep. Cover, per domain:
+transcripts are rich, 6-8 when they're thin or absent. Run this **per topic area** from
+Step 1 — a figure with many areas gets separate research passes per area, not one
+undifferentiated sweep. Cover, per topic area:
 
 - Their books/writings and the core ideas in them; famous named frameworks
 - Long print interviews and profiles — fetch and read 2-3 full pieces when
@@ -126,10 +129,16 @@ different talk, not just a one-line paraphrase.
 **Persist the research — don't let it evaporate into the distillation.** Before
 writing `persona.md` in Step 5, write your actual findings per domain to disk, in
 enough depth to stand alone as a reference (quotes, mechanisms, stories — not just
-what ends up quoted in the persona file): one flat file per domain,
-`DATA_DIR/<slug>/research/<domain-slug>.md`. No per-domain subfolder — if a single
-domain's research later grows large enough to genuinely need splitting into multiple
-files, that's a deliberate restructure at that point, not a default.
+what ends up quoted in the persona file): one flat file per **topic area**,
+`DATA_DIR/<slug>/research/<topic-slug>.md`, written in the shape of
+`skills/coach/references/research-template.md` (frontmatter, Frameworks, Decision Rules,
+Stories & Numbers, Criticism & Limits, See also). Split by topic, merge by source: a
+transcript and a book that both cover pricing go in the same pricing file. There is no cap
+on the number of files; split any file that passes ~4,000 words and link the halves with
+`read_with`. Tag every verbatim quote as `"quote" [src: transcripts/<file>.md]` so
+`scripts/check_quotes.py` can verify it. Capture **Decision Rules** too (when X, they do Y;
+the question they ask before advising) — frameworks alone don't make a coach answer the
+way the person would.
 
 **Don't summarize a summary.** If you delegate reading the transcripts or a batch of
 web sources to a subagent, that subagent should write `research/<domain-slug>.md`
@@ -168,17 +177,42 @@ check for:
   move them to a clearly labeled "no primary source in this folder" section at the
   end of the file, so Step 6 knows to hedge instead of quoting.
 
-If you find gaps, fix `research/<domain-slug>.md` before moving on — don't note the
+**Run the checkers — don't rely on re-reading alone.**
+
+```bash
+python3 "$PLUGIN_ROOT/scripts/check_quotes.py" "DATA_DIR/<slug>"
+python3 "$PLUGIN_ROOT/scripts/validate_research.py" "DATA_DIR/<slug>"
+python3 "$PLUGIN_ROOT/scripts/coach_health.py" "DATA_DIR/<slug>"
+```
+
+`check_quotes.py` fails any tagged quote that isn't in its cited source (`NOT_FOUND`) and
+flags near-matches (`NEAR`): fix the wording to the source, or move the claim to the "no
+primary source" section. `validate_research.py` checks frontmatter, links, the persona index
+and the system map (add `--legacy` for research written before the template).
+`coach_health.py` turns all of that into a deterministic 0-100 score per topic (no AI judges
+it) and writes `DATA_DIR/<slug>/coach-health.json`; its "Fix next" list tells you what to fix
+before moving on. Locate the scripts the way Step 3 does.
+
+If you find gaps, fix `research/<topic-slug>.md` before moving on — don't note the
 gap and proceed anyway. Only once this check is clean does Step 5 read as trustworthy
 input rather than a first draft.
+
+## Step 4.6 — Write the system map (when there are 2+ research files)
+
+Write `DATA_DIR/<slug>/research/_system-map.md` from
+`skills/coach/references/system-map-template.md`: the order the person teaches things in,
+which framework depends on which, which file owns each framework, and where their own ideas
+pull against each other. It points to files; it doesn't repeat them. A single-file build
+skips this step. Re-run `validate_research.py` once it exists.
 
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
 Read `skills/coach/references/persona-template.md` from this plugin and fill it
 out completely from your research. Quote them verbatim wherever possible. Fill in the
-"Deep-Dive Sources" section by listing each `research/<domain-slug>.md` file from
-Step 4, one line each on what it covers — this is the index a later session uses to
-route a question to the right domain. Don't list `transcripts/` here; it's mined,
+"Deep-Dive Sources" section: `research/_system-map.md` first (if it exists), then each
+`research/<topic-slug>.md` from Step 4, one line each — what it covers, which questions it
+answers, and what to read with it. This is the index a later session uses to route a
+question to the right files. Don't list `transcripts/` here; it's mined,
 archival raw material, not a live reference target. Save the whole thing to
 `DATA_DIR/<slug>/persona.md`.
 
@@ -199,9 +233,14 @@ Adopt the persona NOW and for the rest of the conversation:
 4. Don't fabricate: no invented life events, prices, numbers, or opinions they haven't
    publicly expressed. When extrapolating beyond their content, say so in their voice.
 5. The persona file's Frameworks/Beliefs/Quotes sections are a compressed summary, not
-   the ceiling. Match the question's topic to a domain, check the Deep-Dive Sources
-   section for that domain's `research/<domain-slug>.md`, and READ it live before
-   answering — this is a topic lookup, not a vague depth judgment call. Don't guess
+   the ceiling. Before answering, READ the research live. Read `research/_system-map.md` first when the question is broad or spans several
+   topics, then follow the files it points to. For a narrow question, go straight to the
+   matching file(s) in the Deep-Dive Sources index. Read up to 3 files, and follow a
+   file's `read_with` list when the answer needs it — this is a topic lookup, not a vague
+   depth judgment call. If `DATA_DIR/<slug>/coach-health.json` exists, check that topic's
+   band before answering: for a topic marked `thin`, say so in the person's voice ("I haven't
+   gone deep on this") and stay within what the files support instead of filling the gap
+   from general knowledge. Don't guess
    from the compressed version when the real material is sitting right there on disk.
    `transcripts/` and `inbox/` have already been mined into `research/` (Step 4 and
    Step 5.5) — no need to re-read either unless a research file explicitly flags

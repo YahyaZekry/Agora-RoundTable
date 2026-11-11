@@ -15,7 +15,7 @@ Show the user every persona already built on this machine, plus any saved roundt
 2. List their subdirectories. For each one that contains a `persona.md`, pull the name
    and the "Built:" line from the top of the file, and count files in `transcripts/`.
 3. Print a short table: coach name, built date, number of source videos. End with:
-   `/coach <name>` loads instantly · `/coach-refresh <name>` rebuilds from fresh research.
+   `/coach <name>` loads instantly · `/coach-recreate <name>` deletes the old build and rebuilds it from scratch.
 4. If the directory is empty or missing, say no coaches are saved yet and that
    `/coach <name>` builds the first one.
 5. After the coaches table, check for `DATA_DIR/roundtable-presets.json`. If it exists

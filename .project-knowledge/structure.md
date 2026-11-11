@@ -20,8 +20,7 @@ skills/                  # shared skill definitions; Claude Code commands and Co
   coach-switch/SKILL.md   # swap coaches mid-conversation
   coach-end/SKILL.md      # drop character, back to normal Claude
   coach-list/SKILL.md     # list every cached persona + saved presets
-  coach-refresh/SKILL.md  # rebuild one persona; backs the old cache up first, restores on failure
-  coach-refresh-all/SKILL.md  # rebuild all coaches or a named preset (v2.3.0)
+  coach-recreate/SKILL.md  # rebuild one persona; backs the old cache up first, restores on failure
   coach-update/SKILL.md       # explicit inbox sync for one coach (v2.2.0)
   coach-update-all/SKILL.md   # inbox sync for all coaches or a named preset (v2.3.0)
   coach-gaps/SKILL.md         # audit a coach's own sourcing thinness (v2.5.0)
@@ -33,7 +32,7 @@ skills/                  # shared skill definitions; Claude Code commands and Co
 opencode-plugin/          # OpenCode port — full parity with the Claude skills, /agora* commands
   install.sh              # links commands/agents/skills into ~/.config/opencode, writes the plugin shim, creates the agent-neutral ~/.agora data dir (idempotent)
   package.json            # plugin manifest — no runtime dependencies
-  commands/agora-*.md     # 15 slash commands (coach, coach-switch/end/list, coach-refresh[-all],
+  commands/agora-*.md     # 15 slash commands (coach, coach-switch/end/list, coach-recreate,
                           #   coach-update[-all], coach-gaps, roundtable, roundtable-save/add/remove/end, discuss)
   agents/
     agora-facilitator.md  # orchestrator: builds personas, runs warm-agent debates
@@ -65,7 +64,7 @@ README.md                 # user-facing docs, install/usage/troubleshooting
 |------|---------|
 | `skills/coach/SKILL.md` | The core persona pipeline — Steps 0-6 from a name to an embodied persona. Everything in `skills/coach-*` reuses this by reference. |
 | `skills/roundtable/SKILL.md` | Multi-coach facilitator — reads the session JSON, handles 3 message types (general parallel agents, direct @name, /discuss sequential agents). Roundtable-add/remove/end update the JSON. |
-| `skills/coach-update/SKILL.md` | Inbox processing — the only place that reads `inbox/` and writes into `research/`. Called explicitly by the user and by `coach-refresh` after a rebuild. |
+| `skills/coach-update/SKILL.md` | Inbox processing — the only place that reads `inbox/` and writes into `research/`. Called explicitly by the user and by `coach-recreate` after a rebuild. |
 | `skills/coach/references/persona-template.md` | The persona.md contract: what sections exist, target word count (1,500-3,000), and the Deep-Dive Sources index format |
 | `scripts/fetch_youtube.py` | The one piece of real code on the Claude side — deterministic YouTube caption fetching. `main()` orchestrates: list/search videos → fetch captions per video → write `transcripts/*.md` + `videos.json` |
 | `opencode-plugin/plugin/plugin.js` | The opencode-side runtime: a dependency-free ESM plugin (default export `{ id, setup }`) that registers three tools (`agora_data_dir`, `agora_slugify`, `agora_session`) via `ctx.tool.transform` — resolving the portable data dir and persisting roundtable session/preset JSON for the config-file commands. |

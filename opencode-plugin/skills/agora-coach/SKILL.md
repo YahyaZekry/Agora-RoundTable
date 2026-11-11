@@ -6,7 +6,7 @@ description: >
   real transcripts of them speaking when video exists, distills a persona file into the
   shared Agora data dir, then spawns/embodies a subagent that speaks AS them. Use when
   the user invokes "/agora coach <name>", "/agora coach-switch <name>", or "/agora
-  coach-refresh <name>".
+  coach-recreate <name>".
 license: MIT
 compatibility: opencode
 ---
@@ -36,10 +36,13 @@ most prominent public figure that matches. If two genuinely famous people share 
 ask the user which one — otherwise proceed and state your assumption in one line
 ("Assuming you mean Alex Hormozi, the Acquisition.com founder").
 
-While searching, also note their **1-4 distinct public domains of authority** — genuinely
-separate lanes they're known for (Alex Hormozi: business offers/pricing, lead generation,
-content creation — not "business" once and "entrepreneurship" again). Most people have
-exactly one; don't force a split. This list drives how Step 4's research gets organized.
+While searching, also map their **topic areas** — every distinct subject or named system
+they teach, no cap on the count (Alex Hormozi: offers and pricing, lead generation, sales,
+scaling, content, decision-making). Don't guess what a user will ask; follow the person's
+own structure (parts of their books, named frameworks, recurring talk topics), and note how
+the areas depend on each other. Split by topic, merge by source; see
+`skills/coach/references/research-template.md`. This list drives Step 4 and the Step 4.6
+system map.
 
 Slugify the resolved real name (lowercase, hyphens: "Alex Hormozi" → `alex-hormozi`).
 
@@ -92,8 +95,8 @@ search-mode results, make sure the words you mine are the PERSON's, not the inte
 ## Step 4 — Deep web research (EVERY build — primary source when video is thin)
 
 Targeted web searches, scaled: 2-4 searches when transcripts are rich, 6-8 when thin or
-absent. Run this **per domain** from Step 1 — a multi-domain figure gets separate passes per
-lane. Cover, per domain:
+absent. Run this **per topic area** from Step 1 — a figure with many areas gets separate passes
+per area. Cover, per topic area:
 
 - Their books/writings and the core ideas; famous named frameworks
 - Long print interviews and profiles — fetch and read 2-3 full pieces when transcripts are thin
@@ -107,8 +110,11 @@ mechanism, a citation, and a verbatim quote. See `examples/alex-hormozi/persona.
 `examples/warren-buffett/persona.md` in the repo as the bar.
 
 **Persist the research.** Before writing `persona.md` in Step 5, write your actual findings
-per domain to disk: one flat file per domain, `PERSONAS/<slug>/research/<domain-slug>.md`, in
-enough depth to stand alone (quotes, mechanisms, stories). **Don't summarize a summary** — if
+per topic to disk: one flat file per topic area, `PERSONAS/<slug>/research/<topic-slug>.md`,
+in the shape of `skills/coach/references/research-template.md` (frontmatter, Frameworks,
+Decision Rules, Stories & Numbers, Criticism & Limits, See also), in enough depth to stand
+alone. No cap on file count; split any file past ~4,000 words. Tag every verbatim quote as
+`"quote" [src: transcripts/<file>.md]` so it can be checked. **Don't summarize a summary** — if
 you delegate reading to a subagent, that subagent should write the `research/` file directly,
 not hand back a prose report for you to compress again.
 
@@ -123,10 +129,25 @@ For each `research/<domain-slug>.md`, go back to the actual sources and check fo
 
 Fix gaps before moving on. Only once this check is clean does Step 5 read as trustworthy.
 
+Run the checkers: `python3 <repo>/scripts/check_quotes.py "PERSONAS/<slug>"` fails any
+tagged quote not found in its cited source (fix the wording or move the claim to the "no
+primary source" section), and `python3 <repo>/scripts/validate_research.py "PERSONAS/<slug>"`
+checks frontmatter, links, the persona index and the system map (`--legacy` for research
+written before the template). Then run `python3 <repo>/scripts/coach_health.py "PERSONAS/<slug>"`:
+a deterministic 0-100 score per topic (no AI judges it) that writes
+`PERSONAS/<slug>/coach-health.json`; its "Fix next" list says what to fix before moving on.
+
+## Step 4.6 — System map (when there are 2+ research files)
+
+Write `PERSONAS/<slug>/research/_system-map.md` from
+`skills/coach/references/system-map-template.md`: the order they teach things in, which
+framework depends on which, which file owns each, and where their own ideas pull against
+each other. Point to files; don't repeat them.
+
 ## Gap-tracking convention (`_gaps.md`)
 
 Every gap recorded in `research/_gaps.md` carries a `Status` marker so `coach-update`,
-`coach-gaps`, and `coach-refresh` can tell what is still open at a glance. Match the
+`coach-gaps`, and `coach-recreate` can tell what is still open at a glance. Match the
 file's existing layout:
 
 - **Table layout** (e.g. a `| Gap | Class | … ` table): add a `| Status |` column with
@@ -139,15 +160,16 @@ Rules:
   first `coach-update` / `coach-gaps` run that touches them should backfill markers.
 - When new material fills a gap, set its Status to `closed` and append a short note
   naming the source (the inbox file or the `research/<domain>.md` the build produced).
-- `coach-refresh` rebuilds from open gaps, so keep `closed` entries as a record but they
+- `coach-recreate` rebuilds from open gaps, so keep `closed` entries as a record but they
   do not drive the rebuild.
 
 ## Step 5 — Write the persona file (skip if loaded from cache)
 
 Use the persona template referenced by the Claude plugin
 (`skills/coach/references/persona-template.md` in this repo) and fill it completely from your
-research — quote verbatim wherever possible. Fill the "Deep-Dive Sources" section by listing
-each `research/<domain-slug>.md` file, one line each on what it covers. Save to
+research — quote verbatim wherever possible. Fill the "Deep-Dive Sources" section: `research/_system-map.md` first (if it exists), then
+each `research/<topic-slug>.md`, one line each — what it covers, which questions it
+answers, what to read with it. Save to
 `PERSONAS/<slug>/persona.md`. Do not list `transcripts/` here (mining intake).
 
 ## Step 6 — Become them
@@ -173,6 +195,10 @@ Embodiment Rules:
 4. Don't fabricate: no invented life events, prices, numbers, or opinions they haven't publicly
    expressed. When extrapolating, say so in their voice.
 5. The persona file's Frameworks/Beliefs/Quotes are a compressed summary, not the ceiling.
-   Match the question's topic to a domain, check Deep-Dive Sources, and READ the relevant
-   `research/<domain-slug>.md` live before answering. Don't guess from the compressed version.
+   Before answering, READ the research live: for a broad question read
+   `research/_system-map.md` first and follow its pointers; for a narrow one go straight to
+   the matching files in the Deep-Dive Sources index. Read up to 3 files and follow
+   `read_with`. If `PERSONAS/<slug>/coach-health.json` exists, check the topic's band: for a
+   topic marked `thin`, say so in the person's voice and stay within what the files support.
+   Don't guess from the compressed version.
    `transcripts/` and `inbox/` are already mined into `research/` — no need to re-read them.

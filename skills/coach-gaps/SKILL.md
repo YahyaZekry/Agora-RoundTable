@@ -78,7 +78,7 @@ For each gap the agent reports, decide **who can fix it**:
 | Class | Test | Action |
 |---|---|---|
 | **Unmined** | the material is already on disk: either in `transcripts/` but not in `research/`, **or** in `research/` but never surfaced into `persona.md` (this second case is the only one historical figures have, since they have no transcripts) | free to fix, no fetching. Offer to extract it now, and tell the user `/coach-update <name>` also closes it |
-| **Unresearched** | public and researchable, just never covered | needs a web search. `/coach-update <name>` will offer to do it as an additive pass — do not send the user to `/coach-refresh`, which rebuilds the whole cache to fill one hole |
+| **Unresearched** | public and researchable, just never covered | needs a web search. `/coach-update <name>` will offer to do it as an additive pass — do not send the user to `/coach-recreate`, which rebuilds the whole cache to fill one hole |
 | **User-only** | needs a specific book, paywalled piece, or private document, **or a decision only the user can make** | name the exact item in `_gaps.md` and tell the user. They drop the file in `inbox/` and run `/coach-update <name>`. **Do not write a note into `inbox/` yourself** — see below |
 
 Check both places before classifying anything as unresearched: `transcripts/` **and**

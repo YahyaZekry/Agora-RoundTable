@@ -64,7 +64,7 @@
     <div class="diagram-container">
       <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="debate-loop-title debate-loop-desc">
         <title id="debate-loop-title">The roundtable debate loop</title>
-        <desc id="debate-loop-desc">Flowchart of /roundtable checking that every coach is built, entering facilitation mode, then a debate loop where round one spawns all coaches in parallel and later rounds resume the same warm agents until the argument stops moving, followed by a gap check that feeds /coach-refresh.</desc>
+        <desc id="debate-loop-desc">Flowchart of /roundtable checking that every coach is built, entering facilitation mode, then a debate loop where round one spawns all coaches in parallel and later rounds resume the same warm agents until the argument stops moving, followed by a gap check that feeds /coach-recreate.</desc>
         <defs>
           <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
             <path d="M40 0 L0 0 0 40" fill="none" stroke="rgba(157,180,208,0.06)" stroke-width="1"/>
@@ -155,9 +155,9 @@
         <rect x="510" y="496" width="160" height="48" rx="6" fill="rgba(157,180,208,0.08)" stroke="rgba(157,180,208,0.35)" stroke-width="1"/>
         <text x="590" y="525" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">research/_gaps.md</text>
 
-        <!-- S: /coach-refresh (input / terminal) -->
+        <!-- S: /coach-recreate (input / terminal) -->
         <rect x="730" y="496" width="180" height="48" rx="20" fill="rgba(157,180,208,0.10)" stroke="rgba(157,180,208,0.40)" stroke-width="1"/>
-        <text x="820" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-refresh</text>
+        <text x="820" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-recreate</text>
         <text x="820" y="533" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">targets gaps</text>
       </svg>
     </div>

@@ -1,6 +1,6 @@
 ---
 name: coach-update
-description: Process any new files dropped into a coach's inbox/ folder and merge them into their research files. Does not rebuild the persona — use /coach-refresh for that.
+description: Process any new files dropped into a coach's inbox/ folder and merge them into their research files. Does not rebuild the persona — use /coach-recreate for that.
 argument-hint: [person's name]
 disable-model-invocation: false
 ---
@@ -51,13 +51,16 @@ If `inbox/` is empty, say so in one line but **do not stop** — skip to Step 2.
 can still close `unmined` gaps from `transcripts/` without needing anything new.
 
 For each file needing extraction:
-- Check `persona.md`'s Deep-Dive Sources for which domains already exist.
+- Check `persona.md`'s Deep-Dive Sources and `research/_system-map.md` for which topics
+  already exist. Merge by topic, not by source, and tag every verbatim quote you add with
+  `[src: inbox/<file>]` so `scripts/check_quotes.py` can verify it.
 - **Text files:** read in full — don't delegate to a subagent and merge in its report;
   that's summary-of-a-summary loss. Extract real content — mechanisms, named
   frameworks, verbatim quotes, stories — and merge into the matching
   `research/<domain>.md`, genuinely integrated into its existing structure, not pasted
-  as a raw dump. If nothing existing fits, create `research/<new-domain-slug>.md` and
-  add it to `persona.md`'s Deep-Dive Sources.
+  as a raw dump. If nothing existing fits, create `research/<new-topic-slug>.md` from
+  `skills/coach/references/research-template.md` and add it to `persona.md`'s Deep-Dive
+  Sources and to `_system-map.md`.
 - **PDFs:** read only the first 1-3 pages (a `pages` range — never the whole file).
   Extract what those pages show into the matching `research/<domain>.md`, labeled with
   the source and how many pages remain unread, so a later pass can continue with a
@@ -68,6 +71,9 @@ For each file needing extraction:
   the summary.
 - Update `inbox/_sync-status.md`: filename, today's date, coverage, which `research/`
   file(s) it went into. Create the manifest if this is its first entry.
+- After merging, run `scripts/check_quotes.py` and `scripts/validate_research.py` on the
+  persona folder (`--legacy` for research written before the template) and fix any
+  `NOT_FOUND` quote or broken link before reporting.
 
 **Coverage is a claim you have to be able to defend.** Before logging a file as
 complete, walk its actual structure — headings, sections, chapters — and confirm each
@@ -77,6 +83,10 @@ of ~10 read," "concepts I, III-VI extracted; II and VII-XIII not yet." A partial
 extraction logged as complete is worse than no entry at all.
 
 ## Step 2.5 — Close the gaps
+
+Start from the score, not from guesses: run `scripts/coach_health.py` on the persona folder
+and work its "Fix next" list from the lowest-scoring topic up. Run it again at the end and
+report the before and after scores.
 
 **Read `DATA_DIR/<slug>/research/_gaps.md` before doing anything else in this step.** If
 the file does not exist, there are no known gaps — skip to Step 3.
@@ -120,7 +130,7 @@ not summarize a summary.
 
 Do this even when `inbox/` is empty. An empty inbox is not a reason to skip the step,
 and if you stop early here the user has no command that closes these at all short of a
-full `/coach-refresh`, which is far more expensive and rebuilds things that were fine.
+full `/coach-recreate`, which is far more expensive and rebuilds things that were fine.
 
 **b) `user-only` gaps — the user just supplied the missing source.**
 
@@ -129,7 +139,7 @@ processed. For each open entry, check whether the extracted material actually fi
 
 **c) `unresearched` gaps — offer to research them, additively.**
 
-These need a web search. Do not send the user to `/coach-refresh` for them: that command
+These need a web search. Do not send the user to `/coach-recreate` for them: that command
 rebuilds the whole cache to fix what is often one missing topic, and it throws away
 transcripts and research that were perfectly good.
 
@@ -147,7 +157,7 @@ entry with no Status marker counts as open).
 
 **This research pass is strictly additive.** Never delete or rebuild anything —
 `persona.md`, `videos.json`, `transcripts/` and existing `research/` content are all
-untouched. You are appending, not refreshing.
+untouched. You are appending, not recreating.
 
 **Marking:** set `Status: closed` with today's date only after confirming the content is
 now present in `research/`. Never close a gap on the assumption that a file *probably*

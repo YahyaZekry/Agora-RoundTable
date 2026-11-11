@@ -140,7 +140,11 @@ Agent prompt:
 You are an AI embodiment of [Name] built from their public content.
 
 1. Read your persona file: [DATA_DIR]/[slug]/persona.md
-2. [If research/ exists:] Read the most relevant file from [DATA_DIR]/[slug]/research/
+2. [If research/ exists:] If [DATA_DIR]/[slug]/research/_system-map.md exists and the
+   topic is broad, read it first. Then read the 1-3 research files that best match the
+   topic (use the Deep-Dive Sources index in persona.md; follow `read_with`).
+   If [DATA_DIR]/[slug]/coach-health.json exists, check your topic's band; where it is
+   `thin`, say so in your own voice and stay within what your files support.
    [If it does not:] You have no research/ folder — work from persona.md alone, and
    flag in your META block that your sourcing is thin.
 
@@ -178,6 +182,9 @@ Respond to them directly. Where are they wrong? Where — if anywhere — have t
 you? Address them by name. Be specific about the disagreement rather than smoothing it
 over. If you have nothing new to add, say so plainly rather than restating your
 position in fresh words.
+
+If their point is about a topic you haven't read the research for, read that file first
+(Deep-Dive Sources index in your persona.md) and answer from it, not from memory.
 
 Stay in character. 2–3 paragraphs. End with the same META block:
 ---META---
@@ -246,7 +253,10 @@ Agent prompt for each coach:
 You are an AI embodiment of [Name] built from their public content.
 
 1. Read your persona file: [DATA_DIR]/[slug]/persona.md
-2. Read the research file most relevant to this topic from [DATA_DIR]/[slug]/research/
+2. If [DATA_DIR]/[slug]/research/_system-map.md exists and the question is broad, read it
+   first. Then read the 1-3 research files that best match the question (Deep-Dive
+   Sources index in persona.md; follow `read_with`). If coach-health.json exists, check
+   your topic's band; where it is `thin`, say so in your own voice.
 
 The question is: "[question]"
 
@@ -276,7 +286,7 @@ point of the check — an unrouted gap list is just a complaint.
 | Class | Test | Action |
 |---|---|---|
 | **Unmined** | the coach has `transcripts/` and the topic plausibly appears there, but nothing on it reached `research/` | fixable now, no fetching — offer to extract it |
-| **Unresearched** | the topic is public and researchable but was never covered | offer a targeted research pass, or `/coach-refresh <name>` |
+| **Unresearched** | the topic is public and researchable but was never covered | offer a targeted research pass, or `/coach-recreate <name>` |
 | **User-only** | needs a specific book, a paywalled interview, a private document | name the exact item and tell the user to drop it in `DATA_DIR/<slug>/inbox/`, then run `/coach-update <name>` |
 | **No gap** | the coach reported being well-sourced | say nothing — don't manufacture work |
 
@@ -292,7 +302,7 @@ that reported something:
 - **Status:** open
 ```
 
-This file is a live to-do list, not a log. `/coach-refresh` reads it and targets those
+This file is a live to-do list, not a log. `/coach-recreate` reads it and targets those
 areas specifically instead of doing a generic rebuild; `/coach-update` closes entries
 when inbox material lands that fills one. Mark an entry `closed` rather than deleting
 it, so a later session can see the gap was real and was addressed.

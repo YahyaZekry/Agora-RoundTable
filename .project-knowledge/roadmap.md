@@ -9,7 +9,7 @@ ported to the v2 shape, `install.sh` now writes a loadable shim, and the three t
 (`agora_data_dir`, `agora_slugify`, `agora_session`) are verified working in a live session
 (`agora-roundtable` is `active`). The port TODO below is closed. What remains is the broader
 v2.5.1 validation: prove the warm-agent debate at scale (3+ coaches, the `wantsToPress` 1v1
-narrowing, the 5-round cap, and gaps actually closing on a later refresh) on all three runtimes,
+narrowing, the 5-round cap, and gaps actually closing on a later recreate) on all three runtimes,
 then rebuild the novel-coaching stubs (Harris / Navarro / Flynn / Lehane) that gate that test.
 
 Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 2026-10-10
@@ -56,6 +56,11 @@ Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 202
 - [ ] **Smoke-test the Codex plugin** — marketplace discovery, manifest validation, and
       installation are verified; start a fresh Codex task and run a full `coach` / `roundtable`
       flow to confirm the host's skill invocation and multi-agent behavior. *(added: 2026-10-18)*
+- [ ] **v2.6.0 validation: run it on a real coach.** Rebuild or migrate Alex Hormozi to the new
+      research template (frontmatter, Decision Rules, `[src:]` quote tags, `_system-map.md`),
+      run `check_quotes.py` + `validate_research.py` + `coach_health.py`, build a 10-20 question `/coach-eval` set
+      with at least a few held-out transcripts, and record the baseline score. Target: 60%+
+      held-out. *(added: 2026-10-29)*
 - [x] ~~**End-to-end test the v2.5.1 gap flow**~~ — **DONE 2026-08-30.** Ran on Plato.
       Claude side closed 4 unmined gaps (one turned out already closed — stale entry);
       the opencode side then closed all 9 unresearched plus the blocked 518b–d item.
@@ -71,18 +76,18 @@ Separately, the persona data dir was moved to an agent-neutral `~/.agora` on 202
       from the three verified Jowett lines only; the two still-unverified arguments were
       deliberately left out. Plato is now at zero open gaps and `_gaps.md` was deleted per
       the tidy rule.
-- [ ] **Verify the refresh backup path actually restores** — force a build failure and
-      confirm `.refresh-backup/` is put back and nothing is lost. The safety net is
+- [ ] **Verify the recreate backup path actually restores** — force a build failure and
+      confirm `.recreate-backup/` is put back and nothing is lost. The safety net is
       written but untested. *(added: 2026-08-30)*
 - [ ] **Rebuild novel coaching personas with full pipeline** — Thomas Harris, Joe Navarro,
       Gillian Flynn, Dennis Lehane all only have `persona.md` stubs (no `research/`,
-      most have no `transcripts/`). Run `/coach-refresh` for each. Blocks a real test of
+      most have no `transcripts/`). Run `/coach-recreate` for each. Blocks a real test of
       v2.5.0's debate and gap detection — a coach with no `research/` can only report
       "everything is thin." *(added: 2026-08-23)*
 - [ ] **Validate v2.5.0 at scale** — the proof run was 2 coaches, 2 rounds. Untested:
        3+ coaches in a round, the `wantsToPress` 1v1 narrowing, hitting the 5-round cap,
        and whether `_gaps.md` entries actually get closed correctly by a later
-       `/coach-refresh`. Also untested on the opencode port's `agents/agora-*` subagents.
+       `/coach-recreate`. Also untested on the opencode port's `agents/agora-*` subagents.
        *(added: 2026-08-24)*
 - [ ] Run the Step 4.5 pass against the Goggins persona's `inbox/` and coverage the
       same way Hormozi was checked — v1.2.3 fixed its `research/` for accuracy, but

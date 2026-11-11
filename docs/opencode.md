@@ -58,8 +58,7 @@ written to.
 /agora coach-switch <name>     swap to another coach
 /agora coach-end               exit coach mode
 /agora coach-list              list already-built coaches
-/agora coach-refresh <name>    rebuild a persona from fresh research
-/agora coach-refresh-all       refresh every coach (or a preset)
+/agora coach-recreate <name>    delete and rebuild a persona from scratch
 /agora coach-update <name>     sync files dropped in a coach's inbox/ into research
 /agora coach-update-all        update all coaches (or a preset)
 /agora coach-gaps [name]       audit where a coach's sourcing is thin

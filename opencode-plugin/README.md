@@ -47,13 +47,13 @@ don't appear.
 |---|---|
 | `/agora coach <name>` | Build or load a persona, talk one-on-one |
 | `/agora coach-switch <name>` · `/agora coach-end` · `/agora coach-list` | Swap · exit · list already-built coaches |
-| `/agora coach-refresh <name>` | Rebuild a persona from fresh research |
+| `/agora coach-recreate <name>` | Delete and rebuild a persona from scratch (renamed from `coach-refresh`) |
 | `/agora coach-update <name>` | Sync files dropped in a coach's `inbox/` into research |
 | `/agora coach-gaps [name]` | Audit where a coach's sourcing is thin |
 | `/agora roundtable <names> or <preset>` | Open a multi-coach session |
 | `/agora discuss <topic>` | Run a real multi-round debate between active coaches |
 | `/agora roundtable-save <preset>` · add · remove · end | Manage the table |
-| `/agora coach-refresh-all` · `/agora coach-update-all` | Same, across all coaches or a preset |
+| `/agora coach-update-all` | Sync the inbox of every coach, or of a preset |
 
 ## How the warm-agent debate works
 

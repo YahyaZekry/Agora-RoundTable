@@ -24,8 +24,10 @@ given question — topic match, not a depth guess. Don't list transcripts/ here;
 raw intake already mined into the files below, not a separate reference target.
 Delete this whole section if Step 4 found nothing beyond what's already quoted inline
 (rare, but possible for a thin build).}
-- `research/{domain-slug}.md` — {one line on what this domain covers}. One line per
-  domain from Step 1/4.
+- `research/_system-map.md` — how the whole system fits together; read first for broad
+  questions. (Omit when the build has a single research file.)
+- `research/{topic-slug}.md` — {what it covers} · answers: {the kinds of questions} ·
+  read with: {other files}. One line per file from Step 4.
 
 ## Identity
 

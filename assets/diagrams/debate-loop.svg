@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="debate-loop-title debate-loop-desc" id="debate-loop-root">
         <title id="debate-loop-title">The roundtable debate loop</title>
-        <desc id="debate-loop-desc">Flowchart of /roundtable checking that every coach is built, entering facilitation mode, then a debate loop where round one spawns all coaches in parallel and later rounds resume the same warm agents until the argument stops moving, followed by a gap check that feeds /coach-refresh.</desc>
+        <desc id="debate-loop-desc">Flowchart of /roundtable checking that every coach is built, entering facilitation mode, then a debate loop where round one spawns all coaches in parallel and later rounds resume the same warm agents until the argument stops moving, followed by a gap check that feeds /coach-recreate.</desc>
         <defs>
       <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Serif:ital@0;1&amp;family=Noto+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@400&amp;family=Noto+Sans+TC:wght@400;500;600&amp;family=Noto+Serif+TC:wght@400&amp;display=swap');
       #debate-loop-root { --color-paper:   #0a0e1a;
@@ -107,8 +107,8 @@
         <rect x="510" y="496" width="160" height="48" rx="6" fill="#9db4d0" fill-opacity="0.08" stroke="#9db4d0" stroke-opacity="0.35" stroke-width="1"/>
         <text x="590" y="525" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">research/_gaps.md</text>
 
-        <!-- S: /coach-refresh (input / terminal) -->
+        <!-- S: /coach-recreate (input / terminal) -->
         <rect x="730" y="496" width="180" height="48" rx="20" fill="#9db4d0" fill-opacity="0.10" stroke="#9db4d0" stroke-opacity="0.40" stroke-width="1"/>
-        <text x="820" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-refresh</text>
+        <text x="820" y="519" fill="#f2f6fb" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">/coach-recreate</text>
         <text x="820" y="533" fill="#9db4d0" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">targets gaps</text>
       </svg>

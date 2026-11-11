@@ -5,9 +5,9 @@ subtask: true
 ---
 Facilitate a multi-round warm-agent debate on: $ARGUMENTS. Read roundtable-session.json for the active coaches. This uses WARM agents: each coach is a dedicated subagent spawned once and RESUMED across rounds so it keeps its own context and can say "you've moved me."
 
-Round 1 (parallel cold spawn): spawn each coach subagent simultaneously, each reading its own persona.md + most relevant research/ file. Prompt: state a clear position on the topic, no hedging, respond IN CHARACTER, 2-4 paragraphs, ending with a META block (movedBy/none, newArgument/yes, wantsToPress/@name). Show responses labeled, strip META.
+Round 1 (parallel cold spawn): spawn each coach subagent simultaneously, each reading its own persona.md + research/_system-map.md (if the topic is broad) + the 1-3 most relevant research/ files. Prompt: state a clear position on the topic, no hedging, respond IN CHARACTER, 2-4 paragraphs, ending with a META block (movedBy/none, newArgument/yes, wantsToPress/@name). Show responses labeled, strip META.
 
-Rounds 2..N (parallel warm): resume each subagent with the OTHERS' last statements. Prompt them to respond directly, say where the others are wrong and where (if anywhere) they've been moved, address by name, and re-report the META block.
+Rounds 2..N (parallel warm): resume each subagent with the OTHERS' last statements. Prompt them to read the research file for any topic the others raised that they haven't read yet, to respond directly, say where the others are wrong and where (if anywhere) they've been moved, address by name, and re-report the META block.
 
 Stop conditions after each round: CONVERGED (positions merged / synthesis everyone accepts), CRYSTALLIZED (a full round where every coach reported movedBy:none AND newArgument:no — still disagree, report as a fully-developed choice, a success not a failure), or CAPPED at 5 rounds (say it plainly, never present as finished). Do NOT keep pushing for agreement once positions crystallize.
 

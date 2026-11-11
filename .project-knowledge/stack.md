@@ -28,7 +28,7 @@
 | `python3 scripts/fetch_youtube.py --search "<query>" --max-videos 8 --out <dir>` | Same, but finds long-form videos OF a person across all of YouTube (no channel of their own) |
 | `python3 scripts/fetch_youtube.py --videos <URL1> <URL2> --out <dir>` | Fetch specific known video URLs |
 | `/coach <name>` (in Claude Code, plugin installed) | End-to-end: build or load a persona, start talking to them |
-| `/coach-refresh <name>` | Wipe and rebuild a persona's plugin-owned cache from fresh research |
+| `/coach-recreate <name>` | Wipe and rebuild a persona's plugin-owned cache from fresh research |
 | `codex plugin marketplace add YahyaZekry/Agora-RoundTable` | Add the repository's Codex marketplace |
 | `codex plugin add agora-roundtable@agora-roundtable` | Install the native Codex plugin |
 

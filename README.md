@@ -68,14 +68,16 @@ it, anyone with video gets their real spoken voice mined from transcripts.
 | --- | --- |
 | `/coach <name>` | Build or load a persona, talk one-on-one |
 | `/coach-switch <name>` · `/coach-end` · `/coach-list` | Swap · exit · list personas and presets |
-| `/coach-refresh <name>` | Rebuild from fresh research |
+| `/coach-recreate <name>` | Delete and rebuild from scratch (old build kept aside until the new one succeeds; renamed from `/coach-refresh`) |
 | `/coach-update <name>` | Sync new files from their `inbox/` into research |
 | `/coach-gaps [name]` | Audit where a coach's sourcing is thin |
+| `/coach-health [name]` | Deterministic 0-100 grounding score per topic (no AI judges it) and what to fix next |
+| `/coach-eval [name]` | Score how close a coach's answers are to what the real person said |
 | `/roundtable <names or preset>` | Open a multi-coach session |
 | `/discuss <topic>` | Run a real multi-round debate |
 | `/roundtable-save <preset>` | Save the active roster as a named preset |
 | `/roundtable-add` · `/roundtable-remove` · `/roundtable-end` | Manage the table |
-| `/coach-refresh-all` · `/coach-update-all` | Same, across every coach or a preset |
+| `/coach-update-all` | Sync the inbox of every coach, or of a preset |
 
 Namespaced form if names collide on Claude Code: `/agora:coach <name>`. On OpenCode every
 command is `/agora <command>` already. In Codex, invoke the matching skill by name or describe
@@ -220,7 +222,7 @@ is on purpose, so a big PDF is not reprocessed every time you start a session.
 
 ### `research/` is what the coach actually knows
 
-One file per topic the person is known for. Marcus Aurelius has three:
+One file per topic the person teaches, with no cap on how many. Marcus Aurelius has three:
 
 ```
 research/dichotomy-of-control-and-judgment.md
@@ -228,8 +230,31 @@ research/duty-cosmopolitanism-and-difficult-people.md
 research/memento-mori-and-present-moment.md
 ```
 
-When you ask a question, the coach picks the file matching your topic and reads it before
-answering. That is why answers can go deeper than the short persona summary.
+When you ask a question, the coach reads the files that match your topic before answering
+(up to three). A broad question ("how do I grow my business?") starts from
+`research/_system-map.md`, which shows how the person's frameworks connect, then follows its
+pointers. That is why answers can go deeper than the short persona summary.
+
+Each file follows `skills/coach/references/research-template.md`: frontmatter saying which
+questions it answers and what to read with it, then Frameworks, Decision Rules (how the
+person actually decides), Stories & Numbers, and Criticism & Limits. Verbatim quotes carry a
+`[src: transcripts/file.md]` tag, and two scripts check the folder:
+
+```bash
+python3 scripts/check_quotes.py  ~/.agora/personas/<slug>      # every tagged quote must be in its source
+python3 scripts/validate_research.py ~/.agora/personas/<slug>  # structure, links, index, system map
+```
+
+`/coach-health <name>` (or `python3 scripts/coach_health.py <dir>`) gives a 0-100 score per topic
+with no AI in the loop: quotes verified, structure, figures grounded, whether the index routes to
+the right file, and sourced Decision Rules, plus how much of his transcripts and most-repeated
+terms the research covers. Coaches read the result and say "I haven't gone deep on this" for
+thin topics instead of bluffing.
+
+`/coach-eval <name>` has two kinds of question. *Copy* questions are situations the person
+really answered (does the coach know his material?). *New-situation* questions are ones he never
+addressed, graded on his documented Decision Rules (can the coach reason like him?). Held-out,
+open-book and new-situation scores are reported separately.
 
 These are plain markdown. Open and edit them yourself if something is wrong or missing.
 
@@ -272,7 +297,8 @@ let it read those as separate files.
    and claims with no source in the folder at all.
 5. **Distill** into a structured persona file with a Deep-Dive Sources index.
 6. **Embody.** For anything deeper than the summary it reads the matching
-   `research/<domain>.md` live. A lookup, not a guess.
+   `research/<topic>.md` files live (and `_system-map.md` for broad questions). A lookup,
+   not a guess.
 
 **Your own material:** drop notes, a dossier, or a PDF into `DATA_DIR/<slug>/inbox/` and
 run `/coach-update <name>`.
@@ -298,9 +324,9 @@ Two flow diagrams: how a coach gets built, and how a table debates.
 
 *Building a coach: the cache check, the build pipeline, and the `/coach-update` path.*
 
-<img src="assets/diagrams/debate-loop.svg" alt="Flowchart. /roundtable checks that every coach is built, then enters facilitation mode. Round 1 spawns all coaches in parallel; later rounds resume the same warm agents until nothing moves. Then a gap check writes research/_gaps.md, which /coach-refresh reads to target the gaps." width="100%">
+<img src="assets/diagrams/debate-loop.svg" alt="Flowchart. /roundtable checks that every coach is built, then enters facilitation mode. Round 1 spawns all coaches in parallel; later rounds resume the same warm agents until nothing moves. Then a gap check writes research/_gaps.md, which /coach-recreate reads to target the gaps." width="100%">
 
-*The debate loop: round 1 spawns every coach in parallel, later rounds resume the same warm agents, and a gap check feeds `/coach-refresh`.*
+*The debate loop: round 1 spawns every coach in parallel, later rounds resume the same warm agents, and a gap check feeds `/coach-recreate`.*
 
 <details>
 <summary>Repo layout</summary>
@@ -311,9 +337,11 @@ Two flow diagrams: how a coach gets built, and how a table debates.
 .agents/plugins/    Codex marketplace entry (repo is its own marketplace)
 skills/             shared skill definitions — one folder per command
   coach/            main skill + persona template
-  coach-switch/  coach-end/  coach-list/  coach-refresh/  coach-refresh-all/
+  coach-switch/  coach-end/  coach-list/  coach-recreate/
   coach-update/  coach-update-all/
   coach-gaps/       audit a coach's own sourcing            (v2.5.0)
+  coach-eval/       fidelity score vs the real person       (v2.6.0)
+  coach-health/     deterministic grounding score, no AI    (v2.6.0)
   roundtable/       presets v2.1.0, warm-agent debate       (v2.5.0)
   roundtable-save/  roundtable-add/  roundtable-remove/  roundtable-end/
 opencode-plugin/    OpenCode port — same commands under /agora*
@@ -345,9 +373,9 @@ Historical figures are rebuilt from their writing, in the language of their time
 
 | Problem | Fix |
 | --- | --- |
-| `yt-dlp is not installed` | `brew install yt-dlp`, then `/coach-refresh <name>` |
+| `yt-dlp is not installed` | `brew install yt-dlp`, then `/coach-recreate <name>` |
 | Zero transcripts fetched | Captions disabled or region-blocked; persona builds from web research instead |
-| Wrong person picked | `/coach-refresh` with a more specific name ("the founder of X") |
+| Wrong person picked | `/coach-recreate` with a more specific name ("the founder of X") |
 | Commands not showing (Claude Code) | `/plugin` → verify it's installed + enabled, then restart |
 | Commands not showing (OpenCode) | re-run `opencode-plugin/install.sh`, then restart OpenCode |
 | Skills not appearing (Codex) | Start a new task after installing or updating the plugin |
