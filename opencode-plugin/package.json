@@ -1,8 +1,8 @@
 {
   "name": "agora-roundtable",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "type": "module",
-  "description": "Agora RoundTable for OpenCode — turn any public figure into a personal coach, run multi-coach roundtables and warm-agent debates. /agora coach <name>, /agora roundtable <n1>, <n2>, /agora discuss <topic>, and 12 more.",
+  "description": "Agora RoundTable for OpenCode — turn any public figure into a personal coach, run multi-coach roundtables and warm-agent debates. /agora coach <name>, /agora roundtable <n1>, <n2>, /agora discuss <topic>, and 13 more.",
   "license": "MIT",
   "author": "Yahya Zekry",
   "keywords": [
