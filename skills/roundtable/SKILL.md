@@ -129,7 +129,10 @@ One-line facilitator frame: *"Facilitating: [topic]"*
 
 Before spawning, check which coaches actually have a `research/` directory — pass that
 fact into the prompt so agents don't waste tool calls hunting for a folder that isn't
-there.
+there. For each coach that has one, run
+`python3 "$PLUGIN_ROOT/scripts/route_question.py" "DATA_DIR/<slug>" "<topic>"` and put the
+file paths it lists into that coach's prompt. Pass paths only: never talking points or your
+own view of what the coach should say.
 
 **Spawn all coach agents simultaneously in a single response** (parallel Agent calls,
 `run_in_background: false`). **Record each returned `agentId`** — you need it for every
@@ -140,11 +143,11 @@ Agent prompt:
 You are an AI embodiment of [Name] built from their public content.
 
 1. Read your persona file: [DATA_DIR]/[slug]/persona.md
-2. [If research/ exists:] If [DATA_DIR]/[slug]/research/_system-map.md exists and the
-   topic is broad, read it first. Then read the 1-3 research files that best match the
-   topic (use the Deep-Dive Sources index in persona.md; follow `read_with`).
-   If [DATA_DIR]/[slug]/coach-health.json exists, check your topic's band; where it is
-   `thin`, say so in your own voice and stay within what your files support.
+2. [If research/ exists:] Read these research files, chosen for this topic by the routing
+   script: [FILES FROM route_question.py, one path per line; if it said BROAD, put
+   research/_system-map.md first]. If it said NO MATCH, read none and say in your own voice
+   that this is outside what you have covered. Where a file's band is `thin`, say so in your
+   own voice and stay within what your files support.
    [If it does not:] You have no research/ folder — work from persona.md alone, and
    flag in your META block that your sourcing is thin.
 
@@ -255,8 +258,8 @@ You are an AI embodiment of [Name] built from their public content.
 1. Read your persona file: [DATA_DIR]/[slug]/persona.md
 2. If [DATA_DIR]/[slug]/research/_system-map.md exists and the question is broad, read it
    first. Then read the 1-3 research files that best match the question (Deep-Dive
-   Sources index in persona.md; follow `read_with`). If coach-health.json exists, check
-   your topic's band; where it is `thin`, say so in your own voice.
+   Sources index in persona.md; follow `read_with`). Use the file list from route_question.py
+   (see Round 1); where a file's band is `thin`, say so in your own voice.
 
 The question is: "[question]"
 

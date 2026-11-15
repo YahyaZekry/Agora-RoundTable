@@ -5,7 +5,7 @@ subtask: true
 ---
 Facilitate a multi-round warm-agent debate on: $ARGUMENTS. Read roundtable-session.json for the active coaches. This uses WARM agents: each coach is a dedicated subagent spawned once and RESUMED across rounds so it keeps its own context and can say "you've moved me."
 
-Round 1 (parallel cold spawn): spawn each coach subagent simultaneously, each reading its own persona.md + research/_system-map.md (if the topic is broad) + the 1-3 most relevant research/ files. Prompt: state a clear position on the topic, no hedging, respond IN CHARACTER, 2-4 paragraphs, ending with a META block (movedBy/none, newArgument/yes, wantsToPress/@name). Show responses labeled, strip META.
+Round 1 (parallel cold spawn): spawn each coach subagent simultaneously, each reading its own persona.md plus the research files that `python3 <repo>/scripts/route_question.py "PERSONAS/<slug>" "<topic>"` lists for it (you run it per coach and pass the paths only, never talking points; locate <repo> as in the agora-coach skill). Prompt: state a clear position on the topic, no hedging, respond IN CHARACTER, 2-4 paragraphs, ending with a META block (movedBy/none, newArgument/yes, wantsToPress/@name). Show responses labeled, strip META.
 
 Rounds 2..N (parallel warm): resume each subagent with the OTHERS' last statements. Prompt them to read the research file for any topic the others raised that they haven't read yet, to respond directly, say where the others are wrong and where (if anywhere) they've been moved, address by name, and re-report the META block.
 

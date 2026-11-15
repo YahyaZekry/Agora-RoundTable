@@ -233,7 +233,10 @@ research/memento-mori-and-present-moment.md
 When you ask a question, the coach reads the files that match your topic before answering
 (up to three). A broad question ("how do I grow my business?") starts from
 `research/_system-map.md`, which shows how the person's frameworks connect, then follows its
-pointers. That is why answers can go deeper than the short persona summary.
+pointers. That is why answers can go deeper than the short persona summary. Before each answer the coach runs
+`scripts/route_question.py`, which says which files to read (system map first for broad questions)
+and reports when nothing matches, so it can't skip the research. Replies can be long, but are formatted
+for reading: short paragraphs, framework names in bold, and the closing question in its own paragraph.
 
 Each file follows `skills/coach/references/research-template.md`: frontmatter saying which
 questions it answers and what to read with it, then Frameworks, Decision Rules (how the

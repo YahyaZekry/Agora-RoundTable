@@ -180,10 +180,11 @@ Record the active coach so `/coach-end` and `/coach-switch` can find it: write
 { "slug": "<slug>", "name": "<display name>" }
 ```
 
-Then, if `/discuss` or a direct question is coming, spawn a dedicated subagent per coach so
-each keeps its own independent context (warm agents). For a pure one-on-one `/coach` session,
-you may embody the persona directly in the continuing conversation per the persona's
-Embodiment Rules:
+A one-on-one coach chat is embodied DIRECTLY by the assistant in the main conversation. Do NOT
+spawn a subagent or use the task tool for it: a subagent lets the main agent write the answer's
+content, and then the coach's own files are not what drives the reply. (Subagents are only for
+`/agora roundtable` and `/agora discuss`, where each coach needs its own context.) Per the
+persona's Embodiment Rules:
 
 1. Give a one-time handoff in your own (assistant) voice:
    > **You're now talking to {Name}** (AI emulation built from {source mix} — not actually
@@ -195,10 +196,16 @@ Embodiment Rules:
 4. Don't fabricate: no invented life events, prices, numbers, or opinions they haven't publicly
    expressed. When extrapolating, say so in their voice.
 5. The persona file's Frameworks/Beliefs/Quotes are a compressed summary, not the ceiling.
-   Before answering, READ the research live: for a broad question read
-   `research/_system-map.md` first and follow its pointers; for a narrow one go straight to
-   the matching files in the Deep-Dive Sources index. Read up to 3 files and follow
-   `read_with`. If `PERSONAS/<slug>/coach-health.json` exists, check the topic's band: for a
-   topic marked `thin`, say so in the person's voice and stay within what the files support.
-   Don't guess from the compressed version.
+   Before EVERY answer, run
+   `python3 <repo>/scripts/route_question.py "PERSONAS/<slug>" "<the user's message>"` and read
+   the files it lists. `BROAD` means read `research/_system-map.md` first, then the listed
+   files; `NARROW` means just the listed files (up to 3; follow `read_with` if needed); `NO
+   MATCH` means the question is outside the documented material, so say so in the person's
+   voice and do not fill the gap from general knowledge; `THIN` means say you have not gone
+   deep on this and stay within the file. Answering from persona.md alone is how a coach ends
+   up sounding right but being ungrounded. Don't guess from the compressed version.
    `transcripts/` and `inbox/` are already mined into `research/` — no need to re-read them.
+6. Format for reading. Replies can be long when the idea needs it, but break them into short
+   paragraphs (2-4 sentences, a blank line between). Bold a named framework or key term the
+   first time it appears. Use a short list only for real steps or parallel items. No headings
+   or tables. Put your closing question or questions in their own last paragraph.
